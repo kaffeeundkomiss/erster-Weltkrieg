@@ -1,0 +1,30 @@
+{
+  "name": "Jagdgeschwader Richthofen 1916–1918",
+  "short_name": "JG Richthofen",
+  "description": "Animierte Karte der Stationierungen des Jagdgeschwaders I und seiner Jagdstaffeln",
+  "lang": "de",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#eceee8",
+  "theme_color": "#eceee8",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
