@@ -1,0 +1,893 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Animierte Karte vom Weg der Jagdstaffeln 4, 6, 10 und 11 ab 1916 über das Jagdgeschwader I (Richthofen) bis zur Auflösung im November 1918.">
+<meta name="theme-color" content="#eceee8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121614" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="JG Richthofen">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+/* Grundgerüst, das auf claude.ai die Artefakt-Hülle liefert */
+:root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px) }
+body { margin: 0; font: 14px system-ui, -apple-system, sans-serif }
+img { max-width: 100% }
+[hidden] { display: none !important }
+</style>
+<title>Jagdgeschwader Richthofen 1916–1918</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: Karte als Hauptfläche, Detailspalte rechts (mobil darunter), Zeitleiste mit echter Datumsskala, darunter Stationsliste */
+:root {
+  --paper: #eceee8; --panel: #f6f7f3; --ink: #1d2420; --muted: #5d6861; --rule: #c3c9c1;
+  --sea: #9fbdcb; --land-fr: #d3dcea; --land-be: #ece0ae; --land-uk: #ead2cf; --land-nl: #f2d6b8; --land-lu: #dcd2e8; --land-de: #c7c1b6;
+  --border: #6f7a72; --j4: #2a5d91; --j6: #3f7a2e; --j10: #b07d0a; --j11: #7a3d8f; --red: #ad281d; --red-soft: rgba(173,40,29,.16); --front: #6e4c2c; --grat: rgba(29,36,32,.07);
+  --f-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #121614; --panel: #181d1a; --ink: #e2e6e1; --muted: #98a39b; --rule: #313a35;
+  --sea: #0e1518; --land-fr: #1f2b3c; --land-be: #3a3419; --land-uk: #3d2626; --land-nl: #40301c; --land-lu: #2e2840; --land-de: #3a3834;
+  --border: #7d8a82; --j4: #6fa3e0; --j6: #7dbb5f; --j10: #e0b33c; --j11: #c08ad6; --red: #e4533f; --red-soft: rgba(228,83,63,.2); --front: #c29462; --grat: rgba(226,230,225,.05);
+  color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #121614; --panel: #181d1a; --ink: #e2e6e1; --muted: #98a39b; --rule: #313a35;
+  --sea: #0e1518; --land-fr: #1f2b3c; --land-be: #3a3419; --land-uk: #3d2626; --land-nl: #40301c; --land-lu: #2e2840; --land-de: #3a3834;
+  --border: #7d8a82; --j4: #6fa3e0; --j6: #7dbb5f; --j10: #e0b33c; --j11: #c08ad6; --red: #e4533f; --red-soft: rgba(228,83,63,.2); --front: #c29462; --grat: rgba(226,230,225,.05);
+  color-scheme: dark }
+
+* { box-sizing: border-box }
+body { background: var(--paper); color: var(--ink); font: 400 16px/1.55 var(--f-body); }
+.wrap { max-width: 1240px; margin: 0 auto; padding-block: 28px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
+.wrap > * { min-width: 0 }
+header { display: grid; gap: 6px }
+.brand { display: flex; align-items: center; gap: 16px }
+.brand-text { display: grid; gap: 6px; min-width: 0 }
+.logo { width: 76px; height: 76px; flex: none }
+.logo-ring { fill: var(--panel); stroke: var(--ink); stroke-width: 3 }
+.logo-inner { fill: none; stroke: var(--ink); stroke-width: 1; opacity: .5 }
+.logo-plane { fill: var(--red) }
+.logo-text { fill: var(--ink); font: 700 12.5px var(--f-display); letter-spacing: .16em }
+@media (max-width: 560px) { .logo { width: 56px; height: 56px } .brand { gap: 12px } }
+.eyebrow { font: 600 13px/1 var(--f-display); letter-spacing: .14em; text-transform: uppercase; color: var(--red) }
+h1 { font: 700 clamp(30px, 5vw, 50px)/1 var(--f-display); letter-spacing: .01em; margin: 0; text-wrap: balance; text-transform: uppercase }
+.lede { margin: 4px 0 0; max-width: 68ch; color: var(--muted) }
+
+.stage { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 18px; align-items: start }
+@media (max-width: 900px) { .stage { grid-template-columns: minmax(0, 1fr) } }
+
+.map { position: relative; background: var(--sea); border: 1px solid var(--rule); border-radius: 3px; overflow: hidden }
+.map svg { display: block; width: 100%; height: auto; aspect-ratio: 1000 / 640; max-width: 100%; touch-action: manipulation }
+@media (max-width: 640px) { .map svg { aspect-ratio: 1 / 1 } }
+.c-250 { fill: var(--land-fr) } .c-056 { fill: var(--land-be) } .c-826 { fill: var(--land-uk) } .c-528 { fill: var(--land-nl) } .c-442 { fill: var(--land-lu) } .c-276 { fill: var(--land-de) }
+.country { stroke: var(--border); stroke-width: 1.3; vector-effect: non-scaling-stroke; stroke-linejoin: round }
+.al { fill: var(--land-de); stroke: var(--land-de); stroke-width: .6; vector-effect: non-scaling-stroke }
+.alline { fill: none; stroke: var(--border); stroke-width: 1.3; stroke-dasharray: 5 3; vector-effect: non-scaling-stroke }
+.grat { fill: none; stroke: var(--grat); stroke-width: 1; vector-effect: non-scaling-stroke }
+.front { fill: none; stroke: var(--front); stroke-width: 2.4; vector-effect: non-scaling-stroke; transition: opacity .7s; opacity: 0; stroke-linejoin: round }
+.front.on { opacity: .85 }
+.front-teeth { fill: none; stroke: var(--front); stroke-width: 6; stroke-dasharray: 1.5 7; vector-effect: non-scaling-stroke; opacity: 0; transition: opacity .7s }
+.front-teeth.on { opacity: .45 }
+.city circle { fill: var(--muted) }
+.city text, .clabel { fill: var(--muted); font-family: var(--f-display); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round }
+.clabel { fill: var(--ink); opacity: .62; letter-spacing: .2em; font-weight: 700; stroke: none }
+.emb { pointer-events: auto }
+.emb-ring { stroke: rgba(0,0,0,.35); stroke-width: .4 }
+.route-all { fill: none; stroke: var(--red); stroke-opacity: .28; stroke-width: 1.2; stroke-dasharray: 3 4; vector-effect: non-scaling-stroke }
+.route-done { fill: none; stroke: var(--red); stroke-width: 2.6; vector-effect: non-scaling-stroke; stroke-linecap: round; stroke-linejoin: round }
+.trk path { fill: none; stroke: var(--c); vector-effect: non-scaling-stroke; stroke-linecap: round; stroke-linejoin: round }
+.trk-solid { stroke-width: 2.2 } .trk-dash { stroke-width: 2; stroke-dasharray: 5 4 }
+.trk-jg .trk-solid { stroke-width: 2.8 }
+.trk-dot { fill: var(--c); stroke: var(--paper); stroke-width: 1.2; vector-effect: non-scaling-stroke; cursor: pointer }
+.trk-plane { fill: var(--c); stroke: var(--paper); stroke-width: .9; paint-order: stroke; stroke-linejoin: round; cursor: pointer }
+#cur { transition: none }
+.trk { transition: opacity .6s } .trk.merged { opacity: .45 }
+.mk { opacity: 0; transition: opacity .4s; cursor: pointer } .mk.on { opacity: 1 }
+.mk-x { stroke: var(--ink); stroke-width: 1.8; vector-effect: non-scaling-stroke; fill: none }
+.mk-sym { fill: var(--ink); font-family: var(--f-body); font-weight: 600; paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round }
+.ev-label { fill: var(--ink); font-family: var(--f-display); font-weight: 600; paint-order: stroke; stroke: var(--paper); stroke-linejoin: round }
+.cur-ring { fill: var(--red-soft); stroke: var(--red); stroke-width: 1.2; vector-effect: non-scaling-stroke }
+.cur-label { font-family: var(--f-display); font-weight: 700; fill: var(--ink); paint-order: stroke; stroke: var(--paper); stroke-linejoin: round }
+@keyframes pulse { 0% { transform: scale(.6); opacity: .9 } 100% { transform: scale(1.8); opacity: 0 } }
+.pulse { transform-box: fill-box; transform-origin: center; animation: pulse 2s ease-out infinite; fill: none; stroke: var(--red); vector-effect: non-scaling-stroke; stroke-width: 1.5 }
+
+.legend { position: absolute; left: 10px; bottom: 10px; background: color-mix(in srgb, var(--panel) 88%, transparent); border: 1px solid var(--rule);
+  border-radius: 3px; padding: 7px 10px; font: 500 12px/1.5 var(--f-display); letter-spacing: .03em; display: grid; gap: 2px; color: var(--muted) }
+.legend i { display: inline-block; width: 18px; height: 0; vertical-align: middle; margin-right: 6px; border-top: 2.5px solid var(--red) }
+.legend i.f { border-top-color: var(--front) } .legend i.u { border-top-color: var(--c) } .legend span { white-space: nowrap } .legend .lp { display: inline-block; width: 18px; height: 14px; vertical-align: middle; margin-right: 6px } .legend i.d { border-top: 2px dashed var(--muted) } .legend i.b { border-top: 1.5px dashed var(--border) }
+.legend .x { display: inline-block; width: 18px; margin-right: 6px; text-align: center; color: var(--ink); font-weight: 700 }
+.legend .k { font-family: var(--f-body); font-weight: 700; font-size: 14px; line-height: 1 }
+.legend i.sw { height: 10px; width: 12px; border: 1px solid var(--border) }
+.legend { grid-template-columns: auto auto; column-gap: 14px }
+@media (max-width: 560px) { .legend { position: static; border: 0; border-top: 1px solid var(--rule); border-radius: 0; grid-template-columns: 1fr 1fr } }
+.mapbtn { position: absolute; right: 10px; top: 10px; }
+
+.panel { background: var(--panel); border: 1px solid var(--rule); border-radius: 3px; padding: 18px 18px 16px; display: grid; gap: 10px; min-width: 0 }
+.count { font: 500 12px/1 var(--f-mono); color: var(--muted); letter-spacing: .04em; display: flex; justify-content: space-between }
+.panel h2 { font: 700 30px/1.02 var(--f-display); margin: 0; text-transform: uppercase; text-wrap: balance }
+.sub { color: var(--muted); font-size: 15px; margin-top: -4px }
+.dates { font: 500 14px/1.3 var(--f-mono); color: var(--red); font-variant-numeric: tabular-nums }
+.chip { display: inline-block; font: 600 12px/1 var(--f-display); letter-spacing: .1em; text-transform: uppercase; border: 1px solid var(--rule); padding: 5px 7px 4px; border-radius: 2px; color: var(--muted) }
+.panel p { margin: 0 }
+.panel h2.kia-t, .kia-t { color: var(--red) }
+.uchip { display: inline-block; font: 600 12px/1 var(--f-display); letter-spacing: .06em; text-transform: uppercase; padding: 4px 7px 3px 6px; border-radius: 2px;
+  border: 1px solid var(--rule); border-left: 4px solid var(--c); color: var(--ink); white-space: nowrap }
+#pUnits { display: flex; flex-wrap: wrap; gap: 6px }
+#pPersons { display: grid; gap: 8px; border-top: 1px solid var(--rule); padding-top: 10px }
+.pp { font-size: 14.5px; display: grid; gap: 4px; justify-items: start } .pp .chips { display: flex; flex-wrap: wrap; gap: 5px } .pp b { font-weight: 600 } .pp span { color: var(--muted) }
+.pp.is-kia b, .person.is-kia > b { color: var(--red) }
+.persons { display: grid; gap: 10px }
+.person-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px 22px }
+.person { display: grid; gap: 4px; align-content: start; font-size: 14.5px; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 3px; background: var(--panel); min-width: 0 }
+.person[role="button"] { cursor: pointer } .person[role="button"]:hover { border-color: var(--border) }
+.person:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
+.person > b { font: 700 17px/1.2 var(--f-display); letter-spacing: .03em; text-transform: uppercase }
+.person .chips { display: flex; flex-wrap: wrap; gap: 5px }
+.person span { color: var(--muted) } .person .fate { color: var(--ink) }
+.person.is-kia { border-left: 3px solid var(--red) }
+.tod { font-size: 14px; color: var(--muted) } .tod b { color: var(--ink); font-weight: 600 }
+.tod-k b, .tod-s b { color: var(--red) }
+table.others { min-width: 0 } table.others tr { cursor: default } table.others tr:hover td { background: none }
+@media (max-width: 600px) { table.others tr { grid-template-columns: 1fr } table.others td:first-child { padding-top: 4px } }
+.event { border-top: 1px solid var(--rule); padding-top: 9px; font-size: 15px }
+.event b { font-family: var(--f-mono); font-weight: 500; font-size: 13px; color: var(--ink); display: block }
+.note { font-size: 13.5px; color: var(--muted); font-style: italic }
+
+.controls { display: grid; gap: 10px; background: var(--panel); border: 1px solid var(--rule); border-radius: 3px; padding: 14px 16px 12px }
+.btns { display: flex; gap: 8px; align-items: center; flex-wrap: wrap }
+button { font: 600 14px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); background: var(--paper);
+  border: 1px solid var(--border); border-radius: 2px; padding: 9px 12px 8px; cursor: pointer }
+button:hover { border-color: var(--ink) }
+button:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
+button.primary { background: var(--red); border-color: var(--red); color: #fff; min-width: 108px }
+.speed { margin-left: auto; font: 500 12px var(--f-mono); color: var(--muted); display: flex; gap: 6px; align-items: center }
+@media (max-width: 640px) {
+  .btns { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+  .btns button { min-height: 44px; padding-inline: 4px; white-space: nowrap; letter-spacing: .04em; font-size: 13px }
+  #reset { grid-column: 1 } .nowdate { grid-column: 2; text-align: center } .speed { grid-column: 3; margin-left: 0; justify-content: flex-end }
+  .speed select { min-height: 40px }
+  .ruler .tick { width: 10px; margin-left: -5px; height: 26px; top: 10px }
+  .ruler .tick::after { left: 3px; top: 8px }
+  .panel h2 { font-size: 26px }
+  .mapbtn { padding: 8px 10px 7px; font-size: 13px }
+}
+.speed select { font: inherit; color: var(--ink); background: var(--paper); border: 1px solid var(--border); padding: 4px }
+
+.ruler { position: relative; height: 62px; margin: 4px 6px 0 }
+.ruler .axis { position: absolute; left: 0; right: 0; top: 22px; height: 2px; background: var(--rule) }
+.ruler .prog { position: absolute; left: 0; top: 22px; height: 2px; background: var(--red) }
+.ruler .playhead { position: absolute; top: 10px; width: 4px; height: 26px; margin-left: -2px; background: var(--red); border-radius: 1px; pointer-events: none; box-shadow: 0 0 0 2px var(--panel) }
+.nowdate { font: 500 13px var(--f-mono); color: var(--red); font-variant-numeric: tabular-nums; min-width: 9.5ch }
+.ruler .tick { position: absolute; top: 14px; width: 8px; height: 18px; margin-left: -4px; padding: 0; border: 0; background: none; cursor: pointer }
+.ruler .tick::after { content: ""; position: absolute; left: 2px; top: 4px; width: 4px; height: 10px; background: var(--muted); border-radius: 1px }
+.ruler .tick.visited::after { background: var(--red) }
+.ruler .month { position: absolute; top: 34px; font: 500 11px var(--f-mono); color: var(--muted); transform: translateX(-50%); white-space: nowrap }
+.ruler .month.y { color: var(--ink); top: 0 }
+.ruler .mt { position: absolute; top: 24px; width: 1px; height: 6px; background: var(--rule) }
+
+.list { overflow-x: auto }
+@media (max-width: 600px) {
+  table { min-width: 0 } thead { display: none }
+  tr { display: grid; grid-template-columns: 2.4em minmax(0, 1fr); border-bottom: 1px solid var(--rule); padding: 8px 0 }
+  .list td { border: 0; padding: 1px 6px } .list td.n { grid-row: span 3; padding-top: 3px }
+  .list td:last-child { padding-top: 4px }
+}
+table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 15px }
+th { font: 600 12px/1 var(--f-display); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 8px 10px; border-bottom: 1.5px solid var(--ink) }
+td { padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: top }
+td.n, td.d { font: 400 13px/1.5 var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--muted) }
+tr { cursor: pointer } tr:hover td { background: var(--red-soft) }
+tr.cur td { background: var(--red-soft) } tr.cur td.n { color: var(--red); font-weight: 500 }
+td b { font-weight: 600 }
+h3 { font: 700 20px/1 var(--f-display); text-transform: uppercase; letter-spacing: .04em; margin: 8px 0 0 }
+.insignia { display: grid; gap: 10px }
+.ins-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px 22px }
+.ins { display: flex; gap: 12px; align-items: flex-start; font-size: 14.5px; min-width: 0 }
+.ins svg { width: 40px; height: 40px; flex: none }
+.ins b { display: block; font: 600 15px/1.3 var(--f-display); letter-spacing: .06em; text-transform: uppercase }
+.ins span { color: var(--muted) }
+.sources { font-size: 13.5px; color: var(--muted); max-width: 90ch }
+.sources a { color: var(--ink) }
+@media (prefers-reduced-motion: reduce) { .pulse { animation: none } .front, .mk, .trk { transition: none } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <svg class="logo" viewBox="-40 -40 80 80" role="img" aria-label="Logo: Flugzeugsilhouette im Abzeichen des Jagdgeschwaders I">
+        <circle r="37" class="logo-ring"/>
+        <circle r="31.5" class="logo-inner"/>
+        <g transform="translate(0,-4) scale(1.8)"><use href="#plane" class="logo-plane"/></g>
+        <text y="23.5" text-anchor="middle" class="logo-text">JG I</text>
+      </svg>
+      <div class="brand-text">
+        <div class="eyebrow">Westfront · August 1916 – November 1918</div>
+        <h1>Jagdgeschwader Richthofen</h1>
+      </div>
+    </div>
+    <p class="lede">Der Weg des Jagdgeschwaders I (ab Mai 1918 „Freiherr von Richthofen Nr. 1“) von der Aufstellung seiner vier Jagdstaffeln 1916 bis zur Auflösung im November 1918. Farbige Linien zeigen die Staffeln vor dem Zusammenschluss, die rote Linie den Geschwaderstab danach. † markiert gefallene oder tödlich verunglückte bekannte Flieger.</p>
+  </header>
+
+  <section class="stage">
+    <div class="map" id="map">
+      <svg id="svg" viewBox="0 0 1000 640" role="img" aria-label="Karte der Westfront mit den Flugplätzen des Jagdgeschwaders I">
+        <defs>
+          <g id="e-de"><rect x="-11" y="-11" width="22" height="22" fill="#fff" stroke="#000" stroke-width=".5"/><path d="M-3.4,-10 L3.4,-10 L1.4,-1.4 L10,-3.4 L10,3.4 L1.4,1.4 L3.4,10 L-3.4,10 L-1.4,1.4 L-10,3.4 L-10,-3.4 L-1.4,-1.4 Z" fill="#111"/></g>
+          <g id="e-fr" class="emb-ring"><circle r="10" fill="#c8202f"/><circle r="6.6" fill="#fff"/><circle r="3.3" fill="#1f3f95"/></g>
+          <g id="e-uk" class="emb-ring"><circle r="10" fill="#1f3a8a"/><circle r="6.6" fill="#fff"/><circle r="3.3" fill="#c8202f"/></g>
+          <g id="e-be" class="emb-ring"><circle r="10" fill="#c8202f"/><circle r="6.6" fill="#f2c318"/><circle r="3.3" fill="#111"/></g>
+          <g id="e-nl" class="emb-ring"><circle r="10" fill="#f07c12"/></g>
+          <path id="plane" d="M-11,-3.6 h22 v4.2 h-22 z M-1.8,-8.5 h3.6 v16.5 h-3.6 z M-5.2,5.6 h10.4 v3 h-10.4 z M-3.4,-9.6 h6.8 v1.2 h-6.8 z"/>
+        </defs>
+        <rect x="-200" y="-200" width="1400" height="1040" fill="var(--sea)"/>
+        <path class="grat" id="grat"/>
+        <g id="countries"></g>
+        <path class="al" id="al"/>
+        <path class="alline" id="alline"/>
+        <g id="clabels"></g>
+        <g id="fronts"></g>
+        <g id="cities"></g>
+        <path class="route-all" id="routeAll"/>
+        <g id="tracks"></g>
+        <g id="events"></g>
+        <g id="cur">
+          <circle class="pulse" id="pulse" r="9"/>
+          <circle class="cur-ring" id="ring" r="7"/>
+          <text class="cur-label" id="curLabel"></text>
+        </g>
+      </svg>
+      <button class="mapbtn" id="zoomBtn" type="button" aria-pressed="true">Gesamtkarte</button>
+      <div class="legend" aria-hidden="true">
+        <span><i></i>JG I (ab Juni 1917)</span>
+        <span><i class="u" style="--c:var(--j4)"></i>Jasta 4</span>
+        <span><i class="u" style="--c:var(--j6)"></i>Jasta 6</span>
+        <span><i class="u" style="--c:var(--j10)"></i>Jasta 10</span>
+        <span><i class="u" style="--c:var(--j11)"></i>Jasta 11</span>
+        <span><svg class="lp" viewBox="-12 -11 24 22" aria-hidden="true"><use href="#plane" fill="var(--ink)"/></svg>Aufstellung</span>
+        <span><i class="d"></i>Weg nicht belegt</span>
+        <span><i class="f"></i>Front (schematisch)</span>
+        <span><i class="b"></i>Reichsgrenze 1914</span>
+        <span><b class="x k">†</b>gefallen / verunglückt</span>
+        <span><b class="x">✕</b>Ereignis</span>
+      </div>
+    </div>
+
+    <aside class="panel" id="panel" aria-live="polite">
+      <div class="count"><span id="pCount"></span><span id="pFront"></span></div>
+      <h2 id="pName"></h2>
+      <div class="sub" id="pSub"></div>
+      <div class="dates" id="pDates"></div>
+      <div id="pUnits"></div>
+      <p id="pText"></p>
+      <div id="pPersons"></div>
+      <p class="note" id="pNote"></p>
+    </aside>
+  </section>
+
+  <section class="controls" aria-label="Zeitleiste">
+    <div class="btns">
+      <button type="button" id="prev" aria-label="Vorheriger Schritt">◀ Zurück</button>
+      <button type="button" class="primary" id="play">▶ Abspielen</button>
+      <button type="button" id="next" aria-label="Nächster Schritt">Weiter ▶</button>
+      <button type="button" id="reset">Anfang</button>
+      <span class="nowdate" id="nowDate" aria-live="off" title="Dargestelltes Datum"></span>
+      <label class="speed" for="speedSel">Tempo
+        <select id="speedSel"><option value="4200">langsam</option><option value="2800" selected>normal</option><option value="1600">schnell</option></select>
+      </label>
+    </div>
+    <div class="ruler" id="ruler"><div class="axis"></div><div class="prog" id="prog"></div><div class="playhead" id="playhead"></div></div>
+  </section>
+
+  <section>
+    <h3>Chronologie</h3>
+    <div class="list">
+      <table>
+        <thead><tr><th>Nr.</th><th>Datum</th><th>Ort / Ereignis</th><th>Verband</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="persons" aria-labelledby="perH">
+    <h3 id="perH">Bekannte Flieger der Staffeln</h3>
+    <div class="person-grid" id="persons"></div>
+    <h3 id="othH">Weitere erwähnte Personen</h3>
+    <div class="list"><table class="others" aria-labelledby="othH">
+      <thead><tr><th>Name</th><th>Bezug</th><th>Tod</th></tr></thead>
+      <tbody id="others"></tbody>
+    </table></div>
+    <p class="note">Todesart: gefallen, tödlich verunglückt, Selbstmord, natürlicher Tod. „Tödlich verunglückt“ steht für Flugunfälle und Zusammenstöße ohne Feindeinwirkung. Ist kein Datum belegt, steht „unbekannt“.</p>
+  </section>
+
+  <section class="insignia" aria-labelledby="insH">
+    <h3 id="insH">Hoheitszeichen der Luftstreitkräfte</h3>
+    <div class="ins-grid">
+      <div class="ins"><svg viewBox="-12 -12 24 24" aria-hidden="true"><use href="#e-de"/></svg><div><b>Deutsches Reich</b><span>Eisernes Kreuz, schwarz auf weißem Feld. Laut Anordnung der Inspektion der Fliegertruppen vom 20.03.1918 bis 15.04.1918 durch das gerade Balkenkreuz zu ersetzen.</span></div></div>
+      <div class="ins"><svg viewBox="-12 -12 24 24" aria-hidden="true"><use href="#e-fr"/></svg><div><b>Frankreich</b><span>Kokarde: Mitte blau, weiß, außen rot.</span></div></div>
+      <div class="ins"><svg viewBox="-12 -12 24 24" aria-hidden="true"><use href="#e-uk"/></svg><div><b>Großbritannien</b><span>Roundel des RFC/RAF ab Oktober 1914: Farben der französischen Kokarde in umgekehrter Folge, außen blau, Mitte rot.</span></div></div>
+      <div class="ins"><svg viewBox="-12 -12 24 24" aria-hidden="true"><use href="#e-be"/></svg><div><b>Belgien</b><span>Kokarde: Mitte schwarz, gelb, außen rot (belegt für 1915–1940). Änderungen während des Krieges sind nicht belegt.</span></div></div>
+      <div class="ins"><svg viewBox="-12 -12 24 24" aria-hidden="true"><use href="#e-nl"/></svg><div><b>Niederlande (neutral)</b><span>Orangefarbene Scheibe der Luchtvaartafdeeling, eingeführt 1914.</span></div></div>
+      <div class="ins"><svg viewBox="-12 -12 24 24" aria-hidden="true"><circle r="10" fill="none" stroke="var(--border)" stroke-dasharray="2 2"/></svg><div><b>Luxemburg</b><span>Keine eigene Fliegertruppe; 1914–1918 von deutschen Truppen besetzt.</span></div></div>
+    </div>
+  </section>
+
+  <p class="sources">Datengrundlage: Flugplatzlisten der Jagdstaffeln 4, 6, 10 und 11 sowie Chroniken zum Geschwader. Die Staffeln lagen meist auf mehreren benachbarten Plätzen; gezeigt ist der jeweils maßgebliche Platz. Wo Quellen um einige Tage abweichen, ist dies vermerkt. Frontlinien und die Grenze Elsass-Lothringens sind vereinfacht, die Lage von Puisieux-Ferme und Monthussart-Ferme ist nur ungefähr bestimmt.
+  Gestrichelt sind Wege, deren Daten nicht belegt sind: die undatierten Stationen der Jasta 6 zwischen Sivry und Marckebeke, der Weg der Jasta 10 von Angevillers nach Leffincourt und der Weg der Jasta 4 von Vaux nach Roupy, weil die Lage von Vaux nicht gesichert ist. Todesorte der Flieger sind ungefähr eingetragen. Angaben ohne gefundene Quelle sind als „nicht belegt“ gekennzeichnet; widersprüchliche Quellenangaben werden genannt. Die Daten wurden zusätzlich mit einer Perplexity-Recherche abgeglichen.
+  Quellen: <a href="https://en.wikipedia.org/wiki/Jagdgeschwader_I_(World_War_I)">Jagdgeschwader I (Wikipedia)</a>, <a href="https://en.wikipedia.org/wiki/Jagdstaffel_4">Jasta 4</a>, <a href="https://en.wikipedia.org/wiki/Jagdstaffel_6">Jasta 6</a>, <a href="https://en.wikipedia.org/wiki/Jagdstaffel_10">Jasta 10</a>, <a href="https://en.wikipedia.org/wiki/Jagdstaffel_11">Jasta 11</a>, <a href="https://en.wikipedia.org/wiki/La_Brayelle_Airfield">La Brayelle</a>, <a href="https://en.wikipedia.org/wiki/Werner_Voss">Werner Voss</a>, <a href="https://en.wikipedia.org/wiki/Hans_Kirschstein">Hans Kirschstein</a>, <a href="https://theaerodrome.com/aces/germany/lowenhardt.php">Erich Löwenhardt</a>, <a href="https://theaerodrome.com/services/germany/jasta/jasta11.php">The Aerodrome: Jasta 11</a>, <a href="https://en.wikipedia.org/wiki/Karl_Allmenr%C3%B6der">Karl Allmenröder</a>, <a href="https://alchetron.com/Jagdstaffel-10">Jasta 10 (Alchetron)</a>, <a href="https://fr.wikipedia.org/wiki/Jagdgeschwader_I">JG I (fr. Wikipedia)</a>, <a href="https://www.westernfrontassociation.com/world-war-i-articles/2008/august/the-top-german-aces-of-the-great-war/">Western Front Association</a>, <a href="https://www.bundesarchiv.de/themen-entdecken/online-entdecken/geschichtsgalerien/manfred-von-richthofen-der-rote-kampfflieger/">Bundesarchiv</a>, <a href="https://en.wikipedia.org/wiki/Karl_Emil_Sch%C3%A4fer">Karl Emil Schäfer</a>, <a href="https://en.wikipedia.org/wiki/Kurt_Wolff_(aviator)">Kurt Wolff</a>, <a href="https://en.wikipedia.org/wiki/Lothar_von_Richthofen">Lothar von Richthofen</a>, <a href="https://en.wikipedia.org/wiki/Wilhelm_Reinhard_(pilot)">Wilhelm Reinhard</a>, <a href="https://www.ospreypublishing.com/ca/osprey-blog/2016/ernst-udet-26-april-1896-17-november-1941">Ernst Udet (Osprey)</a>, <a href="https://en.wikipedia.org/wiki/Manfred_von_Richthofen">Manfred von Richthofen</a>, <a href="https://www.thisdayinaviation.com/21-april-1918/">21. April 1918</a>, <a href="https://en.wikipedia.org/wiki/Balkenkreuz">Balkenkreuz</a>, <a href="https://historynet.com/fighter-pilot-hermann-goring/">Hermann Göring (HistoryNet)</a>, <a href="https://de.wikipedia.org/wiki/Hans-Joachim_Buddecke">Hans-Joachim Buddecke (Vaux-en-Vermandois)</a>, <a href="https://forum.pages14-18.com/viewtopic.php?t=49657">„La KEK Vaux en Lorraine“ (Pages 14-18)</a>, <a href="https://www.theaerodrome.com/services/germany/jasta/jasta6.php">The Aerodrome: Jasta 6</a>, <a href="http://www.frontflieger.de/2-j06.html">frontflieger.de: Jasta 6</a>, <a href="http://www.frontflieger.de/2-j11.html">frontflieger.de: Jasta 11</a>, <a href="https://www.fotw.info/flags/be%5Eaf-r.html">Belgische Hoheitszeichen (FOTW)</a>, <a href="https://www.valka.cz/Stihaci-letka-4-1916-1918-t16760">Jasta 4 (valka.cz)</a>, <a href="https://en.wikipedia.org/wiki/Ernst_Udet">Ernst Udet</a>, <a href="https://www.dhm.de/lemo/biografie/ernst-udet">Udet (LeMO)</a>, <a href="https://en.wikipedia.org/wiki/Hans-Joachim_Buddecke">Buddecke</a>, <a href="https://www.cwgc.org/find-war-dead/casualty/1620577/">Rhys-Davids (CWGC)</a>, <a href="https://en.wikipedia.org/wiki/Roy_Brown_(RAF_officer)">Roy Brown</a>, <a href="https://www.cheminsdememoire.gouv.fr/en/erich-ludendorff">Ludendorff</a>, <a href="https://theaerodrome.com/services/germany/jasta/jasta10.php">The Aerodrome: Jasta 10</a>, <a href="https://en.wikipedia.org/wiki/Royal_Air_Force_roundels">RAF-Roundels</a>, <a href="https://www.awm.gov.au/articles/blog/battle-amiens">Amiens 1918 (AWM)</a>, <a href="https://en.wikipedia.org/wiki/Third_Battle_of_the_Aisne">Aisne 1918</a>, <a href="https://en.wikipedia.org/wiki/Meuse%E2%80%93Argonne_offensive">Maas-Argonnen</a>, <a href="https://theaerodrome.com/services/germany/jasta/jasta4.php">The Aerodrome</a>, <a href="https://www.meettheredbaron.com/timeline/">Meet the Red Baron</a>, <a href="http://www.frontflieger.de/2-jg1.html">frontflieger.de</a>.</p>
+</div>
+
+<script>
+const MAP = {"W":1000,"H":640,"shapes":[{"id":"250","g":"en","d":"M-160,417.4L-147.8,415.3L-142.1,413.2L-138.5,410.4L-135.9,410L-135,409.2L-131.7,405.1L-123.3,399.8L-108.6,397.5L-93.6,395.1L-87.9,392.7L-85.7,390.7L-83.8,388.4L-92.2,393.1L-102,393.6L-111.7,391.7L-119.9,388.4L-122.5,388.2L-124.6,387.8L-127,386.7L-129.1,385.3L-130.2,383.4L-130.5,382.1L-132.2,381.1L-132.5,379.2L-131.9,377.4L-131.4,376.3L-124.7,365.4L-119,349.8L-117.1,347.8L-110.9,343.6L-109.6,343.7L-108.3,342.6L-92.7,336.6L-91.3,334.8L-76,327.2L-72.1,325.9L-67.3,323.2L-57.9,320.4L-47.8,321.3L1,308.6L4,306.3L7,305.5L11.9,300.6L27.6,289.2L34.3,281.8L35.6,280.7L36.6,279.2L40,269.9L44,264.6L48.2,264.5L59.2,270.5L60.4,270.6L61.3,269.7L61.4,268.5L60.1,268.5L59.3,268.1L58.9,267.2L58.2,265.9L60.7,266L60.8,264.5L58.7,264.4L56.2,263.7L54.6,262L53.9,259.9L52.7,257.7L47.9,255L47.1,253.4L47.4,247.6L48.6,240.6L51.3,235.8L54.2,236.6L55.9,237L55.9,235.7L49.5,230.5L49.6,229.3L52.4,223.3L52.8,214.7L53.6,207.4L57.5,204.8L54.4,199.8L54.1,197.3L54.1,188.7L53.3,181L53.5,177.3L54.1,174L56.9,167.1L58.3,164.4L59.3,161.1L58.7,156.8L56.9,149.9L57.1,147.5L57.1,146.6L59.7,144.5L61,144L63,144.1L65.5,143.3L67.3,141.5L70.8,136.8L74.6,133.9L96.9,125.2L98.9,125.9L103.1,123.6L121.3,122.3L141.2,116.7L142.5,115.8L143.3,115.9L150.3,117.1L159.8,115L164.4,113L166.1,111.8L166.1,111.8L167.6,115.9L168.5,123.9L169.6,127.6L173.5,132.4L175.1,134.9L175.4,138.6L174.5,139.8L171.9,142.1L171,143.9L173.2,152L172.8,153.2L171.9,155L171.8,155.9L172.2,156.5L173.4,157.2L174.2,157.8L175,160.3L175.3,161.2L176.2,161.6L178.2,162L179,162.3L181.1,162.1L182.3,162.1L183.5,163.1L184.3,164L184.3,165.2L185.1,166.5L189.4,170.9L189.8,172.2L191.3,175.9L191.7,176.8L194.1,178.8L203.1,183.4L203.5,183.7L205.1,184L206.8,182.9L210.3,177.2L212.5,174.8L215.4,173.4L221.2,171.7L230.8,168.9L233.7,169.9L235.3,171.8L237.3,175.3L238.8,178.4L240,181.8L241.2,183L242.4,183.1L244,183.7L244.8,185.3L246.3,189.9L244.6,192.6L245.3,198.2L247.9,208.4L248.1,214.2L248.5,216.3L250.1,218.5L251.7,219.8L256.6,222.7L258.7,223.4L261.6,222.8L266.6,221.1L268.3,219.9L269.6,219.1L270.4,218.2L272.1,218.2L273.8,218.5L274.6,219.5L274.5,221L273.2,223.1L274.5,224.1L281.9,224.3L284.8,224.9L287.3,226.2L289.3,228.7L291.3,232.1L292,239.2L291.8,247.5L292.9,255.2L296.5,258.9L297,257.7L297.4,257.7L298.2,257.4L298.2,256.8L299.1,255.3L301.3,252L302.1,250.8L303.8,250.2L308.8,250L313.4,250.7L315.9,252L317.9,253.6L320,254.5L322.5,254.6L330,251.6L332.5,251.4L334.6,252.3L338.3,256.7L340.7,258.3L343.2,260.5L346,267.2L348.5,268.5L349.4,267.6L349,266.4L349,265.2L350.7,264.6L351.5,264.9L353.1,265.8L354.4,267.4L355.2,268.3L355.2,270.5L353.9,271.7L350.9,273.8L349.6,275.6L349.2,276.8L348.7,280.2L346.1,287.5L346,290.8L347.3,291.5L349.8,290.6L351.1,290.3L352.3,290.9L353.9,298.9L354.7,300.5L355.5,302L355.5,303.2L352.5,304.7L350,306.5L347.8,308.3L347,309.5L346.1,310.7L345.7,312.9L346.5,313.2L346.9,316L346.8,318.7L346,318.4L352.6,322.2L353.9,322.5L356,322.5L363.2,321.4L380.3,326.6L381.2,326.9L384.9,326.3L401,318.2L406,317.7L407.3,316.8L408.6,314.6L409.5,311.9L410.4,306.1L409.9,304.8L409.5,303.9L409.5,302.7L409.6,301.2L410.4,299.6L423.1,287.2L426,285.7L426.4,288.4L428.1,289.1L431.4,288.2L432.7,289.7L432.2,292.8L431.8,296.5L431.4,299.8L430.1,298.3L429.7,298.6L427.1,303.5L427.1,305L427.1,306.5L427.1,308.4L422.8,319.7L422,322.4L423.6,325.2L429.1,327.4L431.1,330.7L431.1,333.2L430.7,334.7L430.3,336.3L429.4,338.4L429,339.3L428.1,340.5L428.1,341.7L428.1,342.7L429.4,344.5L429.3,345.4L429.3,352.2L430.6,353.7L433.5,354L436,353.7L441.1,351.9L443.6,352L445.7,353.2L450.3,357.5L452.4,358.7L456.7,360L457.9,361.2L463,368.6L464.6,370.4L466.7,372L469.7,372.6L474.8,371.4L477.3,371.1L479.8,373.5L482.4,376.3L482.8,379L482.4,379.7L481.5,380.3L481.1,383L481.5,384.5L481.9,385.5L484,385.8L484.9,385.5L485.3,384.6L485.7,383.6L486.2,383L487,383.3L488.3,383.9L492.1,385.5L492.9,386.1L494.2,387.3L499.7,397.7L500.6,399.3L500.6,401.1L500.1,402.9L499.7,404.5L500.6,406L503.1,406.9L506.1,405.1L509,402.6L511.2,401.7L515,403.2L516.2,403.5L517.9,403.5L518.4,402.6L518.4,401.4L520,399.5L522.6,398L525.5,398.6L528.1,399.8L530.6,400.1L531.9,399.5L533.6,397.6L534.9,396.7L536.1,397L538.7,398.5L540,398.8L543.8,403.7L545.9,405.8L548.9,407L556.1,408.8L558.3,411.3L560,416.2L562.1,415.5L572.3,414.8L574,414.2L575.2,412.4L576.5,412L576.9,410.8L576.5,409.9L577.3,408.7L578.2,408.4L581.6,408L580.7,406.5L587.5,405.5L590.9,405.8L593.9,407L594.3,407.3L599.8,411.5L603.3,413L605.4,413.3L606.2,413.6L607.5,413.2L610,411.7L610.9,411L612.1,411.3L623.3,416.7L625,418.5L625.9,420L626.3,421.5L626.3,422.5L625.9,422.8L626.8,424L632.8,430L633.2,430.9L632.4,432.5L630.3,432.5L629.9,434.4L630.8,436.5L632.5,438.6L640.7,446.1L640.7,447L640.8,448.9L640.8,449.5L641.6,450.1L642.9,450.7L643.8,451L644.7,454.3L645.1,455.2L645.1,455.5L645.2,457.1L645.6,457.7L646,457.7L647.7,456.4L648.1,456.4L649.1,459.5L648.7,461.6L648.3,463.8L649.6,466.5L651.3,467.1L656.4,467L661.2,468.4L662.4,468.1L664.5,465.3L664,462.6L663.1,459.5L663.9,457L664.8,456.7L669.9,457.8L673.3,457.2L674.6,457.4L682.4,461.6L684.9,461.5L684.7,468L686.5,472.8L689.1,474.9L692.4,472.7L692.9,471.8L692.4,470.5L692.4,469.6L693.2,468.7L694.1,468.7L698.4,471.9L700.6,472.8L702.3,473.4L712.5,473.1L715.6,474.6L716.4,474.9L717.3,473.9L718.5,471.5L718.9,470.5L720.2,470.2L722.7,469.8L723.6,469.2L724,468.3L724.7,465.5L725.2,464.9L727.3,463.6L727.7,463.3L730.2,462.6L732.4,462.8L732.8,464.7L738,465.1L740.1,465.7L741.1,468.4L740.2,469.1L739.8,469.4L739.8,470L741.6,471.8L744.3,476L746,477.8L748.6,479.5L753.8,480.3L756.4,481.5L757.3,482.7L758.6,484.8L759.5,485.7L760.8,485.9L761.2,486.2L762.5,485.6L764.2,485.2L765.5,484.6L766.8,484.8L769.4,485.7L770.7,485.9L771.9,485.3L774.9,483.7L776.1,483.3L786.1,486.1L792.9,484.9L795,485.1L814.2,494.6L825.9,496.6L827.2,497.8L827.2,498.1L825.2,500.9L821.6,508.1L816.5,523.3L815.3,525.8L814.5,526.4L810.3,529L809,529.1L809,529.4L808.6,530L807.8,531L807.8,532.8L807.4,533.7L806.6,534.4L805.8,534.7L802.7,534.8L801,535.5L800.7,537L800.8,540.4L800,542L798.7,543.5L797.5,545.4L795.8,546.4L792.9,550.2L791.3,552.1L789.1,552.7L787.9,553.7L782.9,561.8L782.3,567.7L782.5,574.1L783.9,577.7L783.9,579L781,581.5L779.7,583.1L778.9,584.6L779,588.3L778.2,589.9L777.4,591.1L776.6,593L776.2,595.1L775.5,599.8L775.6,602.2L776.1,604.3L776.6,606.8L777.5,609.2L777.2,611.7L775.9,614.5L773.8,615.7L771.7,617.3L770.9,621L771,624.7L770.3,627.8L769,630.6L761.5,641.5L760.7,643.7L760.8,646.5L760.4,647.7L759.6,649L758.7,650.5L757.9,653.3L757.2,657L757.8,664.3L763.3,673.4L763.5,679.2L762.7,681.4L759.3,684.8L758.9,687.3L759,690.3L759,691.3L758.2,692.8L757.8,693.8L757,694.7L756.5,695.3L756.6,696.2L756.6,696.5L756.6,697.2L756.6,698.1L757.6,701.4L757.2,703.3L755.5,704.2L755.1,705.2L753.5,711L753.1,713.5L754.6,719.9L754.7,723L754.3,724.2L752.1,726.4L751.7,727.3L752.3,731.3L752.8,733.1L753.2,734L755,734.9L756.9,737.3L759.7,742.7L760.6,743.6L761,744.2L761.9,745.1L762.4,746.9L762,747.6L761.6,749.4L757.3,751.1L754.2,753L753.8,753.6L749.1,757.4L749.5,757.7L751.3,759.2L751.7,759.2L751.8,761L751.4,762L750.5,762.3L749.2,762L748.3,762.4L748.3,763L748.8,763.9L749.7,765.1L749.7,765.4L749.7,766L749.7,766.3L749.3,766.6L747.6,768.5L745.8,768.3L744.9,767.7L744.5,767.4L742.2,766.8L740.9,767.2L741,768.4L741.4,769.3L741.9,769.9L742.8,770.5L742.8,771.7L742.4,773.3L742,774.2L740.3,776.7L738.1,777.7L736.8,778L731.9,777.8L728.4,777.9L724.9,778.6L720.5,780.9L719.6,780.9L718.7,780.6L718.3,780L717.8,779.4L717.4,778.8L713.8,778L711.1,776.5L710.2,773.5L712.3,768.2L709.2,768.6L707.4,768.3L705.6,767.4L703,766.9L696.8,768.2L693.7,767.7L692.4,767.1L691.5,766.8L690.2,767.2L689.3,767.8L687.1,768.8L687.1,770.6L688.5,773L689,775.1L688.1,776.7L686.4,778.6L684.7,779.5L681.2,780.5L681.2,783.9L678.2,785.8L676.4,788.3L674.7,791.1L674.3,793.5L688.9,791.7L691.1,790.4L692.9,791.9L694.7,793.7L696.1,795.5L695.2,797.4L693.9,798.3L693,798.7L691.7,799.3L690,801.8L689.1,802.1L688.2,802.1L685.6,804.6L685.3,808.3L685.8,812.9L677.5,819.2L674,823L671.9,827L671.4,827.3L663.6,834.5L660,836.1L660.1,839.2L658.3,840.1L657.9,840.4L657.5,841.4L654.4,842.6L653.5,843.9L651.8,846.7L653.2,850L650.6,854.3L642.2,860.6L629.3,865.1L623.1,868.6L621.4,875L621.9,876.5L623.7,879.9L624.2,881.7L623.8,884.5L623.4,885.4L623.4,886L622.5,887.6L620.4,893.7L620.4,894.3L620.8,895.6L621.3,896.5L622.2,897.4L622.2,900L-160,900Z"},{"id":"276","g":"cp","d":"M1160,739.1L1158.8,739.4L1154.1,742.2L1150.6,742.8L1149.3,742.6L1148.8,741.7L1148.3,740.8L1147.8,740.2L1131.1,735.3L1128,735.5L1126.8,736.8L1124.4,740.3L1122.7,741.7L1121.4,742.1L1116.1,741.8L1114.2,741L1113.3,740.2L1112.4,739.6L1112.3,738.1L1112.6,736.8L1113,735.9L1113,735.3L1112.4,733.5L1111.9,733.2L1111.1,733.6L1108.9,734.3L1107.2,735L1107.7,736.5L1108.8,738.6L1109.8,740.4L1109.9,742.2L1109,749.4L1110.9,750.2L1111.8,751.3L1112.8,752.8L1113.4,755.2L1113.7,758.9L1112.6,763.2L1111.1,767L1109.5,769.9L1108.2,770.6L1105.7,771.7L1104.4,772.7L1104,773.6L1101.7,779.3L1099.7,782.5L1097.2,784.8L1092.1,788.5L1089.5,789.9L1081.6,791.4L1079.9,791.8L1079,791.5L1079.8,790.3L1080.5,788.1L1081,787.7L1082.7,787.3L1083.1,786.7L1083.5,785.4L1083.4,784.2L1082.9,783L1084.7,776.1L1084.5,773.1L1082.2,772L1076.9,773.2L1075.7,774.9L1075.3,775.2L1074.4,775.2L1073,774.7L1072.6,774.7L1070.9,775.5L1070,776.1L1069.2,776.5L1068.2,775.3L1067.2,773.5L1067.1,771.7L1066.5,769.9L1065.1,768.1L1067.6,765.8L1068.4,763.9L1066.9,761.9L1060.6,753.4L1058.9,754.1L1058.1,755.1L1056.8,755.8L1055.4,754.9L1055.4,754L1055.3,753.4L1055.3,752.8L1053.8,750.4L1052.4,749L1051,747.5L1050.4,744.5L1049.1,745.8L1047.4,746.2L1043.4,746.1L1039.8,745.1L1039.4,745.1L1037.7,746.2L1036.8,746.5L1034.1,745.1L1033.5,743.3L1033.8,741.2L1033.3,739.1L1031.9,737.6L1030.1,737.1L1028.3,737.2L1026.6,738.5L1023.7,741.8L1022.6,744.9L1021,748.1L1017.6,749.8L1010.1,750.2L1002.5,748.8L1002,748.5L967,729.2L962.6,728.5L957.7,728.8L955.9,726.1L949.3,726.4L935.6,725.6L933.4,726.6L931.3,728.8L927,730.6L922.2,731.1L919.5,730.6L915.9,728L915.4,728L913.6,726.3L913.5,725L915.7,724.3L912.5,721.4L908.4,719.5L905.4,719.3L904.2,723L905.6,724.2L899,724.5L898.5,723.3L898.4,722L897.1,720.9L896.6,719.4L896.9,718.1L898.6,715.6L899,715L898,713.2L896.7,712.9L895.4,713.3L894.1,713L893.1,711.5L892.2,709.4L890.8,708L889.5,707.4L888.2,708.7L887.9,712.7L886.2,713.7L884.8,712.8L884.8,710.7L884.2,708.2L884.2,707L881.9,705.9L878.9,706L876.7,707L878.1,710L876.4,711L869.9,712.5L868.6,712.6L867.3,713.2L866.1,715.7L865.2,717L864.5,720.7L863.2,722L860.2,723.6L859.4,725.2L859,726.5L859.5,728L860,729.5L859.2,731.4L861.4,731.9L861.9,732.2L865.1,734.5L867.8,735.6L870,735.5L871.7,734.5L873.4,733.2L875.1,732.2L881.2,731.1L882.6,731.3L884.3,731.5L884.8,731.8L885.7,732.1L885.4,736.4L884.5,735.8L884.5,734.9L884.5,734.6L883.6,734.6L883.2,735L882.7,735.3L882.3,736.2L882.8,737.1L882.8,737.7L883.3,738.3L882.9,739.6L883,740.8L883,742.3L882.6,743.3L882.2,743.6L880.5,744.3L879.5,743.1L879.1,742.8L877.7,740.4L875.8,738.7L871.9,739.1L868.4,741.7L867.3,744.8L866.8,745.8L863.8,746.5L863.4,746.5L855.4,746.8L851,745.8L849.6,745.2L848.7,743.4L847.7,741.6L847.3,741L845.9,740.8L842.4,740L840.2,740.1L833.6,741.5L833.2,741.9L832.8,742.8L831.9,743.7L829.8,744.4L827.2,746.1L825.9,746.7L825,748L824.6,748.9L824.2,749.8L822.9,750.5L817.2,751.9L801.4,752.5L801.4,751.9L800.9,750L800.4,748.5L799.5,747.6L792,747.6L790.2,746.7L788.1,750.1L786,752.7L783.8,754L779,755L773.7,756.4L771.1,756.2L769.3,755.3L764.4,753L764.8,753L767.9,752.9L769.2,751.7L770.4,747L767.7,747.4L761.6,749.4L762,747.6L762.4,746.9L761.9,745.1L761,744.2L760.6,743.6L759.7,742.7L756.9,737.3L755,734.9L753.2,734L752.8,733.1L752.3,731.3L751.7,727.3L752.1,726.4L754.3,724.2L754.7,723L754.6,719.9L753.1,713.5L753.5,711L755.1,705.2L755.5,704.2L757.2,703.3L757.6,701.4L756.6,698.1L756.6,697.2L756.6,696.5L756.6,696.2L756.5,695.3L757,694.7L757.8,693.8L758.2,692.8L759,691.3L759,690.3L758.9,687.3L759.3,684.8L762.7,681.4L763.5,679.2L763.3,673.4L757.8,664.3L757.2,657L757.9,653.3L758.7,650.5L759.6,649L760.4,647.7L760.8,646.5L760.7,643.7L761.5,641.5L769,630.6L770.3,627.8L771,624.7L770.9,621L771.7,617.3L773.8,615.7L775.9,614.5L777.2,611.7L777.5,609.2L776.6,606.8L776.1,604.3L775.6,602.2L775.5,599.8L776.2,595.1L776.6,593L777.4,591.1L778.2,589.9L779,588.3L778.9,584.6L779.7,583.1L781,581.5L783.9,579L783.9,577.7L782.5,574.1L782.3,567.7L782.9,561.8L787.9,553.7L789.1,552.7L791.3,552.1L792.9,550.2L795.8,546.4L797.5,545.4L798.7,543.5L800,542L800.8,540.4L800.7,537L801,535.5L802.7,534.8L805.8,534.7L806.6,534.4L807.4,533.7L807.8,532.8L807.8,531L808.6,530L809,529.4L809,529.1L810.3,529L814.5,526.4L815.3,525.8L816.5,523.3L821.6,508.1L825.2,500.9L827.2,498.1L827.2,497.8L825.9,496.6L814.2,494.6L795,485.1L792.9,484.9L786.1,486.1L776.1,483.3L774.9,483.7L771.9,485.3L770.7,485.9L769.4,485.7L766.8,484.8L765.5,484.6L764.2,485.2L762.5,485.6L761.2,486.2L760.8,485.9L759.5,485.7L758.6,484.8L757.3,482.7L756.4,481.5L753.8,480.3L748.6,479.5L746,477.8L744.3,476L741.6,471.8L739.8,470L739.8,469.4L740.2,469.1L741.1,468.4L740.1,465.7L738,465.1L732.8,464.7L732.4,462.8L730.2,462.6L727.7,463.3L727.3,463.6L725.2,464.9L724.7,465.5L724,468.3L723.6,469.2L722.7,469.8L720.2,470.2L718.9,470.5L718.5,471.5L717.3,473.9L716.4,474.9L715.6,474.6L712.5,473.1L702.3,473.4L700.6,472.8L698.4,471.9L694.1,468.7L693.2,468.7L692.4,469.6L692.4,470.5L692.9,471.8L692.4,472.7L689.1,474.9L686.5,472.8L684.7,468L684.9,461.5L682.4,461.6L674.6,457.4L673.3,457.2L669.9,457.8L664.8,456.7L663.9,457L663.1,459.5L664,462.6L664.5,465.3L662.4,468.1L661.2,468.4L656.4,467L651.3,467.1L649.6,466.5L648.3,463.8L648.7,461.6L649.1,459.5L648.1,456.4L647.7,456.4L646,457.7L645.6,457.7L645.2,457.1L645.1,455.5L645.1,455.2L644.7,454.3L643.8,451L642.9,450.7L641.6,450.1L640.8,449.5L640.8,448.9L640.7,447L640.7,446.1L632.5,438.6L630.8,436.5L629.9,434.4L630.3,432.5L632.4,432.5L633.2,430.9L632.8,430L626.8,424L625.9,422.8L626.3,422.5L626.3,421.5L625.9,420L625,418.5L623.3,416.7L612.1,411.3L610.9,411L610,411.7L607.5,413.2L606.2,413.6L605.4,413.3L605.4,412L604.9,406.5L605.7,400.7L606.1,398.9L606,393L606.4,391.2L608,388.4L611.4,384.4L612.2,381.9L613,380.7L613.4,379.8L613.4,378.5L612.6,377.9L612.1,377.3L611.7,376.7L613.3,374.3L622.1,368.6L621.7,368.3L620.8,367.1L621.3,366.5L622.1,366.2L623,366.5L622.1,365.3L621.6,364L621.2,362.5L621.2,361L622.4,360L622.4,359.1L622,358.5L622,357.3L622.8,353.3L622.8,353L622.7,351.5L623.1,351.2L623.2,351.5L622.3,350.6L621.9,350.6L618.5,349.7L612.6,349.8L610.5,349.2L608.8,348L605.4,344.7L603.2,343.5L602.4,343.5L600.3,344.7L599.5,344.4L599.5,343.8L598.6,342L598.2,340.8L597.7,339.9L596,338.6L591.8,337.2L590.1,335L586.2,325.9L584.1,322.9L582.9,325.3L582,323.5L580.3,318.6L578.1,315.6L577.7,314L577.7,311.9L577.2,308.2L576.4,306.7L575.1,306.1L576.3,303.9L576.8,303.3L576.3,303.3L575.5,303.3L576.3,298.1L576.7,295.7L577.5,292.9L578.3,291.7L578.7,290.4L578.3,289.5L577,288.3L577.5,287.7L577.8,285.6L577.8,284.9L579.1,284.3L581.2,284L582,283.4L582.8,281.8L582.8,279.7L582.4,277.5L580.7,276L581.9,274.5L584.4,272.6L585.6,270.8L588.1,269.5L593.1,268.2L595.2,266.1L594.3,264.6L594.7,262.7L595.5,260.9L596.8,259.6L598,258.7L599.3,258.7L601,259.3L602.2,259.6L605.5,258.9L606.8,257.4L606.7,255.8L606.7,254.9L602.5,247.9L602.5,245.8L603.3,243.3L603.6,239L604,236L603.6,235.3L602.7,235.1L601.5,233.5L601,231.7L600.6,230.2L601,228.6L602.2,227.4L600.1,227.1L595.1,226.3L593.1,225.4L593.1,225.1L592.6,225.1L592.2,225.1L592.2,225.4L588.1,226.6L587.3,226.7L586,225.7L585.1,223.6L584.3,223L585.1,221.2L583.9,221.2L583,220.9L582.6,220L583.4,218.7L581.7,216.3L583.8,212.9L587.5,209.8L590,208.2L590,207.6L591.2,206.1L592,204.2L591.6,203.3L583.7,203.1L581.2,201.9L579.9,199.5L581.6,198.2L574.4,187.6L572.3,185.5L570.3,185.2L565.7,186.7L564.1,186.4L563.7,184.9L564.1,183.1L564,181.2L562.4,180.3L562,180L562,179.7L562,179.4L562.4,178.8L562.3,176.7L561.9,175.4L560.7,174.8L559.8,173.3L559,170.9L561.1,171.2L562.7,169.6L563.1,167.5L563.1,165.9L562.7,164.4L563.9,162.6L565.5,161.6L568,161.9L569.2,160.4L570,158.5L570,157L568.8,153.3L569.2,152.1L569.6,151.2L570,150.2L566.2,149.1L563.3,147.2L562.5,146.3L562.1,144.8L562.1,142.4L562.5,140.8L563.3,139.3L562.9,138.4L558.8,139L555.9,137.8L554.2,137.8L552.6,138.1L549.7,139.7L548.1,140L548,135.4L546.4,130.2L545.5,125.9L548.8,124.4L550.4,125L551.7,126.8L553.3,128.3L555.4,128L556.6,126.5L559,121.8L560.3,120L570.9,111.6L577.4,108.2L579,105.7L576.5,103.6L579.4,101.5L580.2,100.8L577.3,99.9L572,104L569.1,102.5L568.3,99.1L568.7,95.1L569.4,91.4L570.7,89.6L573.1,86.5L578.7,75.7L579.9,74.5L582.7,72.6L584,70.8L584.3,68.6L584.7,64.6L585.5,63.1L583.8,61L583.8,57.6L584.6,53.9L585,50.2L584.5,46.9L583.6,41L579.1,35.9L571.3,25.5L570.9,23.1L571.3,20.6L572.8,16.6L565.1,13.3L562.6,10L563.8,4.8L563,3.5L560.2,1.7L558.9,1.1L555.7,1.2L554.5,0.9L554.9,-1L555.3,-1.9L557.3,-3.8L557.3,-7.1L555.6,-10.8L553.2,-12.6L553.6,-14.5L555.6,-15.7L560,-16.7L562,-17.6L564.4,-19.1L566,-20.1L570.5,-21.3L574.1,-20.5L576.9,-19.9L579,-19.3L577.3,-21.7L572.8,-26L571.6,-27.2L575.2,-29.4L578.9,-27.5L582.5,-24.8L586.6,-23L589.8,-24L591,-24L591.8,-23.1L593.1,-21L593.5,-20.4L597.9,-19.8L599.6,-18.6L600,-15.8L604,-17.1L604.8,-19L603.5,-22.9L610.8,-20.9L613.3,-20.9L614.9,-21.9L620.4,-26.2L631.7,-30.1L641.3,-30.6L644.5,-32.4L646.9,-35.6L649.6,-40.2L650.4,-41.1L651.2,-41.5L651.6,-41.8L652,-44.2L651.6,-45.5L650.7,-46.4L647.9,-49.4L640.6,-53.2L638.1,-53.8L636.5,-55L636.1,-57.7L636.8,-59.9L638,-60.2L638.8,-60.2L640.4,-61.2L641.2,-62.1L642,-64.6L642.7,-65.5L644.3,-67.7L646.3,-68.7L646.7,-68.7L653.5,-69.7L654.7,-71L657.4,-75.9L659.4,-78.4L664.1,-80.6L666.1,-82.5L668.8,-86.9L670,-88.4L674.7,-91.3L675.1,-92.2L674.7,-92.8L674.3,-94L673,-98L672.9,-101.4L673.6,-104.2L675.9,-109.1L676.6,-115.9L674.9,-120.4L668.3,-131.3L667.5,-131L666.7,-129.8L665.5,-128.8L663.2,-127.9L660,-127.8L656.8,-128L651.2,-130.1L642.4,-131.1L639.6,-132.6L637.1,-135L636.7,-137.8L636.2,-141.2L635.8,-144.2L634.5,-147.3L636.1,-147.3L642.4,-150.5L638.8,-153.5L638,-154.7L638,-156.2L638.3,-157.8L638.3,-159.3L637.5,-161.1L639.4,-162.7L641.4,-164.2L644.9,-165.2L655.7,-165.7L661.2,-164L666.8,-165L668.4,-164.5L672.4,-163.3L674.3,-167L674.9,-173.5L675.7,-193.1L676.3,-199.3L677.5,-202.4L678.2,-204.9L686.9,-219.2L689.2,-225.4L689.8,-231.2L690.1,-237.7L688.6,-250.5L688.1,-252.4L687.7,-253.3L687.3,-254.5L687.2,-256.6L687.2,-257.9L688,-260L1160,-260Z"},{"id":"442","g":"oc","d":"M577.5,292.9L576.7,295.7L576.3,298.1L575.5,303.3L576.3,303.3L576.8,303.3L576.3,303.9L575.1,306.1L576.4,306.7L577.2,308.2L577.7,311.9L577.7,314L578.1,315.6L580.3,318.6L582,323.5L582.9,325.3L584.1,322.9L586.2,325.9L590.1,335L591.8,337.2L596,338.6L597.7,339.9L598.2,340.8L598.6,342L599.5,343.8L599.5,344.4L600.3,344.7L602.4,343.5L603.2,343.5L605.4,344.7L608.8,348L610.5,349.2L612.6,349.8L618.5,349.7L621.9,350.6L622.3,350.6L623.2,351.5L623.1,351.2L622.7,351.5L622.8,353L622.8,353.3L622,357.3L622,358.5L622.4,359.1L622.4,360L621.2,361L621.2,362.5L621.6,364L622.1,365.3L623,366.5L622.1,366.2L621.3,366.5L620.8,367.1L621.7,368.3L622.1,368.6L613.3,374.3L611.7,376.7L612.1,377.3L612.6,377.9L613.4,378.5L613.4,379.8L613,380.7L612.2,381.9L611.4,384.4L608,388.4L606.4,391.2L606,393L606.1,398.9L605.7,400.7L604.9,406.5L605.4,412L605.4,413.3L603.3,413L599.8,411.5L594.3,407.3L593.9,407L590.9,405.8L587.5,405.5L580.7,406.5L581.6,408L578.2,408.4L577.3,408.7L576.5,409.9L576.9,410.8L576.5,412L575.2,412.4L574,414.2L572.3,414.8L562.1,415.5L560,416.2L558.3,411.3L556.1,408.8L548.9,407L545.9,405.8L543.8,403.7L540,398.8L542.9,397.6L545.4,394.8L546.7,391.8L544.6,390.8L545.8,389.6L546.7,387.8L548.3,383.5L549.2,382.2L550.4,381.3L550.8,379.8L550.4,377L549.6,376.4L547,376.1L546.2,375.5L545.7,374.3L546.2,373.7L546.6,373.1L546.6,371.8L546.6,370.9L547,370L547.8,369.4L547.4,368.5L547.4,367.9L547,366.9L546.1,367L545.3,367.3L544.4,367L544,366.7L542.3,366.1L541.5,365.4L541.5,365.1L541.5,362.7L541,361.8L538.5,356.3L537.6,355.1L535.9,354.1L534.7,354.1L533.4,353.5L532.5,351.4L531.7,349L531.3,346.8L532.1,345.3L533.4,344.4L532.1,343.1L532.5,342.5L532.5,342.2L532.9,341.6L532.9,340.7L535.9,341L534.6,339.1L532.1,337.3L530.8,336.7L531.2,334.9L535.4,327.8L535.8,326.6L535.8,325.7L536.6,324.7L537.5,323.5L538.3,322.9L540,322.6L540.8,321.7L542.1,319.2L541.6,318.3L540.8,317.1L540.8,314.6L541.6,313.7L544.1,312.8L545,311.8L544.9,310.3L544.9,308.5L544.9,306.6L545.8,305.4L547.4,303.9L547.8,302.9L548.3,301.7L548.7,298.6L549.1,297.4L550.7,295.6L555.3,293.7L557,291.9L557.8,289.1L558.2,286.6L559,285.1L561.5,284.8L563.6,283.2L564,284.1L564.5,285.7L565.3,287.2L566.6,287.5L567,287.8L568.2,288.1L570.8,287.5L572,286.8L572.4,286.2L573.7,285.9L574.9,287.4L575.4,288.9L575.4,290.8L575.8,292.3Z"},{"id":"056","g":"en","d":"M166.1,111.8L168.6,110.1L172.8,108.7L188.8,97.7L213,84.4L236.3,70.1L261.8,62.6L262.4,69.6L261.9,74.2L261.8,78.2L263.3,82.8L266.1,86L266.9,86.3L269.3,87.6L273,88.3L278.3,87.5L278.8,85.7L278.4,83.5L278.9,81.4L280.1,80.2L281.8,79.9L283.4,79.7L287.9,78.9L290.8,78.6L293.6,79.3L307.4,84.2L309.4,85.8L310.2,88L309.7,90.1L310.1,91.9L311.7,94.1L312.9,94.8L326.4,94.7L329.3,94.2L334.3,90L348.7,83.2L354.1,79L358.7,72.9L359.5,71.1L360.4,66.8L360.4,65.9L360.4,66.2L362.9,68.1L363.6,69.9L364.4,73.3L366,75.5L368,77.4L369.6,79.2L370,80.5L370,81.4L369.6,82.9L369.1,84.1L368.7,84.4L370,83.8L370.8,82.6L372.5,79.3L368.8,77.7L368,76.7L367.6,75.2L367.7,71.2L367.3,69.4L366.5,67.8L364.9,66L367.4,66L368.2,66L372.2,68.2L374.7,69.2L380,69.6L382,68.4L382.5,65.3L382.1,63.5L379.3,60.4L378.5,58.8L378.5,57L379.3,55.5L379.8,54.2L378.2,52.7L384.3,49.4L390.4,47L393.7,46.8L394.9,47.1L396.1,48.3L395.7,51.4L394.8,53.8L394.4,55.6L396.8,57.2L398.1,57.2L401.3,56.6L405,57.6L407,57.6L408.2,57L409.5,56.1L418.5,45.5L422.2,43.7L423.8,43.7L425.9,44.6L427.9,45.9L428.7,47.4L429.1,50.2L428.2,52.6L427.8,55.4L428.6,58.4L423.7,56.2L422.5,56.2L421.7,58.7L424.1,59.6L432.3,60L434.3,60.6L438.4,62.5L440.8,61.9L443.7,59.1L446.5,55.5L448.2,52.7L449,50.6L449.4,48.8L450.2,47.5L451.9,47.2L452.3,47.5L455.5,50L458,54.3L457.5,57.4L456.3,60.1L455.9,64.1L456.3,65.9L460.3,70.3L460.7,71.8L461.9,75.8L462.8,77L464.4,77.9L468.9,77.6L470.9,78L473,80.4L472.9,86.8L475,87.5L475.8,87.2L479.5,86.2L492.6,86.9L495,85.9L499.9,82.6L502,81.7L504.4,82L507.3,83.5L509.3,86.2L510.1,89.9L510.6,93.9L511.4,94.5L513,96L519.6,98.2L521.2,99.1L522,100.3L523.3,101.2L525.3,101.2L530.2,100.3L531.4,100.6L533.5,101.5L536,104.8L537.2,106.1L540.9,105.1L542.9,105.4L543.8,107.6L544.2,108.5L542.6,110L542.2,112.2L544.6,114.9L543.8,115.5L542.6,116.1L541.4,116.5L540.1,116.2L540.5,117.4L540.6,118L541,118.9L540.2,121.4L539.3,122.6L538.5,123.8L537.3,122.6L536.5,123.2L535.7,125.1L535.7,127.5L536.9,129.3L535.3,133.9L530.8,141L533.3,140.4L534.5,140.4L535.7,141L534.1,143.4L532.5,147.4L530.8,149.9L530.4,150.2L528.8,150.8L527.6,151.1L519.3,160.7L519.8,164.6L521.4,167.4L523.5,168.6L524.3,169.2L526.8,170.4L528.5,170.7L528,172.9L527.2,177.2L529.3,178.4L530.6,178.7L531.8,178.4L532.2,177.5L533.4,175.6L534.3,175L535.5,175.3L538,177.7L539.2,178.6L549.1,178.3L550.4,178.9L551.6,179.2L559.9,179.4L562.4,178.8L562,179.4L562,179.7L562,180L562.4,180.3L564,181.2L564.1,183.1L563.7,184.9L564.1,186.4L565.7,186.7L570.3,185.2L572.3,185.5L574.4,187.6L581.6,198.2L579.9,199.5L581.2,201.9L583.7,203.1L591.6,203.3L592,204.2L591.2,206.1L590,207.6L590,208.2L587.5,209.8L583.8,212.9L581.7,216.3L583.4,218.7L582.6,220L583,220.9L583.9,221.2L585.1,221.2L584.3,223L585.1,223.6L586,225.7L587.3,226.7L588.1,226.6L592.2,225.4L592.2,225.1L592.6,225.1L593.1,225.1L593.1,225.4L595.1,226.3L600.1,227.1L602.2,227.4L601,228.6L600.6,230.2L601,231.7L601.5,233.5L602.7,235.1L603.6,235.3L604,236L603.6,239L603.3,243.3L602.5,245.8L602.5,247.9L606.7,254.9L606.7,255.8L606.8,257.4L605.5,258.9L602.2,259.6L601,259.3L599.3,258.7L598,258.7L596.8,259.6L595.5,260.9L594.7,262.7L594.3,264.6L595.2,266.1L593.1,268.2L588.1,269.5L585.6,270.8L584.4,272.6L581.9,274.5L580.7,276L582.4,277.5L582.8,279.7L582.8,281.8L582,283.4L581.2,284L579.1,284.3L577.8,284.9L577.8,285.6L577.5,287.7L577,288.3L578.3,289.5L578.7,290.4L578.3,291.7L577.5,292.9L575.8,292.3L575.4,290.8L575.4,288.9L574.9,287.4L573.7,285.9L572.4,286.2L572,286.8L570.8,287.5L568.2,288.1L567,287.8L566.6,287.5L565.3,287.2L564.5,285.7L564,284.1L563.6,283.2L561.5,284.8L559,285.1L558.2,286.6L557.8,289.1L557,291.9L555.3,293.7L550.7,295.6L549.1,297.4L548.7,298.6L548.3,301.7L547.8,302.9L547.4,303.9L545.8,305.4L544.9,306.6L544.9,308.5L544.9,310.3L545,311.8L544.1,312.8L541.6,313.7L540.8,314.6L540.8,317.1L541.6,318.3L542.1,319.2L540.8,321.7L540,322.6L538.3,322.9L537.5,323.5L536.6,324.7L535.8,325.7L535.8,326.6L535.4,327.8L531.2,334.9L530.8,336.7L532.1,337.3L534.6,339.1L535.9,341L532.9,340.7L532.9,341.6L532.5,342.2L532.5,342.5L532.1,343.1L533.4,344.4L532.1,345.3L531.3,346.8L531.7,349L532.5,351.4L533.4,353.5L534.7,354.1L535.9,354.1L537.6,355.1L538.5,356.3L541,361.8L541.5,362.7L541.5,365.1L541.5,365.4L542.3,366.1L544,366.7L544.4,367L545.3,367.3L546.1,367L547,366.9L547.4,367.9L547.4,368.5L547.8,369.4L547,370L546.6,370.9L546.6,371.8L546.6,373.1L546.2,373.7L545.7,374.3L546.2,375.5L547,376.1L549.6,376.4L550.4,377L550.8,379.8L550.4,381.3L549.2,382.2L548.3,383.5L546.7,387.8L545.8,389.6L544.6,390.8L546.7,391.8L545.4,394.8L542.9,397.6L540,398.8L538.7,398.5L536.1,397L534.9,396.7L533.6,397.6L531.9,399.5L530.6,400.1L528.1,399.8L525.5,398.6L522.6,398L520,399.5L518.4,401.4L518.4,402.6L517.9,403.5L516.2,403.5L515,403.2L511.2,401.7L509,402.6L506.1,405.1L503.1,406.9L500.6,406L499.7,404.5L500.1,402.9L500.6,401.1L500.6,399.3L499.7,397.7L494.2,387.3L492.9,386.1L492.1,385.5L488.3,383.9L487,383.3L486.2,383L485.7,383.6L485.3,384.6L484.9,385.5L484,385.8L481.9,385.5L481.5,384.5L481.1,383L481.5,380.3L482.4,379.7L482.8,379L482.4,376.3L479.8,373.5L477.3,371.1L474.8,371.4L469.7,372.6L466.7,372L464.6,370.4L463,368.6L457.9,361.2L456.7,360L452.4,358.7L450.3,357.5L445.7,353.2L443.6,352L441.1,351.9L436,353.7L433.5,354L430.6,353.7L429.3,352.2L429.3,345.4L429.4,344.5L428.1,342.7L428.1,341.7L428.1,340.5L429,339.3L429.4,338.4L430.3,336.3L430.7,334.7L431.1,333.2L431.1,330.7L429.1,327.4L423.6,325.2L422,322.4L422.8,319.7L427.1,308.4L427.1,306.5L427.1,305L427.1,303.5L429.7,298.6L430.1,298.3L431.4,299.8L431.8,296.5L432.2,292.8L432.7,289.7L431.4,288.2L428.1,289.1L426.4,288.4L426,285.7L423.1,287.2L410.4,299.6L409.6,301.2L409.5,302.7L409.5,303.9L409.9,304.8L410.4,306.1L409.5,311.9L408.6,314.6L407.3,316.8L406,317.7L401,318.2L384.9,326.3L381.2,326.9L380.3,326.6L363.2,321.4L356,322.5L353.9,322.5L352.6,322.2L346,318.4L346.8,318.7L346.9,316L346.5,313.2L345.7,312.9L346.1,310.7L347,309.5L347.8,308.3L350,306.5L352.5,304.7L355.5,303.2L355.5,302L354.7,300.5L353.9,298.9L352.3,290.9L351.1,290.3L349.8,290.6L347.3,291.5L346,290.8L346.1,287.5L348.7,280.2L349.2,276.8L349.6,275.6L350.9,273.8L353.9,271.7L355.2,270.5L355.2,268.3L354.4,267.4L353.1,265.8L351.5,264.9L350.7,264.6L349,265.2L349,266.4L349.4,267.6L348.5,268.5L346,267.2L343.2,260.5L340.7,258.3L338.3,256.7L334.6,252.3L332.5,251.4L330,251.6L322.5,254.6L320,254.5L317.9,253.6L315.9,252L313.4,250.7L308.8,250L303.8,250.2L302.1,250.8L301.3,252L299.1,255.3L298.2,256.8L298.2,257.4L297.4,257.7L297,257.7L296.5,258.9L292.9,255.2L291.8,247.5L292,239.2L291.3,232.1L289.3,228.7L287.3,226.2L284.8,224.9L281.9,224.3L274.5,224.1L273.2,223.1L274.5,221L274.6,219.5L273.8,218.5L272.1,218.2L270.4,218.2L269.6,219.1L268.3,219.9L266.6,221.1L261.6,222.8L258.7,223.4L256.6,222.7L251.7,219.8L250.1,218.5L248.5,216.3L248.1,214.2L247.9,208.4L245.3,198.2L244.6,192.6L246.3,189.9L244.8,185.3L244,183.7L242.4,183.1L241.2,183L240,181.8L238.8,178.4L237.3,175.3L235.3,171.8L233.7,169.9L230.8,168.9L221.2,171.7L215.4,173.4L212.5,174.8L210.3,177.2L206.8,182.9L205.1,184L203.5,183.7L203.1,183.4L194.1,178.8L191.7,176.8L191.3,175.9L189.8,172.2L189.4,170.9L185.1,166.5L184.3,165.2L184.3,164L183.5,163.1L182.3,162.1L181.1,162.1L179,162.3L178.2,162L176.2,161.6L175.3,161.2L175,160.3L174.2,157.8L173.4,157.2L172.2,156.5L171.8,155.9L171.9,155L172.8,153.2L173.2,152L171,143.9L171.9,142.1L174.5,139.8L175.4,138.6L175.1,134.9L173.5,132.4L169.6,127.6L168.5,123.9L167.6,115.9Z"},{"id":"826","g":"en","d":"M-66.1,-260L-74.7,-252.5L-76.7,-251.8L-78.4,-250.6L-87.9,-238.7L-90.5,-236.4L-92.9,-235.4L-94.6,-234.2L-96.3,-231.9L-96.5,-229.8L-92.9,-229.2L-87.3,-230L-85.8,-229.6L-82.8,-226.7L-81.7,-226L-79.1,-223.9L-74.1,-215L-71.6,-211.4L-69.5,-212.8L-67.1,-213L-62.9,-212.1L-61.3,-211L-58.5,-206.5L-56.9,-205.5L-56.9,-206.7L-57.1,-209.5L-54.9,-212.8L-51.5,-215.9L-50.2,-218.3L-49.1,-222.5L-47.6,-227.3L-45.3,-231.8L-43.9,-234.8L-39.7,-238.5L-34.1,-240.6L-28.1,-241.4L-23,-240.8L-23.7,-242.1L-21.3,-242.9L-19,-242.1L-16.7,-241L-14.4,-240.3L-4.9,-239.7L-0.7,-238.2L3.9,-235.5L9.3,-233.9L14.2,-235.8L13,-236.8L11.9,-237.5L10.3,-237.6L9.2,-237.6L9.2,-238.9L42.6,-228.7L55.2,-221.2L81.4,-198.7L84.3,-194.8L86.9,-190.4L88.4,-181.7L90.2,-176.1L91.5,-170.9L90.5,-166.9L91.2,-164.1L91,-160.7L90.7,-154L92.7,-145.6L92.2,-143.8L90.9,-142.3L87.7,-133L87.6,-131.1L87.1,-129.6L81.7,-116.7L77.8,-110.4L76.5,-109.3L75.2,-107.2L75,-102.6L74.9,-94.3L74,-91L71.6,-84.7L71.1,-81.6L69.2,-76.8L68.7,-74.1L68.3,-73.2L59.2,-69.9L57.5,-67.9L55.6,-69.2L55.1,-67.7L54.6,-65.6L53.7,-64.4L52.9,-63.8L49.8,-59.7L41.8,-51.5L40.4,-49.4L39.2,-48.9L32.1,-59.1L28.9,-60.5L23.6,-65.4L20.4,-66.2L20.3,-65L24.1,-60.8L26.4,-59.1L31.6,-57.6L32.4,-56.9L33.1,-56L33,-53.2L32.5,-52.3L30.1,-53.1L28.9,-52.8L26.5,-52.4L24.8,-52.1L23.7,-52.5L20.6,-54.8L18.2,-55L12.8,-53.4L9.6,-53L12.7,-51.6L31.1,-49.3L33.6,-50.4L33,-47.1L23.7,-38.4L24.8,-37.4L26.8,-36.4L30.8,-35.5L32.1,-36.7L33,-38.5L33.4,-38.8L33.2,-34.8L31.8,-32.1L25,-26.3L19.2,-23L15.5,-21.7L7.3,-20.9L5.3,-21.3L4.6,-22.3L2.8,-26.1L-0.6,-31.2L-1.2,-33.7L-1.8,-30.3L-3.6,-28.6L-8.1,-26.7L-11.6,-23.5L-12.4,-23.3L-12.4,-22.4L-13,-19.9L-13.5,-17.8L-14.4,-17L-15.6,-16.7L-17.7,-15.3L-18.6,-14.8L-20.2,-14.9L-22.5,-16.2L-23.7,-16.6L-26.2,-16.5L-31.6,-14.6L-34.1,-13.3L-32.5,-12.2L-30.5,-11.8L-28.5,-10.8L-27.5,-7.9L-24.1,-10.8L-17.1,-11.9L-13.4,-13.2L-10,-15.8L-8,-16L-6.5,-14L-6.1,-12.5L-6.7,-10.7L-7.1,-9.5L-7.6,-9.2L-7.2,-7.6L-6.9,-6.4L-6.2,-3.9L-7.5,-3L-8,-1.5L-8.3,2.7L-8.7,3.6L-9.6,4.5L-11.3,5.6L-8.4,5.5L-7.2,6.2L-6.9,7.1L-10.4,12.1L-16.4,17L-21.5,19.8L-23.2,20.6L-28.1,22.1L-37,20L-40.2,20.1L-40.2,19.8L-41.8,19.7L-42.2,19.7L-42.7,20L-44.8,22L-46.5,22.5L-48.1,22.4L-49.8,22.6L-51.1,24L-53,22.4L-53.4,22.4L-56.2,22.2L-64.1,23.8L-64.6,25L-65.1,26.8L-66.1,28.9L-67.4,30.7L-69.1,31.5L-71.2,31.9L-72.8,32.8L-65.4,32L-64.6,31.5L-63.7,30.3L-63.2,29.1L-62.8,28.5L-55.3,26.8L-37.2,30.8L-35.7,32.1L-34.6,34.6L-34.7,36.4L-35.6,37.3L-38.1,37.5L-42.1,36.3L-43.7,36.2L-47.6,39.6L-51.7,40.3L-53.8,41.4L-53.1,42.6L-52.3,43.9L-51.6,44.9L-50.8,45.6L-41.1,46.2L-36.2,47.7L-37.3,45.5L-37.6,43L-37.1,41.2L-34.6,41.4L-34.4,43.8L-33.4,47.3L-31.9,50.1L-30.8,51.7L-6.9,55.9L7.2,52.1L44,50.8L46.8,52.8L45.2,58.5L44.8,59.7L44.3,60.6L43.4,61.5L43,62.1L38.9,61.9L38.1,62.4L38.3,66.4L38.9,69.5L40.7,74.5L41.2,81.6L40,88.6L37.2,94.3L33.7,97.8L26.2,99.8L22.8,102.1L21.6,102.3L19.1,101.9L17.9,102.4L16.6,103.3L15.7,104.8L14.8,105.3L12.3,106.4L4.9,106L2.4,106.5L0.3,107.9L-4.4,111.9L-10.7,120.1L-12,122.2L-11.9,126.8L-11.1,133.9L-15.3,135.2L-23.8,131.9L-31.4,128.7L-36,130L-47.8,140.3L-52.5,142.1L-77.5,145.7L-82.1,147.6L-82.6,147.5L-83.9,149L-85.3,150.7L-85.3,151.7L-89.6,153.8L-94.1,159.7L-98.7,159.3L-100.7,158.9L-105.9,156.7L-107.2,156.3L-111.3,156L-112.1,155.3L-114,153.4L-116,152.3L-120.9,151.7L-122.9,150.9L-144.2,141.4L-147.8,140.5L-148.2,140.7L-150.8,142.1L-154.8,140L-160,141.4L-160,-260ZM-13.6,43.9L-11.3,46.8L-10.6,49.6L-11.2,51.7L-14.1,52.7L-27.4,50.7L-29.4,49.7L-31.3,47.7L-32.8,44.8L-33.9,42.6L-32,37.8L-31.1,36.7L-29.4,36.5L-15.9,42.2L-14.7,42.9Z"},{"id":"040","g":"cp","d":"M1160,874.1L1159,873.7L1156.4,874.8L1155.1,874.9L1154.1,873.4L1154.9,872.5L1157.4,869.8L1157.8,868.6L1156.8,866.8L1146.6,862L1144.7,861.5L1142.5,862L1130.3,866.2L1124.9,865.9L1120.7,863.1L1120.4,859.2L1121.3,853L1120.7,849.9L1119.2,848.5L1115,845.7L1112.1,841.6L1110.6,840.2L1110.2,839.9L1109.3,839.6L1108.4,840L1105,842.4L1102.1,845.9L1100.6,850.3L1100.4,853.7L1097.3,854.2L1095,853.5L1093.2,854.2L1091.2,857.4L1090.9,859.9L1091,861.4L1090.6,862.7L1089.4,864.6L1084.2,867.7L1081.2,868.8L1080.3,868.8L1078.5,869L1073,867.4L1070.3,866.1L1065.1,861.8L1051.4,858.3L1048.6,856L1046.7,854L1046.6,852.2L1046.5,850.3L1046.7,846L1047,844.2L1047,843.2L1046.5,842.7L1046,842.7L1045.1,842.4L1045.5,840.3L1021.5,834.3L1019.7,834.1L1013.1,835.4L1010.8,834.9L1014.1,830.1L1014.7,825.4L1013.1,820.9L1009.8,817.1L1006.1,814.9L1006,813.3L1007.2,810.5L1007.2,809.3L1005.7,806.9L1004.7,805.4L1004.2,803.9L1004.5,801.2L1002.6,799.4L1001.2,798L1004.8,791L1008.9,785.6L1009.3,784.3L1009.6,781.2L1009.9,779.4L1014.5,773.3L1015.6,770.5L1015.2,762.8L1011.5,759.6L1007,758.1L1003.1,752.7L1002.6,751.5L1002,748.5L1002.5,748.8L1010.1,750.2L1017.6,749.8L1021,748.1L1022.6,744.9L1023.7,741.8L1026.6,738.5L1028.3,737.2L1030.1,737.1L1031.9,737.6L1033.3,739.1L1033.8,741.2L1033.5,743.3L1034.1,745.1L1036.8,746.5L1037.7,746.2L1039.4,745.1L1039.8,745.1L1043.4,746.1L1047.4,746.2L1049.1,745.8L1050.4,744.5L1051,747.5L1052.4,749L1053.8,750.4L1055.3,752.8L1055.3,753.4L1055.4,754L1055.4,754.9L1056.8,755.8L1058.1,755.1L1058.9,754.1L1060.6,753.4L1066.9,761.9L1068.4,763.9L1067.6,765.8L1065.1,768.1L1066.5,769.9L1067.1,771.7L1067.2,773.5L1068.2,775.3L1069.2,776.5L1070,776.1L1070.9,775.5L1072.6,774.7L1073,774.7L1074.4,775.2L1075.3,775.2L1075.7,774.9L1076.9,773.2L1082.2,772L1084.5,773.1L1084.7,776.1L1082.9,783L1083.4,784.2L1083.5,785.4L1083.1,786.7L1082.7,787.3L1081,787.7L1080.5,788.1L1079.8,790.3L1079,791.5L1079.9,791.8L1081.6,791.4L1089.5,789.9L1092.1,788.5L1097.2,784.8L1099.7,782.5L1101.7,779.3L1104,773.6L1104.4,772.7L1105.7,771.7L1108.2,770.6L1109.5,769.9L1111.1,767L1112.6,763.2L1113.7,758.9L1113.4,755.2L1112.8,752.8L1111.8,751.3L1110.9,750.2L1109,749.4L1109.9,742.2L1109.8,740.4L1108.8,738.6L1107.7,736.5L1107.2,735L1108.9,734.3L1111.1,733.6L1111.9,733.2L1112.4,733.5L1113,735.3L1113,735.9L1112.6,736.8L1112.3,738.1L1112.4,739.6L1113.3,740.2L1114.2,741L1116.1,741.8L1121.4,742.1L1122.7,741.7L1124.4,740.3L1126.8,736.8L1128,735.5L1131.1,735.3L1147.8,740.2L1148.3,740.8L1148.8,741.7L1149.3,742.6L1150.6,742.8L1154.1,742.2L1158.8,739.4L1160,739.1L1160,874.1Z"},{"id":"380","g":"en","d":"M1113.2,900L1112.7,898.4L1113,896.8L1114.3,895.2L1115.5,893L1115.3,890.5L1115.2,888.4L1115.5,886.8L1117.7,885.2L1118.9,882.9L1118.7,880.5L1117.6,877.8L1117,875.1L1119.5,871.8L1120.3,870.5L1120.6,869L1120.7,863.1L1124.9,865.9L1130.3,866.2L1142.5,862L1144.7,861.5L1146.6,862L1156.8,866.8L1157.8,868.6L1157.4,869.8L1154.9,872.5L1154.1,873.4L1155.1,874.9L1156.4,874.8L1159,873.7L1160,874.1L1160,900Z"},{"id":"756","g":"nt","d":"M622.2,900L622.2,897.4L621.3,896.5L620.8,895.6L620.4,894.3L620.4,893.7L622.5,887.6L623.4,886L623.4,885.4L623.8,884.5L624.2,881.7L623.7,879.9L621.9,876.5L621.4,875L623.1,868.6L629.3,865.1L642.2,860.6L650.6,854.3L653.2,850L651.8,846.7L653.5,843.9L654.4,842.6L657.5,841.4L657.9,840.4L658.3,840.1L660.1,839.2L660,836.1L663.6,834.5L671.4,827.3L671.9,827L674,823L677.5,819.2L685.8,812.9L685.3,808.3L685.6,804.6L688.2,802.1L689.1,802.1L690,801.8L691.7,799.3L693,798.7L693.9,798.3L695.2,797.4L696.1,795.5L694.7,793.7L692.9,791.9L691.1,790.4L688.9,791.7L674.3,793.5L674.7,791.1L676.4,788.3L678.2,785.8L681.2,783.9L681.2,780.5L684.7,779.5L686.4,778.6L688.1,776.7L689,775.1L688.5,773L687.1,770.6L687.1,768.8L689.3,767.8L690.2,767.2L691.5,766.8L692.4,767.1L693.7,767.7L696.8,768.2L703,766.9L705.6,767.4L707.4,768.3L709.2,768.6L712.3,768.2L710.2,773.5L711.1,776.5L713.8,778L717.4,778.8L717.8,779.4L718.3,780L718.7,780.6L719.6,780.9L720.5,780.9L724.9,778.6L728.4,777.9L731.9,777.8L736.8,778L738.1,777.7L740.3,776.7L742,774.2L742.4,773.3L742.8,771.7L742.8,770.5L741.9,769.9L741.4,769.3L741,768.4L740.9,767.2L742.2,766.8L744.5,767.4L744.9,767.7L745.8,768.3L747.6,768.5L749.3,766.6L749.7,766.3L749.7,766L749.7,765.4L749.7,765.1L748.8,763.9L748.3,763L748.3,762.4L749.2,762L750.5,762.3L751.4,762L751.8,761L751.7,759.2L751.3,759.2L749.5,757.7L749.1,757.4L753.8,753.6L754.2,753L757.3,751.1L761.6,749.4L767.7,747.4L770.4,747L769.2,751.7L767.9,752.9L764.8,753L764.4,753L769.3,755.3L771.1,756.2L773.7,756.4L779,755L783.8,754L786,752.7L788.1,750.1L790.2,746.7L792,747.6L799.5,747.6L800.4,748.5L800.9,750L801.4,751.9L801.4,752.5L817.2,751.9L822.9,750.5L824.2,749.8L824.6,748.9L825,748L825.9,746.7L827.2,746.1L829.8,744.4L831.9,743.7L832.8,742.8L833.2,741.9L833.6,741.5L840.2,740.1L842.4,740L845.9,740.8L847.3,741L847.7,741.6L848.7,743.4L849.6,745.2L851,745.8L855.4,746.8L863.4,746.5L863.8,746.5L866.8,745.8L867.3,744.8L868.4,741.7L871.9,739.1L875.8,738.7L877.7,740.4L879.1,742.8L879.5,743.1L880.5,744.3L882.2,743.6L882.6,743.3L883,742.3L883,740.8L882.9,739.6L883.3,738.3L882.8,737.7L882.8,737.1L882.3,736.2L882.7,735.3L883.2,735L883.6,734.6L884.5,734.6L884.5,734.9L884.5,735.8L885.4,736.4L885.7,732.1L884.8,731.8L884.3,731.5L882.6,731.3L881.2,731.1L875.1,732.2L873.4,733.2L871.7,734.5L870,735.5L867.8,735.6L865.1,734.5L861.9,732.2L861.4,731.9L859.2,731.4L860,729.5L859.5,728L859,726.5L859.4,725.2L860.2,723.6L863.2,722L864.5,720.7L865.2,717L866.1,715.7L867.3,713.2L868.6,712.6L869.9,712.5L876.4,711L878.1,710L876.7,707L878.9,706L881.9,705.9L884.2,707L884.2,708.2L884.8,710.7L884.8,712.8L886.2,713.7L887.9,712.7L888.2,708.7L889.5,707.4L890.8,708L892.2,709.4L893.1,711.5L894.1,713L895.4,713.3L896.7,712.9L898,713.2L899,715L898.6,715.6L896.9,718.1L896.6,719.4L897.1,720.9L898.4,722L898.5,723.3L899,724.5L905.6,724.2L904.2,723L905.4,719.3L908.4,719.5L912.5,721.4L915.7,724.3L913.5,725L913.6,726.3L915.4,728L915.9,728L919.5,730.6L922.2,731.1L927,730.6L931.3,728.8L933.4,726.6L935.6,725.6L949.3,726.4L955.9,726.1L957.7,728.8L962.6,728.5L967,729.2L1002,748.5L1002.6,751.5L1003.1,752.7L1007,758.1L1011.5,759.6L1015.2,762.8L1015.6,770.5L1014.5,773.3L1009.9,779.4L1009.6,781.2L1009.3,784.3L1008.9,785.6L1004.8,791L1001.2,798L999.6,801.4L997.7,807.7L997.6,813.8L998.7,816.8L1000.1,819.2L1001.6,822.2L1001.8,825.9L1000.6,828.4L999,830.6L997.7,832.5L997.8,834.1L1000.5,834.8L1008.2,835.6L1010.8,834.9L1013.1,835.4L1019.7,834.1L1021.5,834.3L1045.5,840.3L1045.1,842.4L1046,842.7L1046.5,842.7L1047,843.2L1047,844.2L1046.7,846L1046.5,850.3L1046.6,852.2L1046.7,854L1048.6,856L1051.4,858.3L1065.1,861.8L1070.3,866.1L1073,867.4L1078.5,869L1080.3,868.8L1081.2,868.8L1084.2,867.7L1089.4,864.6L1090.6,862.7L1091,861.4L1090.9,859.9L1091.2,857.4L1093.2,854.2L1095,853.5L1097.3,854.2L1100.4,853.7L1100.6,850.3L1102.1,845.9L1105,842.4L1108.4,840L1109.3,839.6L1110.2,839.9L1110.6,840.2L1112.1,841.6L1115,845.7L1119.2,848.5L1120.7,849.9L1121.3,853L1120.4,859.2L1120.7,863.1L1120.7,863.1L1120.6,869L1120.3,870.5L1119.5,871.8L1117,875.1L1117.6,877.8L1118.7,880.5L1118.9,882.9L1117.7,885.2L1115.5,886.8L1115.2,888.4L1115.3,890.5L1115.5,893L1114.3,895.2L1113,896.8L1112.7,898.4L1113.2,900L622.2,900Z"},{"id":"528","g":"nt","d":"M688,-260L687.2,-257.9L687.2,-256.6L687.3,-254.5L687.7,-253.3L688.1,-252.4L688.6,-250.5L690.1,-237.7L689.8,-231.2L689.2,-225.4L686.9,-219.2L678.2,-204.9L677.5,-202.4L676.3,-199.3L675.7,-193.1L674.9,-173.5L674.3,-167L672.4,-163.3L668.4,-164.5L666.8,-165L661.2,-164L655.7,-165.7L644.9,-165.2L641.4,-164.2L639.4,-162.7L637.5,-161.1L638.3,-159.3L638.3,-157.8L638,-156.2L638,-154.7L638.8,-153.5L642.4,-150.5L636.1,-147.3L634.5,-147.3L635.8,-144.2L636.2,-141.2L636.7,-137.8L637.1,-135L639.6,-132.6L642.4,-131.1L651.2,-130.1L656.8,-128L660,-127.8L663.2,-127.9L665.5,-128.8L666.7,-129.8L667.5,-131L668.3,-131.3L674.9,-120.4L676.6,-115.9L675.9,-109.1L673.6,-104.2L672.9,-101.4L673,-98L674.3,-94L674.7,-92.8L675.1,-92.2L674.7,-91.3L670,-88.4L668.8,-86.9L666.1,-82.5L664.1,-80.6L659.4,-78.4L657.4,-75.9L654.7,-71L653.5,-69.7L646.7,-68.7L646.3,-68.7L644.3,-67.7L642.7,-65.5L642,-64.6L641.2,-62.1L640.4,-61.2L638.8,-60.2L638,-60.2L636.8,-59.9L636.1,-57.7L636.5,-55L638.1,-53.8L640.6,-53.2L647.9,-49.4L650.7,-46.4L651.6,-45.5L652,-44.2L651.6,-41.8L651.2,-41.5L650.4,-41.1L649.6,-40.2L646.9,-35.6L644.5,-32.4L641.3,-30.6L631.7,-30.1L620.4,-26.2L614.9,-21.9L613.3,-20.9L610.8,-20.9L603.5,-22.9L604.8,-19L604,-17.1L600,-15.8L599.6,-18.6L597.9,-19.8L593.5,-20.4L593.1,-21L591.8,-23.1L591,-24L589.8,-24L586.6,-23L582.5,-24.8L578.9,-27.5L575.2,-29.4L571.6,-27.2L572.8,-26L577.3,-21.7L579,-19.3L576.9,-19.9L574.1,-20.5L570.5,-21.3L566,-20.1L564.4,-19.1L562,-17.6L560,-16.7L555.6,-15.7L553.6,-14.5L553.2,-12.6L555.6,-10.8L557.3,-7.1L557.3,-3.8L555.3,-1.9L554.9,-1L554.5,0.9L555.7,1.2L558.9,1.1L560.2,1.7L563,3.5L563.8,4.8L562.6,10L565.1,13.3L572.8,16.6L571.3,20.6L570.9,23.1L571.3,25.5L579.1,35.9L583.6,41L584.5,46.9L585,50.2L584.6,53.9L583.8,57.6L583.8,61L585.5,63.1L584.7,64.6L584.3,68.6L584,70.8L582.7,72.6L579.9,74.5L578.7,75.7L573.1,86.5L570.7,89.6L569.4,91.4L568.7,95.1L568.3,99.1L569.1,102.5L572,104L577.3,99.9L580.2,100.8L579.4,101.5L576.5,103.6L579,105.7L577.4,108.2L570.9,111.6L560.3,120L559,121.8L556.6,126.5L555.4,128L553.3,128.3L551.7,126.8L550.4,125L548.8,124.4L545.5,125.9L546.4,130.2L548,135.4L548.1,140L549.7,139.7L552.6,138.1L554.2,137.8L555.9,137.8L558.8,139L562.9,138.4L563.3,139.3L562.5,140.8L562.1,142.4L562.1,144.8L562.5,146.3L563.3,147.2L566.2,149.1L570,150.2L569.6,151.2L569.2,152.1L568.8,153.3L570,157L570,158.5L569.2,160.4L568,161.9L565.5,161.6L563.9,162.6L562.7,164.4L563.1,165.9L563.1,167.5L562.7,169.6L561.1,171.2L559,170.9L559.8,173.3L560.7,174.8L561.9,175.4L562.3,176.7L562.4,178.8L559.9,179.4L551.6,179.2L550.4,178.9L549.1,178.3L539.2,178.6L538,177.7L535.5,175.3L534.3,175L533.4,175.6L532.2,177.5L531.8,178.4L530.6,178.7L529.3,178.4L527.2,177.2L528,172.9L528.5,170.7L526.8,170.4L524.3,169.2L523.5,168.6L521.4,167.4L519.8,164.6L519.3,160.7L527.6,151.1L528.8,150.8L530.4,150.2L530.8,149.9L532.5,147.4L534.1,143.4L535.7,141L534.5,140.4L533.3,140.4L530.8,141L535.3,133.9L536.9,129.3L535.7,127.5L535.7,125.1L536.5,123.2L537.3,122.6L538.5,123.8L539.3,122.6L540.2,121.4L541,118.9L540.6,118L540.5,117.4L540.1,116.2L541.4,116.5L542.6,116.1L543.8,115.5L544.6,114.9L542.2,112.2L542.6,110L544.2,108.5L543.8,107.6L542.9,105.4L540.9,105.1L537.2,106.1L536,104.8L533.5,101.5L531.4,100.6L530.2,100.3L525.3,101.2L523.3,101.2L522,100.3L521.2,99.1L519.6,98.2L513,96L511.4,94.5L510.6,93.9L510.1,89.9L509.3,86.2L507.3,83.5L504.4,82L502,81.7L499.9,82.6L495,85.9L492.6,86.9L479.5,86.2L475.8,87.2L475,87.5L472.9,86.8L473,80.4L470.9,78L468.9,77.6L464.4,77.9L462.8,77L461.9,75.8L460.7,71.8L460.3,70.3L456.3,65.9L455.9,64.1L456.3,60.1L457.5,57.4L458,54.3L455.5,50L452.3,47.5L451.9,47.2L450.2,47.5L449.4,48.8L449,50.6L448.2,52.7L446.5,55.5L443.7,59.1L440.8,61.9L438.4,62.5L434.3,60.6L432.3,60L424.1,59.6L421.7,58.7L422.5,56.2L423.7,56.2L428.6,58.4L427.8,55.4L428.2,52.6L429.1,50.2L428.7,47.4L427.9,45.9L425.9,44.6L423.8,43.7L422.2,43.7L418.5,45.5L409.5,56.1L408.2,57L407,57.6L405,57.6L401.3,56.6L398.1,57.2L396.8,57.2L394.4,55.6L394.8,53.8L395.7,51.4L396.1,48.3L394.9,47.1L393.7,46.8L390.4,47L384.3,49.4L378.2,52.7L379.8,54.2L379.3,55.5L378.5,57L378.5,58.8L379.3,60.4L382.1,63.5L382.5,65.3L382,68.4L380,69.6L374.7,69.2L372.2,68.2L368.2,66L367.4,66L364.9,66L364.5,65.4L363.7,63.2L363.4,61L363.4,59.2L363.4,57.7L362.2,56.7L361,58.6L358.1,59.1L347.9,58.7L345.9,58L343.5,56.4L337.5,51.1L335.4,50.2L331,49.5L329.3,50.7L326,56.7L324.3,58.8L322.6,59.7L318.6,59.9L317.3,60.8L316.1,61.1L314.9,60.5L311.7,57L304.8,53.5L300.5,49.1L298.8,49.1L294.3,50.5L291.5,50.8L285.4,49.1L283.4,47.8L281.4,45.3L280.3,42.5L278.7,40.3L275.1,36.9L273.9,35L273.6,31.9L274.9,30.4L286.4,23.4L316.9,21L319.3,21.3L320.9,22.3L322.9,23.9L324.5,26.3L325.3,28.8L324.5,29.4L322.4,30.6L321.6,31.2L321.6,32.4L332.5,33.9L337.7,36.1L342.1,40.2L343.7,43.3L346,49.4L347.6,51.6L350.1,52.6L356.2,51.7L358.2,53L360.7,52.4L364.3,52.5L365.5,52.2L367.6,51.6L369.3,47.7L368.5,43.7L366.1,40.6L362.9,38.7L362.1,38.7L358,37.7L353.2,35.8L351.6,35.4L347.9,35.7L346.3,35.6L343.5,33.8L334.7,25.3L340.8,22.4L343.7,21.8L353.8,22.3L357,23.3L359.4,25.7L359.1,22.4L357.5,20.8L357.1,20.8L352.6,20.4L351.4,20.1L350.6,19.2L349.4,18.2L349,16.7L348.7,14.5L348.7,12.4L349.1,10.9L350.8,9.4L352.4,8.5L356.5,8.2L355.3,7L352.5,5.1L344.4,2.5L342.9,0L342.6,-6.1L340.6,-9.8L337.8,-12.3L334.6,-14.5L332.6,-13L329.7,-12.2L326.9,-12.2L324.9,-11.7L324.5,-11L323.6,-10.8L322.4,-10.8L321.3,-16L324.6,-18.1L331.9,-20.1L332.7,-21.3L335.2,-21.6L338.8,-20.6L342,-19L342.4,-18.7L343.2,-19L344.4,-19.3L345.6,-20.5L344.9,-22.3L342.1,-26.3L341.3,-27L340.9,-27.6L340.5,-28.8L340.6,-30L341.4,-31.3L341.8,-31.9L342.2,-32.5L341.9,-35.2L339.6,-42.3L338.4,-45.4L339.3,-46.9L340.1,-47.8L345.3,-46.8L349.7,-47.4L353.4,-49.8L369.8,-69.1L383.7,-88.8L395.1,-109.2L402.1,-129.1L403,-134L403,-135.5L405.1,-140.1L410.2,-175.3L412.3,-184.2L412.7,-187L413.9,-192.8L418.4,-204.7L419.6,-210.5L419.6,-213.9L420.1,-218.5L420.9,-222.2L422.5,-223.7L429.2,-222.4L430.4,-223.6L431.1,-222.1L429.1,-216.6L431.9,-213.5L436.2,-211.9L440.5,-212.2L443.3,-213.7L447.7,-217.7L450,-218.6L454.4,-219.2L458.7,-221L480.8,-240.6L482.4,-242.7L484.4,-244.2L489.5,-245.5L491.8,-247L493.8,-251.3L496,-260L688,-260ZM261.8,62.6L280.3,57.2L282,55.7L283.6,55.8L290.8,60.5L301.7,63.9L305.3,67.3L307.8,68.3L312.3,68.4L316.3,69.7L319.2,69.5L330.3,64.8L331.9,63L332.8,59.6L333.7,57.8L336.1,58.1L338.9,59.1L340.6,60.1L341.4,61.3L342.5,64.1L343.3,65.3L344.5,65.6L347.4,66.3L348.6,67.2L349,67.6L353.1,67.9L355.2,64.9L356,64.3L358,64.6L360.4,65.9L360.4,66.8L359.5,71.1L358.7,72.9L354.1,79L348.7,83.2L334.3,90L329.3,94.2L326.4,94.7L312.9,94.8L311.7,94.1L310.1,91.9L309.7,90.1L310.2,88L309.4,85.8L307.4,84.2L293.6,79.3L290.8,78.6L287.9,78.9L283.4,79.7L281.8,79.9L280.1,80.2L278.9,81.4L278.4,83.5L278.8,85.7L278.3,87.5L273,88.3L269.3,87.6L266.9,86.3L266.1,86L263.3,82.8L261.8,78.2L261.9,74.2L262.4,69.6ZM340.7,8L345.1,9.6L347.5,10.8L347.5,13.9L346.2,15.7L344.6,16.9L342.5,17.8L333.6,19.2L332,19.1L327.5,17.5L325.1,15.6L324.4,13.2L323.6,11L321.6,9.4L317.6,7.5L316.8,6.9L316,5.9L315.2,5L313.6,5L310.7,8.3L309.9,8.9L305,9.1L302.6,8.1L301.4,5.9L301.6,0.1L305.7,-2.6L315.4,-3.6L315.8,-3.9L317.8,-3.5L319,-2.9L329.9,-2.4L332.4,-1.7L334,-0.1L338.3,5.2L338.7,6.1L339.5,7ZM438.3,-260L438.1,-259.5L439.7,-257L440.4,-253.9L440.4,-250.8L438.8,-249.6L438.8,-249.6L438.8,-248.4L440.8,-248.4L440,-245.9L438.8,-243.2L435.6,-238.6L430.5,-234.3L428.1,-229.5L424.1,-228.6L420.2,-230.1L418.3,-234.8L419.1,-239.4L421.1,-244.9L423.9,-249.1L429,-253.7L431.8,-259.2L432.3,-260L438.3,-260Z"},{"id":"438","g":"nt","d":"M1001.2,798L1002.6,799.4L1004.5,801.2L1004.2,803.9L1004.7,805.4L1005.7,806.9L1007.2,809.3L1007.2,810.5L1006,813.3L1006.1,814.9L1009.8,817.1L1013.1,820.9L1014.7,825.4L1014.1,830.1L1010.8,834.9L1008.2,835.6L1000.5,834.8L997.8,834.1L997.7,832.5L999,830.6L1000.6,828.4L1001.8,825.9L1001.6,822.2L1000.1,819.2L998.7,816.8L997.6,813.8L997.7,807.7L999.6,801.4Z"}],"al":"M552.9,405.7L576.5,411L608.3,410.6L629.6,419.4L650.5,464.4L687.2,460L737,462.4L791.1,482.6L830.8,495.7L799.2,545.8L769.1,619.4L756.7,692.3L761.9,748.4L727.2,778.4L690.1,766.6L677.3,739.6L669.4,708.9L678.7,688.8L690.4,665L695.9,639.4L698.9,612.2L706.6,582.9L695.8,581.4L663,563.9L629.2,544.5L601.4,523.1L567.8,499.9L565.3,487.2L561.6,465.5Z","alLine":"M552.9,405.7L561.6,465.5L565.3,487.2L567.8,499.9L601.4,523.1L629.2,544.5L663,563.9L695.8,581.4L706.6,582.9L698.9,612.2L695.9,639.4L690.4,665L678.7,688.8L669.4,708.9L677.3,739.6L690.1,766.6","fronts":{"f1916":"M192.5,101.3L204.2,123.5L213.6,151.1L207.1,174.4L204.2,192.5L193.8,228.4L190.5,257.4L182.4,287.9L191.1,304.6L200,319.4L195.9,337.4L187.1,355.2L190.8,382.6L203.1,401.1L234.5,414.8L269.9,417.6L302.9,416.5L340.2,446.3L375.5,459.5L440.7,460.1L494,449.4L511.9,511.1L571.5,514.4L649.8,564.2L693.1,621.4L701.1,711.9L708.5,766.2","f1917":"M192.5,101.3L204.2,123.5L219.5,147.6L209.4,174.5L204.2,192.5L197.1,232.2L202,259.6L223.1,289.3L236.9,333.2L250,366.3L267.9,403L302.9,416.5L340.2,446.3L375.5,459.5L440.7,460.1L494,449.4L511.9,511.1L571.5,514.4L649.8,564.2L693.1,621.4L701.1,711.9L708.5,766.2","f1918":"M192.5,101.3L204.2,123.5L213.6,151.1L195.8,168.6L172.4,182.3L174,200.5L184.9,219.1L191.1,237.4L190.4,259.2L170.3,300.2L155.1,332.3L159.4,372.4L194,391.8L216.7,419.7L227.5,452.7L256.3,484.4L284.9,481.4L322.2,458.7L340.2,446.3L375.5,459.5L440.7,460.1L494,449.4L511.9,511.1L571.5,514.4L649.8,564.2L693.1,621.4L701.1,711.9L708.5,766.2","fsep":"M192.5,101.3L214.3,129.3L219.2,156.7L209.1,183.6L200.2,210.5L210.5,247.1L226.7,283.9L239.3,333.3L253.6,366.4L270.2,403.1L302.9,416.5L340.2,446.3L375.5,459.5L440.7,460.1L494,449.4L535.6,496.5L571.4,505.3L649.8,564.2L693.1,621.4L701.1,711.9L708.5,766.2","fnov":"M312.3,86.6L302.4,120.8L287.9,158.6L307.6,199L326.5,232L328.3,262.9L348.3,314L388.7,341.8L423.6,365.7L447,387.6L468.1,409.5L488.1,433.1L535.6,487.4L571.4,505.3L649.8,564.2L693.1,621.4L701.1,711.9L708.5,766.2"},"cities":[{"n":"Paris","p":[130.2,514.6]},{"n":"Brüssel","p":[373.7,160.2]},{"n":"Lille","p":[224.8,196.8]},{"n":"Amiens","p":[131.9,327.7]},{"n":"Reims","p":[331.8,448]},{"n":"Verdun","p":[491.6,467.6]},{"n":"Luxemburg","p":[579.8,385.5]},{"n":"Straßburg","p":[775.9,568.4]},{"n":"Köln","p":[672.3,142.9]},{"n":"Frankfurt","p":[875.3,287]},{"n":"Cambrai","p":[243.2,279]},{"n":"St-Quentin","p":[247.3,339]},{"n":"Ypern","p":[205.4,156.2]},{"n":"Laon","p":[284.6,392.6]},{"n":"Soissons","p":[248.4,424.3]}],"countryLabels":[{"n":"FRANKREICH","e":"fr","p":[314.1,567.3]},{"n":"BELGIEN","e":"be","p":[418.8,246]},{"n":"DEUTSCHES REICH","e":"de","p":[805.4,219]},{"n":"NIEDERLANDE","e":"nl","p":[516.7,74]},{"n":"LUX.","e":"","p":[575.9,345.7]},{"n":"ELSASS-LOTHRINGEN","e":"","p":[673.1,527.4]},{"n":"GROSSBRITANNIEN","e":"uk","p":[23.7,61]}],"graticule":"M-160,641.4L-95.3,-260M-53.7,900L14.1,-260M71,900L123.3,-260M195.5,900L232.4,-260M319.9,900L341.5,-260M444.2,900L450.4,-260M568.6,900L559.3,-260M692.9,900L668.3,-260M817.4,900L777.3,-260M941.9,900L886.5,-260M1066.6,900L995.7,-260M1160,476.6L1105.1,-260M-160,836.2L135.1,852.5L444.5,859.3L753.9,855.8L1063.1,842L1160,834.5M-160,654.5L142.1,671.2L445.4,677.8L748.9,674.4L1052,660.9L1160,652.5M-160,472.5L-148,473.6L149,489.9L446.4,496.5L743.8,493.1L1040.9,479.9L1160,470.6M-160,290.5L-135,292.7L156,308.7L447.4,315.1L738.7,311.8L1029.9,298.9L1160,288.7M-160,108.4L-122,111.8L163,127.5L448.3,133.7L733.7,130.5L1018.8,117.8L1160,106.8M-160,-73.7L-109,-69.2L170,-53.8L449.3,-47.7L728.6,-50.9L1007.7,-63.3L1160,-75.1M-160,-256L-96,-250.4L177,-235.3L450.2,-229.3L723.6,-232.4L996.7,-244.6L1160,-257.3","pts":{"kortrijk":[249.4,161.6],"marke":[245.8,165.7],"avesnes":[259.8,266.8],"awoingt":[248.8,283.9],"lechelle":[211.9,300.7],"harbonnieres":[174.5,336.6],"cappy":[186.2,323.4],"guise":[286.9,330.9],"puisieux":[287.1,385.4],"beugneux":[258.7,451.8],"monthussart":[271.9,432.1],"ennemain":[209.9,336.6],"bernes":[225.8,327.6],"busigny":[269.2,305.1],"metz":[580.8,483.3],"marville":[500.5,414.6],"tellancourt":[521.7,405],"aschaffenburg":[930.9,308.5],"darmstadt":[873.8,330.2],"wervik":[223.3,169.5],"vaux":[162,320.7],"sivry":[478.6,438.5],"roupy":[235.4,345.9],"phalempin":[219.6,216.6],"brayelle":[221,242.9],"jametz":[490.4,418.6],"xivry":[537.7,433],"angevillers":[570.7,425.5],"lecatelet":[243.4,311.7],"douai":[229.1,245.9],"roucourt":[233.5,251.5],"harlebeke":[254.7,157.7],"heule":[246.6,159.3],"zandvoorde":[216.6,163.9],"zillebeke":[209.9,160],"moorslede":[226.3,149.7],"frezenberg":[213.5,154.7],"fismes":[290.6,438],"chaulnes":[189.8,342.6],"ugny":[222.6,343.7],"aulnoye":[311.7,277.1],"bisseghem":[244.2,162.9],"leffincourt":[394.8,427.1],"bersee":[234.3,224.3],"poelkapelle":[215,143.8],"cuene":[248.5,156],"vauxverm":[229.5,343.2]}};
+
+// ---------- Verbände, Personen, Markierungen ----------
+const TRACKS = {
+  j4:  { name: "Jasta 4",  color: "var(--j4)" },
+  j6:  { name: "Jasta 6",  color: "var(--j6)" },
+  j10: { name: "Jasta 10", color: "var(--j10)" },
+  j11: { name: "Jasta 11", color: "var(--j11)" },
+  jg:  { name: "JG I",     color: "var(--red)" }
+};
+const PERSONS = {
+  mvr:      { n: "Manfred von Richthofen", u: ["j11", "jg"], role: "Zuvor Jasta 2 „Boelcke“. Ab Januar 1917 Führer der Jasta 11, ab Juni 1917 Kommandeur des JG I.", fate: "Gefallen am 21.04.1918 bei Vaux-sur-Somme. 80 Luftsiege.", kia: "21.04.1918" },
+  lvr:      { n: "Lothar von Richthofen", u: ["j11"], role: "Bruder Manfreds, ab 06.03.1917 in der Jasta 11. Führte sie in Abwesenheit seines Bruders und nach dem Tod von Kurt Wolff.", fate: "Überlebte den Krieg. 40 Luftsiege." },
+  schaefer: { n: "Karl Emil Schäfer", u: ["j11"], role: "Jasta 11, ab 26.04.1917 Führer der Jasta 28.", fate: "Gefallen am 05.06.1917 bei Becelaere-Zandvoorde im Luftkampf mit der britischen No. 20 Squadron. 30 Luftsiege.", kia: "05.06.1917" },
+  allm:     { n: "Karl Allmenröder", u: ["j11"], role: "Jasta 11, nach Schäfers Weggang ihr Führer.", fate: "Gefallen am 27.06.1917 bei Zillebeke; Umstände umstritten (möglicherweise Flakbeschuss). 30 Luftsiege.", kia: "27.06.1917" },
+  wolff:    { n: "Kurt Wolff", u: ["j11"], role: "Jasta 11, ab 02.07.1917 ihr Führer.", fate: "Gefallen am 15.09.1917 bei Moorslede nördlich von Wervik. 33 Luftsiege.", kia: "15.09.1917" },
+  voss:     { n: "Werner Voss", u: ["j10"], role: "Führer der Jasta 10 ab 30.07.1917.", fate: "Gefallen am 23.09.1917; Ort je nach Quelle bei Poelkapelle oder nördlich von Frezenberg. 48 Luftsiege.", kia: "23.09.1917" },
+  reinhard: { n: "Wilhelm Reinhard", u: ["j6", "jg"], role: "Jasta 6, ab 22.04.1918 Kommandeur des JG I.", fate: "Tödlich verunglückt am 03.07.1918 in Berlin-Adlershof beim Testflug eines Prototyps (Tragflächenbruch). 20 Luftsiege.", kia: "03.07.1918" },
+  kirsch:   { n: "Hans Kirschstein", u: ["j6"], role: "Führer der Jasta 6 ab 10.06.1918 (laut einer Quelle bereits ab 27.04.1918 stellvertretend).", fate: "Tödlich verunglückt am 16.07.1918 bei Fismes. 27 Luftsiege.", kia: "16.07.1918" },
+  udet:     { n: "Ernst Udet", u: ["j11", "j4"], role: "März bis 08.04.1918 Führer der Jasta 11, ab 20. bzw. 22.05.1918 (je nach Quelle) Führer der Jasta 4.", fate: "Überlebte den Krieg. 62 Luftsiege." },
+  loew:     { n: "Erich Löwenhardt", u: ["j10"], role: "Führer der Jasta 10.", fate: "Gefallen am 10.08.1918 bei Chaulnes nach einem Zusammenstoß mit Lt. Alfred Wenz (Jasta 11). 54 Luftsiege.", kia: "10.08.1918" },
+  goering:  { n: "Hermann Göring", u: ["jg"], role: "Zuvor Führer der Jasta 27. Ab Juli 1918 letzter Kommandeur des JG I (ernannt am 8. Juli, Dienstantritt laut einer Quelle am 14. Juli; andere Quellen nennen den 6. oder 7. Juli). Unter seiner Führung meldete das Geschwader in vier Monaten 144 weitere Luftsiege.", fate: "22 Luftsiege (21 zum Zeitpunkt der Ernennung)." }
+};
+// Todesart: gefallen | tödlich verunglückt | Selbstmord | natürlicher Tod | unbekannt
+const TOD = {
+  mvr:      ["gefallen", "21.04.1918", "bei Vaux-sur-Somme"],
+  lvr:      ["tödlich verunglückt", "04.07.1922", "Absturz bei Hamburg-Fuhlsbüttel als Pilot im Linienflugdienst (eine Quelle nennt den 02.07.1922)"],
+  schaefer: ["gefallen", "05.06.1917", "bei Becelaere-Zandvoorde"],
+  allm:     ["gefallen", "27.06.1917", "bei Zillebeke"],
+  wolff:    ["gefallen", "15.09.1917", "bei Moorslede"],
+  voss:     ["gefallen", "23.09.1917", "bei Poelkapelle bzw. Frezenberg"],
+  reinhard: ["tödlich verunglückt", "03.07.1918", "Testflug in Berlin-Adlershof"],
+  kirsch:   ["tödlich verunglückt", "16.07.1918", "bei Fismes"],
+  udet:     ["Selbstmord", "17.11.1941", "in Berlin; vom NS-Regime öffentlich als Flugunfall dargestellt"],
+  loew:     ["gefallen", "10.08.1918", "bei Chaulnes"],
+  goering:  ["Selbstmord", "15.10.1946", "in Nürnberg, am Vorabend der Vollstreckung des Todesurteils"]
+};
+const OTHERS = [
+  { n: "Oswald Boelcke", ctx: "Namensgeber der Jasta 2 „Boelcke“, in der Richthofen vor 1917 flog", tod: ["tödlich verunglückt", "28.10.1916", "bei Douai, nach Zusammenstoß mit Erwin Böhme im Einsatz"] },
+  { n: "Ludwig Linck", ctx: "Erster Führer der Jasta 10 („Jagdstaffel Linck“)", tod: ["gefallen", "Oktober 1916", "genaues Datum unbekannt; sein Kommando endete am 22.10.1916"] },
+  { n: "Rudolf Lang", ctx: "Erster Führer der Jasta 11 bis 14.01.1917", tod: ["unbekannt", "unbekannt", ""] },
+  { n: "Hans-Joachim Buddecke", ctx: "Führer der Jasta 4 nach ihrer Aufstellung; Quelle zur Lage von Vaux", tod: ["gefallen", "10.03.1918", "Ort je nach Quelle bei Lens oder bei Lille"] },
+  { n: "Arthur Rhys-Davids", ctx: "Britischer Flieger (No. 56 Squadron), dem der Abschuss von Werner Voss zugeschrieben wird", tod: ["gefallen", "27.10.1917", "vermisst bei Roeselare"] },
+  { n: "Roy Brown", ctx: "Kanadischer Flieger (No. 209 Squadron), möglicher Schütze bei Richthofens Tod", tod: ["natürlicher Tod", "09.03.1944", "in Stouffville (Ontario); laut einer Quelle Herzinfarkt"] },
+  { n: "Alfred Wenz", ctx: "Flieger der Jasta 11, Zusammenstoß mit Löwenhardt am 10.08.1918 (rettete sich mit dem Fallschirm)", tod: ["unbekannt", "unbekannt", ""] },
+  { n: "Erich Ludendorff", ctx: "Deutscher Heerführer; nannte den 08.08.1918 den „schwarzen Tag des deutschen Heeres“", tod: ["natürlicher Tod", "20.12.1937", "Sterbeort je nach Quelle München oder Tutzing; Ursache laut einer Quelle Leberkrebs"] }
+];
+const todHTML = t => t ? `<span class="tod tod-${t[0] === "unbekannt" ? "x" : t[0] === "natürlicher Tod" ? "n" : t[0] === "Selbstmord" ? "s" : "k"}"><b>Tod:</b> ${t[0] === "unbekannt" ? "unbekannt" : `${t[0]}, ${t[1]}${t[2] ? " – " + t[2] : ""}`}</span>` : "";
+
+// kind "kia": gefallen/tödlich verunglückt (†), kind "ev": sonstiges Ereignis (✕); lp = Beschriftung [dx, dy, Ausrichtung]
+const MARKS = {
+  schaefer:  { k: "zandvoorde", kind: "kia", lab: "† Schäfer · 05.06.1917", lp: [8, 4, "start"] },
+  allm:      { k: "zillebeke",  kind: "kia", lab: "† Allmenröder · 27.06.1917", lp: [-8, 4, "end"] },
+  wervik:    { k: "wervik",     kind: "ev",  lab: "Verwundung Richthofens · 06.07.1917", lp: [-9, 4, "end"] },
+  wolff:     { k: "moorslede",  kind: "kia", lab: "† Wolff · 15.09.1917", lp: [8, -6, "start"] },
+  voss:      { k: "frezenberg", kind: "kia", lab: "† Voss · 23.09.1917", lp: [-8, -6, "end"] },
+  mvr:       { k: "vaux",       kind: "kia", lab: "† Manfred von Richthofen · 21.04.1918", lp: [4, 18, "end"] },
+  kirsch:    { k: "fismes",     kind: "kia", lab: "† Kirschstein · 16.07.1918", lp: [8, 4, "start"] },
+  loew:      { k: "chaulnes",   kind: "kia", lab: "† Löwenhardt · 10.08.1918", lp: [0, 18, "middle"] }
+
+};
+
+// ---------- Chronologie ----------
+// moves: [Verband, Ort, gestrichelt (Weg/Datum nicht belegt)]
+const STEPS = [
+  { date: "1916-08-25", dl: "25.08.1916", title: "Aufstellung Jasta 4 und Jasta 6", sub: "Somme und Verdun", units: ["j4", "j6"],
+    moves: [["j6", "sivry"], ["j4", "vauxverm"]], focus: "vauxverm",
+    text: "Beide Staffeln werden am selben Tag aufgestellt. Die Jasta 4 bildet sich aus Personal des Kampfeinsitzerkommandos Vaux, der Feldfliegerabteilung 23, weiterer Aufklärungsverbände der 2. Armee und des Armee-Flugparks 2. Die Jasta 6 geht aus der Fokkerstaffel Sivry an der Maas hervor.",
+    note: "Lage von „Vaux“ widersprüchlich: Ein Wikipedia-Artikel (Buddecke) nennt Vaux-en-Vermandois bei Roupy, ein Forumsbeitrag („La KEK Vaux en Lorraine“) bezweifelt diese Gleichsetzung. Eingetragen ist Vaux-en-Vermandois, ohne belegte Koordinaten. Aufstellungsdatum der Jasta 6 widersprüchlich: 25.08.1916 (The Aerodrome) oder 15.09.1916 (frontflieger.de)." },
+  { date: "1916-09-01", dl: "01.09.1916", title: "Jasta 4 nach Roupy", sub: "bei St-Quentin", units: ["j4"],
+    moves: [["j4", "roupy", true]],
+    text: "Die Jasta 4 liegt ab 01.09.1916 in Roupy bei St-Quentin (bis 11.12.1916).",
+    note: "Gestrichelt, weil die Lage des vorherigen Platzes „Vaux“ nicht gesichert ist." },
+  { date: "1916-09-28", dl: "28.09.1916", title: "Aufstellung Jasta 10 und Jasta 11", sub: "Phalempin bei Lille", units: ["j10", "j11"],
+    moves: [["j10", "phalempin"]],
+    text: "Die Jasta 10 entsteht in Phalempin aus dem Kampfeinsitzerkommando 3 und heißt nach ihrem ersten Führer zunächst „Jagdstaffel Linck“. Am selben Tag wird die Jasta 11 aus Kampfeinsitzerkommandos der 4. Armee gebildet." },
+  { date: "1916-10-11", dl: "11.10.1916", title: "Jasta 11 einsatzbereit", sub: "La Brayelle bei Douai", units: ["j11"],
+    moves: [["j11", "brayelle"]],
+    text: "Die Jasta 11 wird auf dem Flugplatz La Brayelle westlich von Douai mobil gemacht. Bis Anfang 1917 erzielt sie keinen einzigen Luftsieg." },
+  { date: "1916-10-28", dl: "28.10.1916", title: "Jasta 10 an die Maas", sub: "Jametz bei Stenay", units: ["j10"],
+    moves: [["j10", "jametz"]],
+    text: "Verlegung in den Abschnitt nördlich von Verdun." },
+  { date: "1916-12-12", dl: "12.12.1916", title: "Verlegungen nach Lothringen", sub: "Xivry-Circourt und Angevillers", units: ["j4", "j10"],
+    moves: [["j4", "xivry"], ["j10", "angevillers"]],
+    text: "Jasta 4 verlegt nach Xivry-Circourt, Jasta 10 nach Angevillers. Bis wann die Jasta 10 dort lag und ob es danach Zwischenplätze gab, ist nicht belegt." },
+  { date: "1917-01-22", dl: "Januar 1917", title: "Richthofen übernimmt Jasta 11", sub: "La Brayelle bei Douai", units: ["j11"], persons: ["mvr"],
+    focus: "brayelle",
+    text: "Manfred von Richthofen, bisher in der Jasta 2 „Boelcke“, wird Führer der Jasta 11. Am 23.01.1917 erzielt er den ersten Luftsieg der Staffel. Er lässt sein Flugzeug rot streichen; die Staffel übernimmt rote Anstriche.",
+    note: "Sein Vorgänger Rudolf Lang führte die Staffel bis 14.01.1917. Für Richthofens Ernennung nennen Quellen den 10., 12. oder 16.01.1917; eine Quelle nennt die Ankunft in La Brayelle am 22.01.1917." },
+  { date: "1917-02-10", dl: "10.02.1917", title: "Jasta 4 zurück an die Somme", sub: "Le Catelet", units: ["j4"],
+    moves: [["j4", "lecatelet"]],
+    text: "Verlegung nach Le Catelet nördlich von St-Quentin." },
+  { date: "1917-02-24", dl: "24.02.1917", title: "Jasta 4 nach Douai", sub: "Arras-Front", units: ["j4"],
+    moves: [["j4", "douai"]],
+    text: "Die Jasta 4 liegt bis 31.05.1917 in Douai, nahe dem Platz der Jasta 11 in La Brayelle." },
+  { date: "1917-03-16", dl: "16.03.1917", title: "Rückzug in die Siegfriedstellung", sub: "Unternehmen „Alberich“", units: ["j11"], persons: ["lvr"],
+    focus: "brayelle",
+    text: "Beginn des Hauptrückzugs aus dem Bogen von Noyon in die Siegfriedstellung (Unternehmen „Alberich“, 09.02.–20.03.1917). Bereits am 06.03.1917 kam Lothar von Richthofen zur Jasta 11." },
+  { date: "1917-04-13", dl: "13.04.1917", title: "Jasta 11 nach Roucourt", sub: "Schlacht bei Arras", units: ["j11"], persons: ["mvr", "lvr", "schaefer", "wolff", "allm"],
+    moves: [["j11", "roucourt"]],
+    text: "Nach britischen Nachtangriffen auf La Brayelle (5./6. und 7./8.04.1917) verlegt die Jasta 11 nach Roucourt. Seit dem 09.04.1917 läuft die britische Offensive bei Arras.",
+    note: "Verlegung je nach Quelle am 13. oder 14.04.1917; in einer weiteren Prüfung war das Datum nicht belegt." },
+  { date: "1917-05-02", dl: "02.05.1917", title: "Jasta 10 nach Bersée", sub: "über Leffincourt", units: ["j10"],
+    moves: [["j10", "bersee", false, [["leffincourt", true]]]],
+    text: "Die Jasta 10 lag bis 01.05.1917 in Leffincourt und verlegt am 02.05. nach Bersée bei Douai (bis 24.05.).",
+    note: "Seit wann die Jasta 10 in Leffincourt lag, ist nicht belegt (gestrichelt)." },
+  { date: "1917-05-25", dl: "25.05.1917", title: "Jasta 10 nach Heule", sub: "bei Kortrijk", units: ["j10"],
+    moves: [["j10", "heule"]],
+    text: "Die Jasta 10 verlegt nach Heule bei Kortrijk (bis 02.07.1917)." },
+  { date: "1917-06-01", dl: "Anfang Juni 1917", title: "Verlegung nach Flandern", sub: "Cuerne (Kuurne) bei Kortrijk", units: ["j4"],
+    moves: [["j4", "cuene"]],
+    text: "Die Staffeln werden nach Flandern verlegt, wo im Juni 1917 eine alliierte Offensive beginnt. Die Jasta 4 liegt vom 01.06. bis 01.07.1917 auf dem Militärflugplatz Cuerne bei Kuurne, nördlich von Kortrijk.",
+    note: "In Quellen auch „Ceune“ oder „Cuene“ geschrieben. Die genaue Lage des Flugfelds ist nicht belegt; eingetragen in der Gemeinde Kuurne." },
+  { date: "1917-06-05", dl: "05.06.1917", title: "Tod von Karl Emil Schäfer", sub: "bei Becelaere-Zandvoorde", units: ["j11"], persons: ["schaefer"], mark: "schaefer",
+    text: "Der frühere Flieger der Jasta 11 fällt als Führer der Jasta 28 im Luftkampf mit der britischen No. 20 Squadron.",
+    note: "Ein Eintrag nennt Zonnebeke; die überwiegenden Quellen nennen Becelaere-Zandvoorde." },
+  { date: "1917-06-10", dl: "10.06.1917", title: "Jasta 11 nach Harlebeke", sub: "bei Bavikhove", units: ["j11"],
+    moves: [["j11", "harlebeke"]],
+    text: "Die Jasta 11 verlegt von Roucourt nach Harlebeke (Harelbeke) bei Bavikhove. Spätestens am 24.06.1917 liegt sie in Marke.",
+    note: "Das Datum des Wechsels von Harlebeke nach Marke ist nicht belegt; Zwischenplätze sind nicht ausgewiesen." },
+  { date: "1917-06-24", dl: "24.06. – Anf. 07.1917", title: "Kortrijk", sub: "Aufstellung des Jagdgeschwaders I", units: ["jg", "j4", "j6", "j10", "j11"],
+    moves: [["jg", "kortrijk"], ["j11", "marke"], ["j6", "bisseghem", true, [["jametz", true], ["ugny", true], ["aulnoye", true]]]], sector: "Flandern",
+    text: "Die Jagdstaffeln 4, 6, 10 und 11 werden zum Jagdgeschwader I zusammengefasst. Kommandeur ist Rittmeister Manfred Freiherr von Richthofen. Nach diesem Vorbild entstehen im Februar 1918 weitere Jagdgeschwader. Anfangsverteilung: Jasta 11 in Marke, Jasta 4 in Cuerne (Kuurne), Jasta 6 in Bisseghem, Jasta 10 in Heule.",
+    note: "Mehrere Quellen bestätigen den 24.06.1917; einzelne nennen den 26.06. Für die Jasta 6 sind die Stationen Jametz, Ugny-l'Équipée und Aulnoye-Aymeries belegt, aber nicht datiert (gestrichelt)." },
+  { date: "1917-06-27", dl: "27.06.1917", title: "Tod von Karl Allmenröder", sub: "bei Zillebeke", units: ["j11"], persons: ["allm"], mark: "allm",
+    text: "Der Führer der Jasta 11 fällt drei Tage nach Aufstellung des Geschwaders. Die Umstände sind umstritten; möglicherweise traf ihn Flakfeuer." },
+  { date: "1917-07-02", dl: "07.1917 – 22.11.1917", title: "Marckebeke", sub: "Marke bei Kortrijk", units: ["jg", "j6"],
+    moves: [["jg", "marke"], ["j4", "marke"], ["j6", "marke", true]], sector: "Flandern",
+    text: "Stab und Staffeln auf Plätzen rund um Kortrijk; Jasta 4 und Jasta 6 verlegen am 02.07. nach Marckebeke. Einsatz über dem Schlachtfeld in Flandern. Wegen der bunten Bemalung und der häufigen Verlegungen erhält der Verband den Beinamen „Flying Circus“.",
+    note: "Für die Jasta 4 ist der 02.07.1917 belegt. Für die Jasta 6 nennt nur eine Quellenzusammenfassung dieses Datum; eine weitere Prüfung fand es nicht (gestrichelt)." },
+  { date: "1917-07-06", dl: "06.07.1917", title: "Richthofen verwundet", sub: "bei Wervik", units: ["jg"], persons: ["mvr"], mark: "wervik",
+    text: "Richthofen erleidet im Luftkampf eine schwere Kopfverletzung und muss notlanden.",
+    note: "Rückkehr in den Dienst je nach Quelle am 25.07. oder 16.08.1917." },
+  { date: "1917-09-15", dl: "15.09.1917", title: "Tod von Kurt Wolff", sub: "über Moorslede", units: ["j11"], persons: ["wolff"], mark: "wolff",
+    text: "Der Führer der Jasta 11 fällt im Luftkampf. Lothar von Richthofen übernimmt die Staffel." },
+  { date: "1917-09-23", dl: "23.09.1917", title: "Tod von Werner Voss", sub: "bei Poelkapelle / Frezenberg", units: ["j10"], persons: ["voss"], mark: "voss",
+    text: "Der Führer der Jasta 10 fällt im Luftkampf mit S.E.5 der britischen No. 56 Squadron, wenige Stunden nach seinem 48. Luftsieg. Den Abschuss wird Arthur Rhys-Davids zugeschrieben.",
+    note: "Todesort je nach Quelle bei Poelkapelle oder nördlich von Frezenberg (eingetragen: Frezenberg). Zahl der beteiligten britischen Flugzeuge (sechs bis acht) und Verlauf des Kampfes sind umstritten." },
+  { date: "1917-11-23", dl: "23.11.1917 – 19.03.1918", title: "Avesnes-le-Sec", sub: "nordöstlich von Cambrai", units: ["jg"],
+    moves: [["jg", "avesnes"]], sector: "Cambrai",
+    text: "Eilverlegung aus Flandern nach Beginn der britischen Offensive bei Cambrai. Das Geschwader bleibt hier bis 19.03.1918; Jasta 4 lag zeitweise im benachbarten Lieu-Saint-Amand.",
+    note: "Ankunft je nach Quelle am 23. oder 26.11.1917." },
+  { date: "1918-03-20", dl: "20.03. – 26.03.1918", title: "Awoingt", sub: "südöstlich von Cambrai", units: ["jg"],
+    moves: [["jg", "awoingt"]], sector: "Somme",
+    text: "Getarnter Bereitstellungsplatz für die Frühjahrsoffensive „Michael“, die am 21.03.1918 bei St-Quentin beginnt. Die Flugzeuge wurden nach der Landung sofort in Zelte geschoben." },
+  { date: "1918-03-27", dl: "27.03. – Anf. 04.1918", title: "Léchelle", sub: "über das alte Somme-Schlachtfeld", units: ["jg"],
+    moves: [["jg", "lechelle"]], sector: "Somme",
+    text: "Verlegung nach Westen hinter die vorrückende Front." },
+  { date: "1918-04-02", dl: "Anf. – 11.04.1918", title: "Harbonnières", sub: "östlich von Amiens", units: ["jg"],
+    moves: [["jg", "harbonnieres"]], sector: "Somme",
+    text: "Der am weitesten südwestlich gelegene Platz, den das Geschwader bezog." },
+  { date: "1918-04-12", dl: "12.04. – 19.05.1918", title: "Cappy", sub: "an der Somme", units: ["jg"],
+    moves: [["jg", "cappy"]], sector: "Somme",
+    text: "Von hier startet Richthofen zu seinem letzten Flug. Am 10.05. meldet das Geschwader seinen 300. Luftsieg." },
+  { date: "1918-04-21", dl: "21.04.1918", title: "Tod Manfred von Richthofens", sub: "über dem Somme-Tal bei Vaux-sur-Somme", units: ["jg", "j11"], persons: ["mvr", "reinhard"], mark: "mvr",
+    text: "Richthofen wird im Kampf mit Sopwith Camel der No. 209 Squadron über dem Morlancourt-Rücken tödlich getroffen und landet nördlich von Vaux-sur-Somme. Nachfolger als Kommandeur wird Hauptmann Wilhelm Reinhard (Jasta 6).",
+    note: "Ob ihn australisches Feuer vom Boden oder der kanadische Flieger Roy Brown traf, ist umstritten." },
+  { date: "1918-05-20", dl: "20.05. – 25.05.1918", title: "Guise", sub: "an der Oise", units: ["jg", "j4"], persons: ["udet"],
+    moves: [["jg", "guise"]], sector: "Aisne",
+    text: "Verlegung nach Süden, eine Woche vor Beginn der Aisne-Offensive. Das Geschwader erhält den Ehrennamen „Jagdgeschwader Freiherr von Richthofen Nr. 1“. Am 20. bzw. 22.05. übernimmt Ernst Udet die Jasta 4." },
+  { date: "1918-05-26", dl: "26.05. – 31.05.1918", title: "Puisieux-Ferme", sub: "bei Laon", units: ["jg"],
+    moves: [["jg", "puisieux"]], sector: "Aisne",
+    text: "Unterstützung der Offensive „Blücher-Yorck“ am Chemin des Dames, die ab 27.05.1918 bis an die Marne vorstößt.",
+    note: "Lage nur ungefähr; Jasta 10 wird für diese Zeit in Puisieux-et-Clanlieu geführt." },
+  { date: "1918-05-31", dl: "31.05. – 17.07.1918", title: "Beugneux", sub: "Rugny-Ferme, Marne-Bogen", units: ["jg"],
+    moves: [["jg", "beugneux"]], sector: "Marne",
+    text: "Platz im Marne-Bogen, der bei der Aisne-Offensive entstanden war." },
+  { date: "1918-07-03", dl: "03.07.1918", title: "Tod von Wilhelm Reinhard", sub: "Berlin-Adlershof", units: ["jg", "j6"], persons: ["reinhard", "goering"],
+    focus: "beugneux",
+    text: "Der Kommandeur verunglückt beim Testflug eines Prototyps in Berlin-Adlershof tödlich, als eine Tragfläche bricht (Ort außerhalb des Kartenausschnitts). Oberleutnant Hermann Göring übernimmt das Geschwader.",
+    note: "Göring wurde am 8. Juli ernannt und trat das Kommando laut einer Quelle am 14. Juli an; andere Quellen nennen den 6. oder 7. Juli 1918. Reinhard flog eine Zeppelin-Lindau D.I." },
+  { date: "1918-07-16", dl: "16.07.1918", title: "Tod von Hans Kirschstein", sub: "bei Fismes", units: ["j6"], persons: ["kirsch"], mark: "kirsch",
+    text: "Der Führer der Jasta 6 verunglückt als Passagier eines Zweisitzers tödlich, nachdem er sein Flugzeug zur Wartung nach Fismes gebracht hatte." },
+  { date: "1918-07-18", dl: "18.07. – 29.07.1918", title: "Monthussart-Ferme", sub: "südlich der Aisne", units: ["jg"],
+    moves: [["jg", "monthussart"]], sector: "Marne",
+    text: "Am 18.07.1918 beginnt die alliierte Gegenoffensive an der Marne. Die deutschen Truppen räumen den Marne-Bogen.",
+    note: "Lage nur ungefähr." },
+  { date: "1918-07-30", dl: "30.07. – 09.08.1918", title: "Puisieux-Ferme", sub: "bei Laon, Rückverlegung", units: ["jg"],
+    moves: [["jg", "puisieux"]], sector: "Aisne",
+    text: "Rückverlegung auf den früheren Platz nach dem Rückzug aus dem Marne-Bogen." },
+  { date: "1918-08-08", dl: "08.08.1918", title: "Alliierte Offensive bei Amiens", sub: "„Schwarzer Tag des deutschen Heeres“", units: ["jg"],
+    focus: "puisieux",
+    text: "Alliierte Truppen durchbrechen die Front östlich von Amiens. Ludendorff nennt den Tag den „schwarzen Tag des deutschen Heeres“. Er gilt als Beginn der Hunderttageoffensive." },
+  { date: "1918-08-10", dl: "10.08. – 11.08.1918", title: "Ennemain / Falvy", sub: "an der Somme", units: ["jg"],
+    moves: [["jg", "ennemain"]], sector: "Somme",
+    text: "Verlegung an die Somme, in den Raum der alliierten Offensive." },
+  { date: "1918-08-10", dl: "10.08.1918", title: "Tod von Erich Löwenhardt", sub: "bei Chaulnes", units: ["j10"], persons: ["loew"], mark: "loew",
+    text: "Der Führer der Jasta 10 stößt im Luftkampf mit einer Maschine der Jasta 11 zusammen. Sein Fallschirm öffnet sich nicht.",
+    note: "Das Versagen des Fallschirms ist nur in einer Quelle beschrieben." },
+  { date: "1918-08-12", dl: "11./12.08. – 30.08.1918", title: "Bernes", sub: "östlich von Péronne", units: ["jg"],
+    moves: [["jg", "bernes"]], sector: "Somme",
+    text: "Einsatz gegen die alliierte Offensive an der Somme. Angaben zu Verlusten des Geschwaders in dieser Zeit: nicht belegt.",
+    note: "Beginn je nach Staffel 11. oder 12.08.1918." },
+  { date: "1918-08-30", dl: "30.08. – ca. 25.09.1918", title: "Busigny / Escaufourt", sub: "südöstlich von Cambrai", units: ["jg"],
+    moves: [["jg", "busigny"]], sector: "Siegfriedstellung",
+    text: "Im September 1918 meldet das Geschwader nur 17 Luftsiege, obwohl die alliierten Luftstreitkräfte in diesem Monat ihre höchsten Verluste des Krieges erleiden.",
+    note: "Ende je nach Staffel zwischen 20. und 27.09.1918." },
+  { date: "1918-09-25", dl: "25./28.09. – 08.10.1918", title: "Metz-Frescaty", sub: "Lothringen", units: ["jg"],
+    moves: [["jg", "metz"]], sector: "Maas / Lothringen",
+    text: "Verlegung in den Südabschnitt der Front. Am 26.09.1918 beginnt die amerikanisch-französische Maas-Argonnen-Offensive." },
+  { date: "1918-10-09", dl: "09.10. – 06.11.1918", title: "Marville", sub: "nördlich von Verdun", units: ["jg"],
+    moves: [["jg", "marville"]], sector: "Maas / Lothringen",
+    text: "Letzter längerer Platz vor dem Waffenstillstand. Einzelheiten zu den Einsätzen von hier aus: nicht belegt." },
+  { date: "1918-11-07", dl: "07.11. – 10.11.1918", title: "Tellancourt", sub: "bei Longwy", units: ["jg"],
+    moves: [["jg", "tellancourt"]], sector: "Maas / Lothringen",
+    text: "Letzter Frontplatz. Göring erhält wiederholt Befehl, das Geschwader zurückzuziehen." },
+  { date: "1918-11-10", dl: "10.11. – 16.11.1918", title: "Aschaffenburg", sub: "Rückführung ins Reich", units: ["jg"],
+    moves: [["jg", "aschaffenburg"]], sector: "Heimat",
+    text: "Verlegung ins Reich; am 11.11.1918 tritt der Waffenstillstand in Kraft." },
+  { date: "1918-11-16", dl: "16.11.1918", title: "Darmstadt", sub: "Auflösung", units: ["jg", "j4", "j6", "j10", "j11"],
+    moves: [["jg", "darmstadt"]], sector: "Heimat",
+    text: "Die Staffeln werden bei der Flieger-Ersatz-Abteilung 9 in Darmstadt aufgelöst." }
+];
+
+const FRONT_LABEL = { f1916: "Front 1916", f1917: "Front 1917", f1918: "Front Höchststand 1918", fsep: "Front Spätsommer 1918", fnov: "Front 11.11.1918" };
+function frontFor(iso) {
+  if (iso < "1917-03-16") return "f1916";
+  if (iso < "1918-03-21") return "f1917";
+  if (iso < "1918-08-08") return "f1918";
+  if (iso < "1918-10-01") return "fsep";
+  return "fnov";
+}
+
+const NS = "http://www.w3.org/2000/svg";
+const $ = id => document.getElementById(id);
+const el = (tag, attrs = {}, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; };
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const N = STEPS.length;
+
+// ---------- statische Karte ----------
+$("grat").setAttribute("d", MAP.graticule);
+for (const s of MAP.shapes) el("path", { d: s.d, class: "country c-" + s.id }, $("countries"));
+$("al").setAttribute("d", MAP.al);
+$("alline").setAttribute("d", MAP.alLine);
+const EMB_NAME = { de: "Eisernes Kreuz (Deutsches Reich)", fr: "Kokarde Frankreich", uk: "Kokarde Großbritannien", be: "Kokarde Belgien", nl: "Orangefarbene Scheibe (Niederlande)" };
+const embEls = [];
+for (const c of MAP.countryLabels) {
+  const left = c.p[0] < 120;
+  const x = left ? 8 : c.p[0];
+  const t = el("text", { x, y: c.p[1], class: "clabel", "text-anchor": left ? "start" : "middle", "font-size": 13 }, $("clabels")); t.textContent = c.n;
+  if (c.e) {
+    const g = el("g", { class: "emb" }, $("clabels"));
+    el("use", { href: "#e-" + c.e }, g);
+    const tt = el("title", {}, g); tt.textContent = EMB_NAME[c.e];
+    embEls.push({ g, x: left ? x + 12 : x, y: c.p[1] });
+  }
+}
+const frontEls = {};
+for (const [k, d] of Object.entries(MAP.fronts)) {
+  const g = el("g", {}, $("fronts"));
+  frontEls[k] = [el("path", { d, class: "front-teeth" }, g), el("path", { d, class: "front" }, g)];
+}
+const LEFT_LABELS = new Set(["Amiens", "Ypern", "Cambrai", "St-Quentin", "Soissons", "Laon"]);
+for (const c of MAP.cities) {
+  const g = el("g", { class: "city" }, $("cities"));
+  el("circle", { cx: c.p[0], cy: c.p[1], r: 1.8 }, g);
+  const left = LEFT_LABELS.has(c.n);
+  const t = el("text", { x: c.p[0] + (left ? -4 : 4), y: c.p[1] - 3, "font-size": 11, "text-anchor": left ? "end" : "start" }, g); t.textContent = c.n;
+}
+
+const PLACE = { sivry: "Sivry-sur-Meuse", roupy: "Roupy", phalempin: "Phalempin", brayelle: "La Brayelle", jametz: "Jametz", xivry: "Xivry-Circourt",
+  angevillers: "Angevillers", ugny: "Ugny-l'Équipée", aulnoye: "Aulnoye-Aymeries", bisseghem: "Bisseghem", leffincourt: "Leffincourt", bersee: "Bersée",
+  cuene: "Cuerne (Kuurne)", vauxverm: "Vaux-en-Vermandois", poelkapelle: "Poelkapelle", lecatelet: "Le Catelet", douai: "Douai", roucourt: "Roucourt", harlebeke: "Harlebeke", heule: "Heule",
+  kortrijk: "Kortrijk", marke: "Marckebeke", avesnes: "Avesnes-le-Sec", awoingt: "Awoingt", lechelle: "Léchelle", harbonnieres: "Harbonnières",
+  cappy: "Cappy", guise: "Guise", puisieux: "Puisieux-Ferme", beugneux: "Beugneux", monthussart: "Monthussart-Ferme", ennemain: "Ennemain",
+  bernes: "Bernes", busigny: "Busigny", metz: "Metz-Frescaty", marville: "Marville", tellancourt: "Tellancourt", aschaffenburg: "Aschaffenburg",
+  zandvoorde: "Zandvoorde", zillebeke: "Zillebeke", wervik: "Wervik", moorslede: "Moorslede", frezenberg: "Frezenberg", vaux: "Vaux-sur-Somme",
+  fismes: "Fismes", chaulnes: "Chaulnes", darmstadt: "Darmstadt" };
+
+// ---------- Verbandslinien aus der Chronologie ableiten ----------
+const pt = k => { const p = MAP.pts[k]; if (!p) throw new Error("Koordinate fehlt: " + k); return p; };
+const TP = {}; for (const t in TRACKS) TP[t] = [];
+STEPS.forEach((st, s) => {
+  st.moves = st.moves || [];
+  st.from = []; st.prevOf = {};
+  st.moves.forEach(([t, k, dashed, via]) => {
+    const prev = TP[t][TP[t].length - 1];
+    if (prev) st.from.push(prev.p);
+    // via: belegte, aber undatierte Zwischenstationen; sie werden im selben Schritt als Kette durchlaufen
+    (via || []).forEach(([vk, vd]) => { TP[t].push({ s, k: vk, p: pt(vk), dashed: !!vd, via: true, first: !TP[t].length }); st.from.push(pt(vk)); });
+    const last = TP[t][TP[t].length - 1];
+    if (last) st.prevOf[k] = last.p;
+    TP[t].push({ s, k, p: pt(k), dashed: !!dashed, first: !last });
+  });
+  if (!st.focus) st.focus = st.moves.length ? st.moves[0][1] : MARKS[st.mark].k;
+});
+const F = STEPS.map(st => pt(st.focus));
+// Der Fokus-Ring gleitet nur, wenn ein Verband tatsächlich vom vorherigen Fokusort zum neuen verlegt.
+// Sonst (Aufstellung, Todesfall, Ereignis, anderer Verband) blendet er am neuen Ort ein.
+const same = (a, b) => a && b && Math.abs(a[0] - b[0]) < .01 && Math.abs(a[1] - b[1]) < .01;
+STEPS.forEach((st, s) => { st.glide = s > 0 && same(st.prevOf[st.focus], F[s - 1]); });
+const T = STEPS.map(st => Date.parse(st.date));
+
+// Vorschau: blasse Linie des späteren Geschwaderwegs
+$("routeAll").setAttribute("d", "M" + TP.jg.map(q => q.p.join(",")).join("L"));
+
+const trkEls = {};
+for (const [t, def] of Object.entries(TRACKS)) {
+  const g = el("g", { class: "trk trk-" + t, style: `--c:${def.color}` }, $("tracks"));
+  trkEls[t] = { g, solid: el("path", { class: "trk-solid" }, g), dash: el("path", { class: "trk-dash" }, g), dots: TP[t].map(q => {
+    const c = q.first ? el("use", { href: "#plane", class: "trk-plane" }, g) : el("circle", { cx: q.p[0], cy: q.p[1], r: 4, class: "trk-dot" }, g);
+    const tt = el("title", {}, c); tt.textContent = `${def.name}: ${q.first ? "Aufstellung / erster Platz " : ""}${PLACE[q.k]} (${STEPS[q.s].dl})`;
+    c.addEventListener("click", () => go(q.s));
+    return c;
+  }) };
+}
+const MERGE_AT = Object.fromEntries(Object.keys(TRACKS).map(t => [t, t === "jg" ? Infinity : Math.max(TP.jg[0].s, TP[t][TP[t].length - 1].s)]));
+
+// Markierungen (✕ Ereignis, † gefallen / tödlich verunglückt)
+const markEls = {};
+STEPS.forEach((st, s) => {
+  if (!st.mark) return;
+  const m = MARKS[st.mark], [x, y] = pt(m.k);
+  const g = el("g", { class: "mk mk-" + m.kind, transform: `translate(${x},${y})` }, $("events"));
+  if (m.kind === "kia") { const c = el("text", { class: "mk-sym", "text-anchor": "middle", "dominant-baseline": "central" }, g); c.textContent = "†"; }
+  else el("path", { class: "mk-x", d: "M-4,-4L4,4M4,-4L-4,4" }, g);
+  const lt = el("text", { class: "ev-label", "text-anchor": m.lp[2], "data-dx": m.lp[0], "data-dy": m.lp[1] }, g); lt.textContent = m.lab;
+  const tt = el("title", {}, g); tt.textContent = st.dl + " – " + st.title;
+  g.addEventListener("click", () => go(s));
+  markEls[s] = { g, label: lt };
+});
+
+// ---------- Zeitleiste mit Datumsskala ----------
+const t0 = Date.parse("1916-08-01"), t1 = Date.parse("1918-11-30");
+const pos = ms => ((ms - t0) / (t1 - t0)) * 100;
+const ruler = $("ruler");
+const MON = ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"];
+for (let y = 1916, m = 7; y < 1918 || m <= 10; m++) {
+  if (m > 11) { m = 0; y++; }
+  const x = pos(Date.parse(`${y}-${String(m + 1).padStart(2, "0")}-01`)); if (x < 0) continue;
+  const mt = document.createElement("div"); mt.className = "mt"; mt.style.left = x + "%"; ruler.appendChild(mt);
+  if (m % 3 === 0) { const l = document.createElement("div"); l.className = "month"; l.style.left = x + "%"; l.textContent = MON[m]; ruler.appendChild(l); }
+  if (m === 0 || (y === 1916 && m === 7)) { const l = document.createElement("div"); l.className = "month y"; l.style.left = x + "%"; l.textContent = y; ruler.appendChild(l); }
+}
+const ticks = STEPS.map((s, i) => {
+  const b = document.createElement("button"); b.type = "button"; b.className = "tick"; b.style.left = pos(T[i]) + "%";
+  b.title = `${i + 1}. ${s.dl}: ${s.title}`; b.setAttribute("aria-label", b.title);
+  b.addEventListener("click", () => go(i)); ruler.insertBefore(b, $("playhead")); return b;
+});
+
+// ---------- Tabelle und Personen ----------
+const chip = u => `<span class="uchip" style="--c:${TRACKS[u].color}">${TRACKS[u].name}</span>`;
+const rows = STEPS.map((s, i) => {
+  const tr = document.createElement("tr");
+  const kia = s.mark && MARKS[s.mark].kind === "kia";
+  tr.innerHTML = `<td class="n">${String(i + 1).padStart(2, "0")}</td><td class="d">${s.dl}</td><td><b class="${kia ? "kia-t" : ""}">${kia ? "† " : ""}${s.title}</b><br><span style="color:var(--muted)">${s.sub}</span></td><td>${s.units.map(chip).join(" ")}</td>`;
+  tr.addEventListener("click", () => { go(i); $("map").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" }); });
+  $("tbody").appendChild(tr); return tr;
+});
+for (const [id, p] of Object.entries(PERSONS)) {
+  const d = document.createElement("div"); d.className = "person" + (p.kia ? " is-kia" : "");
+  const stepIdx = STEPS.findIndex(s => s.mark === id || (p.kia && s.persons && s.persons.includes(id) && s.dl === p.kia));
+  d.innerHTML = `<b>${p.kia ? "† " : ""}${p.n}</b><div class="chips">${p.u.map(chip).join(" ")}</div><span>${p.role}</span><span class="fate">${p.fate}</span>${todHTML(TOD[id])}`;
+  if (stepIdx >= 0) { d.tabIndex = 0; d.setAttribute("role", "button"); d.title = "Auf der Karte zeigen";
+    const open = () => { go(stepIdx); $("map").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" }); };
+    d.addEventListener("click", open); d.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } }); }
+  $("persons").appendChild(d);
+}
+$("others").innerHTML = OTHERS.map(o => `<tr><td><b>${o.n}</b></td><td>${o.ctx}</td><td>${todHTML(o.tod)}</td></tr>`).join("");
+
+// ---------- Zustand und Animation ----------
+// g = Fortschritt in Schritten (0 … N-1, gebrochen während der Animation). Linien, Punkte, Zeitleiste, Front
+// und Markierungen werden alle aus g berechnet und laufen dadurch synchron.
+let cur = 0, follow = true, playing = false, timer = null;
+let vb = [0, 0, 1000, 640], g = 0;
+const lerp = (a, b, f) => [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f];
+const ISO = ms => new Date(ms).toISOString().slice(0, 10);
+function split(v) { const i = Math.min(N - 1, Math.floor(v + 1e-9)); return [i, i < N - 1 ? v - i : 0]; }
+function timeAt(v) { const [i, f] = split(v); return i < N - 1 ? T[i] + (T[i + 1] - T[i]) * f : T[i]; }
+function focusAt(v) {
+  const [i, f] = split(v);
+  if (i >= N - 1 || f === 0) return { p: F[i], o: 1 };
+  if (STEPS[i + 1].glide) return { p: lerp(F[i], F[i + 1], f), o: 1 };
+  return { p: F[i + 1], o: f < .5 ? 0 : (f - .5) * 2 };   // kein Gleiten: am Ziel einblenden
+}
+function trackGeom(t, v) {
+  const [i, f] = split(v), pts = TP[t], segs = []; let head = null, shown = 0;
+  for (let j = 0; j < pts.length; j++) {
+    const q = pts[j];
+    if (q.s <= i) { if (j) segs.push([pts[j - 1].p, q.p, q.dashed]); head = q.p; shown = j + 1; continue; }
+    if (q.s === i + 1 && f > 0 && j) {
+      // Kette aller Punkte dieses Schritts gemeinsam durchlaufen: Fortschritt f bezieht sich auf die Gesamtlänge
+      let e = j; while (e + 1 < pts.length && pts[e + 1].s === i + 1) e++;
+      const len = k => Math.hypot(pts[k].p[0] - pts[k - 1].p[0], pts[k].p[1] - pts[k - 1].p[1]);
+      let tot = 0; for (let k = j; k <= e; k++) tot += len(k);
+      let rest = f * tot;
+      for (let k = j; k <= e; k++) {
+        const L = len(k);
+        if (rest >= L && k < e) { segs.push([pts[k - 1].p, pts[k].p, pts[k].dashed]); shown = k + 1; head = pts[k].p; rest -= L; continue; }
+        head = lerp(pts[k - 1].p, pts[k].p, L ? Math.min(1, rest / L) : 1); segs.push([pts[k - 1].p, head, pts[k].dashed]); break;
+      }
+    }
+    break;
+  }
+  return { segs, head, shown };
+}
+const svgEl = $("svg");
+const aspect = () => { const r = svgEl.getBoundingClientRect(); return r.width && r.height ? r.width / r.height : 1000 / 640; };
+function fitBox(pts, padX, padY, minW, minH) {
+  const A = aspect();
+  let x0 = Math.min(...pts.map(p => p[0])), x1 = Math.max(...pts.map(p => p[0]));
+  let y0 = Math.min(...pts.map(p => p[1])), y1 = Math.max(...pts.map(p => p[1]));
+  let w = Math.max(x1 - x0 + padX, minW), h = Math.max(y1 - y0 + padY, minH);
+  if (w / h > A) h = w / A; else w = h * A;
+  if (w > 1000) { w = 1000; h = w / A; }
+  if (h > 640 && A >= 1000 / 640) { h = 640; w = h * A; }
+  let x = (x0 + x1) / 2 - w / 2, y = (y0 + y1) / 2 - h / 2;
+  x = w >= 1000 ? (1000 - w) / 2 : Math.max(0, Math.min(1000 - w, x));
+  y = h >= 640 ? Math.max(-120, Math.min(760 - h, y)) : Math.max(0, Math.min(640 - h, y));
+  return [x, y, w, h];
+}
+const ALL_PTS = Object.values(TP).flat().map(q => q.p);
+function targetBox(i) {
+  if (!follow) return aspect() >= 1000 / 640 - .01 ? [0, 0, 1000, 640] : fitBox(ALL_PTS, 60, 80, 0, 0);
+  const narrow = svgEl.getBoundingClientRect().width < 500;
+  const st = STEPS[i];
+  const pts = [F[i], F[Math.max(0, i - 1)], ...st.from, ...st.moves.map(m => pt(m[1]))];
+  return fitBox(pts, narrow ? 150 : 220, narrow ? 150 : 160, narrow ? 300 : 420, narrow ? 300 : 260);
+}
+let raf = null;
+function animate(i, dur) {
+  cancelAnimationFrame(raf);
+  const vbFrom = vb.slice(), vbTo = targetBox(i), gFrom = g, gTo = i;
+  const start = performance.now();
+  const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  const step = now => {
+    const t = dur <= 0 ? 1 : Math.min(1, (now - start) / dur), e = ease(t);
+    vb = vbFrom.map((v, k) => v + (vbTo[k] - v) * e);
+    g = t >= 1 ? gTo : gFrom + (gTo - gFrom) * e;
+    draw();
+    if (t < 1) raf = requestAnimationFrame(step);
+  };
+  raf = requestAnimationFrame(step);
+}
+let lastFront = "";
+function draw() {
+  svgEl.setAttribute("viewBox", vb.map(v => v.toFixed(1)).join(" "));
+  const pxw = svgEl.getBoundingClientRect().width || 1000;
+  const s = Math.min(vb[2] / pxw, 3.2) * (pxw < 500 ? 1 : 1.1); // Karteneinheiten pro Bildschirmpixel
+  const [i, f] = split(g);
+  const settled = Math.abs(g - Math.round(g)) < 1e-6;
+  // Verbandslinien
+  for (const t in TRACKS) {
+    const geo = trackGeom(t, g), E = trkEls[t];
+    const toD = arr => arr.map(([a, b]) => `M${a[0].toFixed(1)},${a[1].toFixed(1)}L${b[0].toFixed(1)},${b[1].toFixed(1)}`).join("");
+    E.solid.setAttribute("d", toD(geo.segs.filter(x => !x[2])));
+    E.dash.setAttribute("d", toD(geo.segs.filter(x => x[2])));
+    E.dots.forEach((c, j) => {
+      c.style.display = j < geo.shown ? "" : "none";
+      const q = TP[t][j];
+      if (q.first) c.setAttribute("transform", `translate(${q.p[0]},${q.p[1]}) scale(${(t === "jg" ? .78 : .68) * s})`);
+      else c.setAttribute("r", (t === "jg" ? 4 : 3.4) * s);
+    });
+    E.g.classList.toggle("merged", i >= MERGE_AT[t]);
+  }
+  $("routeAll").style.opacity = i >= TP.jg[0].s ? "" : "0";
+  // Fokus-Marker
+  const fo = focusAt(g), m = fo.p;
+  $("cur").style.opacity = fo.o;
+  $("ring").setAttribute("cx", m[0]); $("ring").setAttribute("cy", m[1]); $("ring").setAttribute("r", 9 * s);
+  $("pulse").setAttribute("cx", m[0]); $("pulse").setAttribute("cy", m[1]); $("pulse").setAttribute("r", 11 * s);
+  const lab = $("curLabel");
+  const right = m[0] < vb[0] + vb[2] * 0.7;
+  lab.setAttribute("x", m[0] + (right ? 12 : -12) * s); lab.setAttribute("y", m[1] - 9 * s);
+  lab.setAttribute("text-anchor", right ? "start" : "end");
+  lab.setAttribute("font-size", 17 * s); lab.setAttribute("stroke-width", 4 * s);
+  lab.style.visibility = STEPS[cur].mark && settled ? "hidden" : "";
+  // Markierungen: Symbol ab Erreichen des Schritts, Beschriftung nur beim aktuellen Schritt
+  for (const [k, me] of Object.entries(markEls)) {
+    const sIdx = +k;
+    me.g.classList.toggle("on", sIdx <= i);
+    const t = me.label;
+    t.setAttribute("x", t.dataset.dx * s); t.setAttribute("y", t.dataset.dy * s); t.setAttribute("font-size", 11 * s); t.setAttribute("stroke-width", 3 * s);
+    let show = settled && sIdx === cur;
+    if (show) try {
+      const b = t.getBBox(), mt = me.g.transform.baseVal.consolidate().matrix;
+      show = mt.e + b.x >= vb[0] && mt.e + b.x + b.width <= vb[0] + vb[2] && mt.f + b.y >= vb[1] && mt.f + b.y + b.height <= vb[1] + vb[3];
+    } catch (e) {}
+    t.style.visibility = show ? "" : "hidden";
+  }
+  document.querySelectorAll(".mk-x").forEach(p => p.setAttribute("transform", `scale(${s})`));
+  document.querySelectorAll(".mk-sym").forEach(p => p.setAttribute("font-size", 17 * s));
+  document.querySelectorAll(".city circle").forEach(c => c.setAttribute("r", 1.8 * s));
+  document.querySelectorAll(".city text").forEach(t => t.setAttribute("font-size", 11 * s));
+  document.querySelectorAll(".clabel").forEach(t => t.setAttribute("font-size", 13 * s));
+  embEls.forEach(e => e.g.setAttribute("transform", `translate(${e.x},${e.y - 26 * s}) scale(${1.1 * s})`));
+  // Zeitleiste und Front
+  const tNow = timeAt(g);
+  const pp = pos(tNow).toFixed(2) + "%";
+  $("prog").style.width = pp; $("playhead").style.left = pp;
+  $("nowDate").textContent = new Date(tNow).toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric", timeZone: "UTC" });
+  ticks.forEach((b, j) => b.classList.toggle("visited", j <= i));
+  const fk = frontFor(ISO(tNow));
+  if (fk !== lastFront) {
+    lastFront = fk;
+    for (const [k, [a, b]] of Object.entries(frontEls)) { a.classList.toggle("on", k === fk); b.classList.toggle("on", k === fk); }
+  }
+}
+
+function render(i) {
+  const s = STEPS[i];
+  $("pCount").textContent = `Schritt ${i + 1} / ${N}`;
+  $("pFront").textContent = FRONT_LABEL[frontFor(s.date)];
+  const kia = s.mark && MARKS[s.mark].kind === "kia";
+  $("pName").textContent = (kia ? "† " : "") + s.title;
+  $("pName").classList.toggle("kia-t", !!kia);
+  $("pSub").textContent = s.sub;
+  $("pDates").textContent = s.dl;
+  $("pUnits").innerHTML = s.units.map(chip).join(" ") + (s.sector ? ` <span class="chip">${s.sector}</span>` : "");
+  $("pText").textContent = s.text;
+  $("pNote").textContent = s.note || ""; $("pNote").hidden = !s.note;
+  const pb = $("pPersons"); pb.innerHTML = "";
+  (s.persons || []).forEach(id => {
+    const p = PERSONS[id], d = document.createElement("div");
+    d.className = "pp" + (p.kia ? " is-kia" : "");
+    d.innerHTML = `<b>${p.kia ? "† " : ""}${p.n}</b><span class="chips">${p.u.map(chip).join("")}</span><span>${p.role} ${p.fate}</span>${todHTML(TOD[id])}`;
+    pb.appendChild(d);
+  });
+  pb.hidden = !(s.persons || []).length;
+  $("curLabel").textContent = PLACE[s.focus] || "";
+  ticks.forEach((b, j) => b.classList.toggle("cur", j === i));
+  rows.forEach((r, j) => r.classList.toggle("cur", j === i));
+  $("prev").disabled = i === 0; $("next").disabled = i === N - 1;
+}
+
+function go(i, dur) {
+  i = Math.max(0, Math.min(N - 1, i));
+  const d = reduce ? 0 : (dur ?? Math.min(1800, 600 + Math.abs(i - g) * 250));
+  cur = i; render(i); animate(i, d);
+}
+function setPlaying(on) {
+  playing = on; clearTimeout(timer);
+  $("play").textContent = on ? "❚❚ Pause" : "▶ Abspielen";
+  if (on) {
+    if (cur >= N - 1) go(0, 600);
+    const tick = () => { timer = setTimeout(() => { if (cur >= N - 1) return setPlaying(false); go(cur + 1); tick(); }, +$("speedSel").value); };
+    tick();
+  }
+}
+$("play").addEventListener("click", () => setPlaying(!playing));
+$("next").addEventListener("click", () => { setPlaying(false); go(cur + 1); });
+$("prev").addEventListener("click", () => { setPlaying(false); go(cur - 1); });
+$("reset").addEventListener("click", () => { setPlaying(false); go(0); });
+$("zoomBtn").addEventListener("click", () => {
+  follow = !follow;
+  $("zoomBtn").textContent = follow ? "Gesamtkarte" : "Ausschnitt folgen";
+  $("zoomBtn").setAttribute("aria-pressed", String(follow));
+  animate(cur, reduce ? 0 : 800);
+});
+let rz;
+addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => animate(cur, 0), 120); });
+document.addEventListener("keydown", e => {
+  if (e.target.closest && e.target.closest("select")) return;
+  if (e.key === "ArrowRight") { setPlaying(false); go(cur + 1); }
+  if (e.key === "ArrowLeft") { setPlaying(false); go(cur - 1); }
+});
+
+vb = targetBox(0); render(0); draw();
+</script>
+</body>
+</html>
