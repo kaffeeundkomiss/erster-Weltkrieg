@@ -198,6 +198,15 @@ tr { cursor: pointer } tr:hover td { background: var(--red-soft) }
 tr.cur td { background: var(--red-soft) } tr.cur td.n { color: var(--red); font-weight: 500 }
 td b { font-weight: 600 }
 h3 { font: 700 20px/1 var(--f-display); text-transform: uppercase; letter-spacing: .04em; margin: 8px 0 0 }
+.chron > summary { display: flex; align-items: baseline; gap: 12px; cursor: pointer; list-style: none; padding: 4px 0 8px; border-bottom: 1px solid var(--rule) }
+.chron > summary::-webkit-details-marker { display: none }
+.chron > summary h3 { margin: 0 }
+.chron > summary .cnt { font: 500 13px/1 var(--f-mono); color: var(--muted) }
+.chron > summary .chev { margin-left: auto; font: 700 22px/1 var(--f-display); color: var(--muted); transition: transform .2s }
+.chron[open] > summary .chev { transform: rotate(90deg) }
+.chron > summary:hover h3, .chron > summary:focus-visible h3 { color: var(--red) }
+.chron > summary:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
+@media (prefers-reduced-motion: reduce) { .chron > summary .chev { transition: none } }
 .insignia { display: grid; gap: 10px }
 .ins-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px 22px }
 .ins { display: flex; gap: 12px; align-items: flex-start; font-size: 14.5px; min-width: 0 }
@@ -302,18 +311,20 @@ h3 { font: 700 20px/1 var(--f-display); text-transform: uppercase; letter-spacin
   </section>
 
   <section>
-    <h3>Chronologie</h3>
+    <details class="chron" id="chron">
+    <summary><h3>Chronologie</h3><span class="cnt"><span id="chronN"></span> Einträge</span><span class="chev" aria-hidden="true">›</span></summary>
     <div class="list">
       <table>
         <thead><tr><th>Nr.</th><th>Datum</th><th>Ort / Ereignis</th><th>Verband</th></tr></thead>
         <tbody id="tbody"></tbody>
       </table>
     </div>
+    </details>
   </section>
 
   <section class="persons" aria-labelledby="perH">
     <h3 id="perH">Personen</h3>
-    <p class="more">Die bekannten Flieger der Staffeln und alle weiteren erwähnten Personen, mit Steckbriefen und Chronologie: <a href="personen.html">Seite „Personen“ öffnen</a></p>
+    <p class="more">Register der bekannten Flieger und weiteren Personen mit eigener Chronologie: <a href="personen.html">Seite „Personen“ öffnen</a></p>
   </section>
 
   <section class="insignia" aria-labelledby="insH">
@@ -684,6 +695,7 @@ const rows = STEPS.map((s, i) => {
   tr.addEventListener("click", () => { go(i); $("map").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" }); });
   $("tbody").appendChild(tr); return tr;
 });
+$("chronN").textContent = STEPS.length;
 
 // ---------- Zustand und Animation ----------
 // g = Fortschritt in Schritten (0 … N-1, gebrochen während der Animation). Linien, Punkte, Zeitleiste, Front
