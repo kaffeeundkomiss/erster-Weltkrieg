@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flieger des Jagdgeschwaders Richthofen</title>
+<meta name="description" content="Chronologie der bekannten Flieger der Jagdstaffeln 4, 6, 10 und 11 und des Jagdgeschwaders I, nach Jahren aufklappbar.">
+<meta name="theme-color" content="#eceee8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121614" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="JG Richthofen">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: Kopf wie auf der Kartenseite, darunter Personenregister als Filter, darunter Jahres-Abschnitte (aufklappbar) mit Zeitleiste */
+:root {
+  --paper: #eceee8; --panel: #f6f7f3; --ink: #1d2420; --muted: #5d6861; --rule: #c3c9c1; --border: #6f7a72;
+  --j2: #6b6f6c; --j4: #2a5d91; --j6: #3f7a2e; --j10: #b07d0a; --j11: #7a3d8f; --ally: #4f6d7a; --red: #ad281d; --red-soft: rgba(173,40,29,.12);
+  --f-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #121614; --panel: #181d1a; --ink: #e2e6e1; --muted: #98a39b; --rule: #313a35; --border: #7d8a82;
+  --j2: #a4aaa6; --j4: #6fa3e0; --j6: #7dbb5f; --j10: #e0b33c; --j11: #c08ad6; --ally: #8fb3c4; --red: #e4533f; --red-soft: rgba(228,83,63,.16);
+  color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #121614; --panel: #181d1a; --ink: #e2e6e1; --muted: #98a39b; --rule: #313a35; --border: #7d8a82;
+  --j2: #a4aaa6; --j4: #6fa3e0; --j6: #7dbb5f; --j10: #e0b33c; --j11: #c08ad6; --ally: #8fb3c4; --red: #e4533f; --red-soft: rgba(228,83,63,.16);
+  color-scheme: dark }
+
+* { box-sizing: border-box }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 16px/1.55 var(--f-body) }
+[hidden] { display: none !important }
+.wrap { max-width: 1040px; margin: 0 auto; padding-block: 28px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 26px }
+.wrap > * { min-width: 0 }
+header { display: grid; gap: 10px }
+.brand { display: flex; align-items: center; gap: 16px }
+.brand-text { display: grid; gap: 6px; min-width: 0 }
+.logo { width: 76px; height: 76px; flex: none }
+.logo-ring { fill: var(--panel); stroke: var(--ink); stroke-width: 3 }
+.logo-inner { fill: none; stroke: var(--ink); stroke-width: 1; opacity: .5 }
+.logo-plane { fill: var(--red) }
+.logo-text { fill: var(--ink); font: 700 12.5px var(--f-display); letter-spacing: .16em }
+.eyebrow { font: 600 13px/1 var(--f-display); letter-spacing: .14em; text-transform: uppercase; color: var(--red) }
+h1 { font: 700 clamp(28px, 5vw, 46px)/1 var(--f-display); margin: 0; text-transform: uppercase; text-wrap: balance }
+.lede { margin: 0; max-width: 68ch; color: var(--muted) }
+nav.pages { display: flex; gap: 8px; flex-wrap: wrap }
+nav.pages a { font: 600 14px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); text-decoration: none;
+  border: 1px solid var(--border); border-radius: 2px; padding: 9px 12px 8px; background: var(--panel) }
+nav.pages a[aria-current="page"] { background: var(--ink); color: var(--paper); border-color: var(--ink) }
+nav.pages a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
+@media (max-width: 560px) { .logo { width: 56px; height: 56px } .brand { gap: 12px } }
+
+h2 { font: 700 20px/1 var(--f-display); text-transform: uppercase; letter-spacing: .04em; margin: 0 }
+.sect { display: grid; gap: 12px }
+.hint { font-size: 14px; color: var(--muted); margin: 0 }
+
+/* Personenregister */
+.roster { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px }
+.who { display: grid; grid-template-columns: 4px minmax(0, 1fr); gap: 0 10px; text-align: left; font: inherit; color: inherit; cursor: pointer;
+  background: var(--panel); border: 1px solid var(--rule); border-radius: 3px; padding: 9px 10px 9px 0; min-width: 0 }
+.who::before { content: ""; grid-row: span 2; background: var(--c); border-radius: 3px 0 0 3px; margin: -9px 0 }
+.who b { font: 700 16px/1.2 var(--f-display); letter-spacing: .03em; text-transform: uppercase }
+.who .t { font-size: 13.5px; color: var(--muted) }
+.who .t.d { color: var(--red) }
+.who:hover { border-color: var(--border) }
+.who[aria-pressed="true"] { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink) }
+.filterbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center }
+button.tool { font: 600 13px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); background: var(--paper);
+  border: 1px solid var(--border); border-radius: 2px; padding: 8px 11px 7px; cursor: pointer }
+button.tool:hover { border-color: var(--ink) }
+.filterstate { font: 500 13px var(--f-mono); color: var(--muted) }
+
+/* Jahre */
+details.year { border-top: 2px solid var(--ink) }
+details.year:last-of-type { border-bottom: 1px solid var(--rule) }
+summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: baseline; gap: 6px 18px; padding: 14px 2px 12px }
+summary::-webkit-details-marker { display: none }
+summary .yr { font: 700 clamp(34px, 6vw, 48px)/.9 var(--f-display); font-variant-numeric: tabular-nums }
+summary .ctx { color: var(--muted); font-size: 15px; min-width: 0 }
+summary .cnt { font: 500 13px/1.4 var(--f-mono); color: var(--muted); text-align: right; white-space: nowrap }
+summary .cnt .k { color: var(--red) }
+summary .chev { display: inline-block; transition: transform .2s; margin-left: 6px }
+details[open] summary .chev { transform: rotate(90deg) }
+@media (max-width: 600px) { summary { grid-template-columns: auto minmax(0, 1fr) } summary .cnt { grid-column: 1 / -1; text-align: left } }
+
+ol.tl { list-style: none; margin: 0 0 18px; padding: 0 0 0 0; display: grid; gap: 0 }
+.ev { display: grid; grid-template-columns: 8.5em 18px minmax(0, 1fr); gap: 0 12px; position: relative }
+.ev .dt { font: 500 13.5px/1.5 var(--f-mono); color: var(--muted); text-align: right; padding-top: 10px; font-variant-numeric: tabular-nums }
+.ev .rail { position: relative }
+.ev .rail::before { content: ""; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: var(--rule) }
+.ev .rail::after { content: ""; position: absolute; left: 3px; top: 14px; width: 12px; height: 12px; border-radius: 50%; background: var(--panel); border: 2px solid var(--c) }
+.ev.death .rail::after { background: var(--red); border-color: var(--red); border-radius: 1px; transform: rotate(45deg) }
+.ev .body { padding: 8px 0 12px; display: grid; gap: 3px; min-width: 0; border-bottom: 1px solid var(--rule) }
+.ev .head { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline }
+.ev .nm { font: 700 17px/1.2 var(--f-display); letter-spacing: .03em; text-transform: uppercase }
+.ev.death .nm { color: var(--red) }
+.ev .txt { font-size: 15px }
+.ev .note { font-size: 13.5px; color: var(--muted); font-style: italic }
+.badge { font: 600 11.5px/1 var(--f-display); letter-spacing: .1em; text-transform: uppercase; padding: 4px 6px 3px; border-radius: 2px; border: 1px solid var(--rule); color: var(--muted); white-space: nowrap }
+.badge.k { border-color: var(--red); color: var(--red) }
+.badge.f { background: var(--red); border-color: var(--red); color: var(--panel) }
+.uchip { font: 600 11.5px/1 var(--f-display); letter-spacing: .06em; text-transform: uppercase; padding: 3px 6px 2px 5px; border-radius: 2px;
+  border: 1px solid var(--rule); border-left: 4px solid var(--c); color: var(--ink); white-space: nowrap }
+@media (max-width: 600px) {
+  .ev { grid-template-columns: 18px minmax(0, 1fr) }
+  .ev .dt { grid-column: 2; grid-row: 1; text-align: left; padding: 10px 0 0 }
+  .ev .rail { grid-column: 1; grid-row: 1 / span 2 }
+  .ev .body { grid-column: 2; padding-top: 2px }
+}
+.legend { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: 14px; color: var(--muted); align-items: center }
+.sources { font-size: 13.5px; color: var(--muted); max-width: 90ch; margin: 0 }
+.sources a { color: var(--ink) }
+@media (prefers-reduced-motion: reduce) { summary .chev { transition: none } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <svg class="logo" viewBox="-40 -40 80 80" role="img" aria-label="Logo: Flugzeugsilhouette im Abzeichen des Jagdgeschwaders I">
+        <circle r="37" class="logo-ring"/><circle r="31.5" class="logo-inner"/>
+        <g transform="translate(0,-4) scale(1.8)"><path class="logo-plane" d="M-11,-3.6 h22 v4.2 h-22 z M-1.8,-8.5 h3.6 v16.5 h-3.6 z M-5.2,5.6 h10.4 v3 h-10.4 z M-3.4,-9.6 h6.8 v1.2 h-6.8 z"/></g>
+        <text y="23.5" text-anchor="middle" class="logo-text">JG I</text>
+      </svg>
+      <div class="brand-text">
+        <div class="eyebrow">Personen · 1916 – 1946</div>
+        <h1>Flieger des Jagdgeschwaders Richthofen</h1>
+      </div>
+    </div>
+    <nav class="pages" aria-label="Seiten">
+      <a href="index.html">Karte</a>
+      <a href="personen.html" aria-current="page">Personen</a>
+    </nav>
+    <p class="lede">Die bekannten Flieger der Jagdstaffeln 4, 6, 10 und 11 und des Jagdgeschwaders I sowie weitere Personen, die auf der Karte erwähnt werden. Die Chronologie zeigt Kommandos, Wechsel, Verwundungen und Todesfälle, nach Jahren aufklappbar.</p>
+  </header>
+
+  <section class="sect" aria-labelledby="rosH">
+    <h2 id="rosH">Personen</h2>
+    <p class="hint">Eine Person antippen, um die Chronologie auf sie zu beschränken.</p>
+    <div class="roster" id="roster"></div>
+  </section>
+
+  <section class="sect" aria-labelledby="chrH">
+    <h2 id="chrH">Chronologie</h2>
+    <div class="filterbar">
+      <button type="button" class="tool" id="openAll">Alle aufklappen</button>
+      <button type="button" class="tool" id="closeAll">Alle zuklappen</button>
+      <button type="button" class="tool" id="reset" hidden>Filter aufheben</button>
+      <span class="filterstate" id="state" aria-live="polite"></span>
+    </div>
+    <div class="legend" aria-hidden="true">
+      <span><span class="badge">Kommando</span> Führung übernommen</span>
+      <span><span class="badge">Wechsel</span> Versetzung</span>
+      <span><span class="badge k">verwundet</span></span>
+      <span><span class="badge f">gefallen</span> / <span class="badge f">verunglückt</span></span>
+      <span><span class="badge">Selbstmord</span> / <span class="badge">natürlicher Tod</span> nach dem Krieg</span>
+    </div>
+    <div id="years"></div>
+  </section>
+
+  <p class="sources">Alle Angaben wurden im November 2026 an den Quellseiten geprüft; abweichende Quellenangaben sind vermerkt. Für Rudolf Lang und Alfred Wenz ist kein Todesdatum belegt.
+  Quellen: Wikipedia-Artikel zu <a href="https://en.wikipedia.org/wiki/Jagdstaffel_4">Jasta 4</a>, <a href="https://en.wikipedia.org/wiki/Jagdstaffel_6">Jasta 6</a>, <a href="https://en.wikipedia.org/wiki/Jagdstaffel_10">Jasta 10</a>, <a href="https://en.wikipedia.org/wiki/Jagdstaffel_11">Jasta 11</a>, <a href="https://en.wikipedia.org/wiki/Jagdgeschwader_I_(World_War_I)">JG I</a>, <a href="https://en.wikipedia.org/wiki/La_Brayelle_Airfield">La Brayelle</a> sowie zu den einzelnen Personen (<a href="https://en.wikipedia.org/wiki/Manfred_von_Richthofen">M. v. Richthofen</a>, <a href="https://en.wikipedia.org/wiki/Lothar_von_Richthofen">L. v. Richthofen</a>, <a href="https://en.wikipedia.org/wiki/Karl_Emil_Sch%C3%A4fer">Schäfer</a>, <a href="https://en.wikipedia.org/wiki/Karl_Allmenr%C3%B6der">Allmenröder</a>, <a href="https://en.wikipedia.org/wiki/Kurt_Wolff_(aviator)">Wolff</a>, <a href="https://en.wikipedia.org/wiki/Werner_Voss">Voss</a>, <a href="https://en.wikipedia.org/wiki/Wilhelm_Reinhard_(pilot)">Reinhard</a>, <a href="https://en.wikipedia.org/wiki/Hans_Kirschstein">Kirschstein</a>, <a href="https://en.wikipedia.org/wiki/Erich_Loewenhardt">Löwenhardt</a>, <a href="https://en.wikipedia.org/wiki/Ernst_Udet">Udet</a>, <a href="https://en.wikipedia.org/wiki/Hermann_G%C3%B6ring">Göring</a>, <a href="https://en.wikipedia.org/wiki/Oswald_Boelcke">Boelcke</a>, <a href="https://de.wikipedia.org/wiki/Hans-Joachim_Buddecke">Buddecke</a>, <a href="https://en.wikipedia.org/wiki/Arthur_Rhys-Davids">Rhys-Davids</a>, <a href="https://en.wikipedia.org/wiki/Roy_Brown_(RAF_officer)">Brown</a>, <a href="https://en.wikipedia.org/wiki/Erich_Ludendorff">Ludendorff</a>); <a href="https://historynet.com/fighter-pilot-hermann-goring/">HistoryNet (Göring)</a>, <a href="https://www.ospreypublishing.com/ca/osprey-blog/2016/ernst-udet-26-april-1896-17-november-1941">Osprey (Udet)</a>, <a href="https://warfarehistorynetwork.com/article/the-red-barons-band-of-brothers/">Warfare History Network (Wolff)</a>, <a href="https://www.dhm.de/lemo/biografie/ernst-udet">LeMO (Udet)</a>.</p>
+</div>
+
+<script>
+// Verbände: Farbe über CSS-Token
+const U = {
+  j2: ["Jasta 2", "var(--j2)"], j4: ["Jasta 4", "var(--j4)"], j6: ["Jasta 6", "var(--j6)"], j10: ["Jasta 10", "var(--j10)"], j11: ["Jasta 11", "var(--j11)"],
+  j27: ["Jasta 27", "var(--j2)"], j28: ["Jasta 28", "var(--j2)"], j29: ["Jasta 29", "var(--j2)"], jg: ["JG I", "var(--red)"],
+  rfc: ["RFC No. 56", "var(--ally)"], raf: ["RAF No. 209", "var(--ally)"], ohl: ["Heeresleitung", "var(--j2)"]
+};
+// Personen: Hauptverband (Farbe), Kurzbeschreibung, Tod
+const P = {
+  mvr: { n: "Manfred von Richthofen", u: "jg", t: "Führer Jasta 11, Kommandeur JG I · 80 Luftsiege", tod: "gefallen 21.04.1918", k: true },
+  lvr: { n: "Lothar von Richthofen", u: "j11", t: "Jasta 11, zeitweise ihr Führer · 40 Luftsiege", tod: "tödlich verunglückt 04.07.1922" },
+  schaefer: { n: "Karl Emil Schäfer", u: "j11", t: "Jasta 11, dann Führer Jasta 28 · 30 Luftsiege", tod: "gefallen 05.06.1917", k: true },
+  allm: { n: "Karl Allmenröder", u: "j11", t: "Führer Jasta 11 · 30 Luftsiege", tod: "gefallen 27.06.1917", k: true },
+  wolff: { n: "Kurt Wolff", u: "j11", t: "Führer Jasta 29 und Jasta 11 · 33 Luftsiege", tod: "gefallen 15.09.1917", k: true },
+  voss: { n: "Werner Voss", u: "j10", t: "Führer Jasta 10 · 48 Luftsiege", tod: "gefallen 23.09.1917", k: true },
+  reinhard: { n: "Wilhelm Reinhard", u: "j6", t: "Führer Jasta 6, Kommandeur JG I · 20 Luftsiege", tod: "tödlich verunglückt 03.07.1918", k: true },
+  kirsch: { n: "Hans Kirschstein", u: "j6", t: "Führer Jasta 6 · 27 Luftsiege", tod: "tödlich verunglückt 16.07.1918", k: true },
+  udet: { n: "Ernst Udet", u: "j4", t: "Führer Jasta 11, dann Jasta 4 · 62 Luftsiege", tod: "Selbstmord 17.11.1941" },
+  loew: { n: "Erich Löwenhardt", u: "j10", t: "Führer Jasta 10 · 54 Luftsiege", tod: "gefallen 10.08.1918", k: true },
+  goering: { n: "Hermann Göring", u: "jg", t: "Letzter Kommandeur JG I · 22 Luftsiege", tod: "Selbstmord 15.10.1946" },
+  boelcke: { n: "Oswald Boelcke", u: "j2", t: "Führer Jasta 2, Lehrer Richthofens", tod: "tödlich verunglückt 28.10.1916", k: true },
+  linck: { n: "Ludwig Linck", u: "j10", t: "Erster Führer Jasta 10", tod: "gefallen Oktober 1916", k: true },
+  lang: { n: "Rudolf Lang", u: "j11", t: "Erster Führer Jasta 11", tod: "Todesdatum unbekannt" },
+  buddecke: { n: "Hans-Joachim Buddecke", u: "j4", t: "Führer Jasta 4 nach der Aufstellung", tod: "gefallen 10.03.1918", k: true },
+  wenz: { n: "Alfred Wenz", u: "j11", t: "Jasta 11, Zusammenstoß mit Löwenhardt", tod: "Todesdatum unbekannt" },
+  rhys: { n: "Arthur Rhys-Davids", u: "rfc", t: "Britischer Flieger, Gegner von Voss", tod: "gefallen 27.10.1917", k: true },
+  brown: { n: "Roy Brown", u: "raf", t: "Kanadischer Flieger, Gegner Richthofens", tod: "natürlicher Tod 09.03.1944" },
+  ludendorff: { n: "Erich Ludendorff", u: "ohl", t: "Erster Generalquartiermeister", tod: "natürlicher Tod 20.12.1937" }
+};
+// Ereignisse: d = Sortierdatum, dl = Anzeige, p = Person, a = Art, u = Verband, x = Text, no = Hinweis zu Quellen
+// Arten: kommando, wechsel, verwundet, gefallen, verunglueckt, selbstmord, natuerlich, ereignis
+const E = [
+  { d: "1916-08-25", dl: "Ende Aug. 1916", p: "buddecke", a: "kommando", u: "j4", x: "Übernimmt die neu aufgestellte Jasta 4 in Vaux-en-Vermandois bei Roupy.", no: "Deutsche Wikipedia: September 1916, englische: Ende August 1916." },
+  { d: "1916-09-21", dl: "21.09.1916", p: "linck", a: "kommando", u: "j10", x: "Führer der Jasta 10, die nach ihm zunächst „Jagdstaffel Linck“ heißt." },
+  { d: "1916-10-11", dl: "11.10.1916", p: "lang", a: "kommando", u: "j11", x: "Führt die Jasta 11 ab ihrer Mobilmachung in La Brayelle bei Douai." },
+  { d: "1916-10-22", dl: "Oktober 1916", p: "linck", a: "gefallen", u: "j10", x: "Fällt im Oktober 1916; sein Kommando endet am 22.10.1916.", no: "Genaues Todesdatum unbekannt." },
+  { d: "1916-10-28", dl: "28.10.1916", p: "boelcke", a: "verunglueckt", u: "j2", x: "Stirbt bei Bapaume nach einem Zusammenstoß mit Erwin Böhme im Luftkampf. Richthofen gehörte zu seiner Jasta 2." },
+  { d: "1917-01-14", dl: "14.01.1917", p: "lang", a: "wechsel", u: "j11", x: "Gibt die Führung der Jasta 11 ab." },
+  { d: "1917-01-16", dl: "15./16.01.1917", p: "mvr", a: "kommando", u: "j11", x: "Übernimmt die Jasta 11: Ankunft in La Brayelle am 15.01., Ernennung am 16.01.1917. Am 23.01. erzielt er den ersten Luftsieg der Staffel.", no: "Weitere Quellen nennen den 10. oder 12.01. als Ernennung und den 22.01. als Ankunft." },
+  { d: "1917-02-21", dl: "21.02.1917", p: "schaefer", a: "wechsel", u: "j11", x: "Kommt zur Jasta 11." },
+  { d: "1917-03-06", dl: "06.03.1917", p: "lvr", a: "wechsel", u: "j11", x: "Kommt zur Jasta 11, der Staffel seines Bruders." },
+  { d: "1917-04-26", dl: "26.04.1917", p: "schaefer", a: "kommando", u: "j28", x: "Wird Führer der Jasta 28." },
+  { d: "1917-05-06", dl: "Mai 1917", p: "wolff", a: "kommando", u: "j29", x: "Wird nach seinem 29. Luftsieg Führer der Jasta 29." },
+  { d: "1917-05-13", dl: "13.05.1917", p: "allm", a: "kommando", u: "j11", x: "Führt die Jasta 11 vertretungsweise." },
+  { d: "1917-06-05", dl: "05.06.1917", p: "schaefer", a: "gefallen", u: "j28", x: "Fällt bei Becelaere-Zandvoorde im Luftkampf mit einer F.E.2d der No. 20 Squadron." },
+  { d: "1917-06-24", dl: "24.06.1917", p: "mvr", a: "kommando", u: "jg", x: "Wird Kommandeur des neu aufgestellten Jagdgeschwaders I." },
+  { d: "1917-06-25", dl: "25.06.1917", p: "allm", a: "kommando", u: "j11", x: "Übernimmt die Jasta 11 fest.", no: "Der Staffel-Artikel nennt den 26.06.1917." },
+  { d: "1917-06-27", dl: "27.06.1917", p: "allm", a: "gefallen", u: "j11", x: "Fällt bei Zillebeke; die Umstände sind umstritten, möglicherweise traf ihn Flakfeuer." },
+  { d: "1917-07-02", dl: "Juli 1917", p: "wolff", a: "kommando", u: "j11", x: "Kehrt als Führer zur Jasta 11 zurück; am 11.07. wird er verwundet.", no: "Eine Quelle nennt den 02.07.1917." },
+  { d: "1917-07-06", dl: "06.07.1917", p: "mvr", a: "verwundet", u: "jg", x: "Schwere Kopfverletzung im Luftkampf bei Wervik; Rückkehr in den Dienst am 25.07.1917.", no: "Eine Quelle nennt den 16.08.1917 als Rückkehr." },
+  { d: "1917-07-30", dl: "30.07.1917", p: "voss", a: "kommando", u: "j10", x: "Wird Führer der Jasta 10." },
+  { d: "1917-09-15", dl: "15.09.1917", p: "wolff", a: "gefallen", u: "j11", x: "Fällt in einem Fokker-Dreidecker-Prototyp bei Moorslede im Luftkampf mit Sopwith Camel der No. 10 Naval Squadron." },
+  { d: "1917-09-15", dl: "15.09.1917", p: "lvr", a: "kommando", u: "j11", x: "Übernimmt nach Wolffs Tod die Jasta 11." },
+  { d: "1917-09-23", dl: "23.09.1917", p: "voss", a: "gefallen", u: "j10", x: "Fällt bei Poelkapelle im Kampf gegen Flieger der No. 56 Squadron, wenige Stunden nach seinem 48. Luftsieg.", no: "Andere Quelle: nördlich von Frezenberg. Wikipedia nennt acht Gegner, andere Quellen sechs." },
+  { d: "1917-09-23", dl: "23.09.1917", p: "rhys", a: "ereignis", u: "rfc", x: "Ihm wird der Abschuss von Werner Voss zugeschrieben." },
+  { d: "1917-10-27", dl: "27.10.1917", p: "rhys", a: "gefallen", u: "rfc", x: "Verfolgt deutsche Flugzeuge über Roeselare und bleibt verschollen; ein Grab ist nicht bekannt." },
+  { d: "1917-11-26", dl: "Nov. 1917", p: "reinhard", a: "kommando", u: "j6", x: "Wird Führer der Jasta 6.", no: "Der Staffel-Artikel nennt den 16.11., der Personenartikel den 26.11.1917." },
+  { d: "1918-03-10", dl: "10.03.1918", p: "buddecke", a: "gefallen", u: "j4", x: "Fällt über Harnes bei Lens.", no: "Andere Angabe: bei Lille." },
+  { d: "1918-03-15", dl: "März 1918", p: "udet", a: "kommando", u: "j11", x: "Führt die Jasta 11 bis 08.04.1918." },
+  { d: "1918-04-01", dl: "01.04.1918", p: "loew", a: "kommando", u: "j10", x: "Wird kurz vor seinem 21. Geburtstag Führer der Jasta 10." },
+  { d: "1918-04-21", dl: "21.04.1918", p: "mvr", a: "gefallen", u: "jg", x: "Verfolgt im Tiefflug die Sopwith Camel von Wilfrid „Wop“ May über den Morlancourt-Rücken und stürzt nach einem Brusttreffer nördlich von Vaux-sur-Somme ab." },
+  { d: "1918-04-21", dl: "21.04.1918", p: "brown", a: "ereignis", u: "raf", x: "Greift Richthofen an, um May zu helfen. Die RAF schreibt ihm den Abschuss zu; heute gilt Bodenfeuer als nahezu sicher." },
+  { d: "1918-04-22", dl: "22.04.1918", p: "reinhard", a: "kommando", u: "jg", x: "Wird Kommandeur des Jagdgeschwaders I." },
+  { d: "1918-05-20", dl: "20.05.1918", p: "udet", a: "kommando", u: "j4", x: "Wird Führer der Jasta 4.", no: "Eine Quelle nennt den 22.05.1918." },
+  { d: "1918-06-10", dl: "10.06.1918", p: "kirsch", a: "kommando", u: "j6", x: "Wird Führer der Jasta 6." },
+  { d: "1918-07-03", dl: "03.07.1918", p: "reinhard", a: "verunglueckt", u: "jg", x: "Stirbt in Berlin-Adlershof beim Testflug einer Dornier-Zeppelin D.I, als eine Strebe bricht und die obere Tragfläche versagt." },
+  { d: "1918-07-08", dl: "Juli 1918", p: "goering", a: "kommando", u: "jg", x: "Wird letzter Kommandeur des Jagdgeschwaders I.", no: "Quellen nennen den 7., 8. oder 14.07.1918." },
+  { d: "1918-07-16", dl: "16.07.1918", p: "kirsch", a: "verunglueckt", u: "j6", x: "Stirbt bei Fismes als Passagier eines Zweisitzers, der beim Start abkippt." },
+  { d: "1918-08-08", dl: "08.08.1918", p: "ludendorff", a: "ereignis", u: "ohl", x: "Nennt den Beginn der alliierten Offensive bei Amiens den „schwarzen Tag des deutschen Heeres“." },
+  { d: "1918-08-10", dl: "10.08.1918", p: "loew", a: "gefallen", u: "j10", x: "Stößt bei Chaulnes mit Alfred Wenz (Jasta 11) zusammen; sein Fallschirm öffnet sich nicht." },
+  { d: "1918-08-10", dl: "10.08.1918", p: "wenz", a: "ereignis", u: "j11", x: "Rettet sich nach dem Zusammenstoß mit Löwenhardt mit dem Fallschirm." },
+  { d: "1918-11-10", dl: "Nov. 1918", p: "goering", a: "ereignis", u: "jg", x: "Verweigert die Übergabe der Flugzeuge an die Alliierten; seine Flieger zerstören sie. Das Geschwader wird aufgelöst." },
+  { d: "1922-07-04", dl: "04.07.1922", p: "lvr", a: "verunglueckt", u: "j11", x: "Stirbt bei Hamburg-Fuhlsbüttel als Pilot einer LVG C VI nach Motorausfall.", no: "Eine Quelle nennt den 02.07.1922." },
+  { d: "1937-12-20", dl: "20.12.1937", p: "ludendorff", a: "natuerlich", u: "ohl", x: "Stirbt in München an Leberkrebs.", no: "Andere Quellen nennen Tutzing als Sterbeort." },
+  { d: "1941-11-17", dl: "17.11.1941", p: "udet", a: "selbstmord", u: "j4", x: "Erschießt sich in Berlin; das NS-Regime stellt seinen Tod öffentlich als Flugunfall dar." },
+  { d: "1944-03-09", dl: "09.03.1944", p: "brown", a: "natuerlich", u: "raf", x: "Stirbt in Stouffville (Ontario) an einem Herzinfarkt." },
+  { d: "1946-10-15", dl: "15.10.1946", p: "goering", a: "selbstmord", u: "jg", x: "Vergiftet sich in Nürnberg mit Zyankali, am Vorabend der Vollstreckung seines Todesurteils." }
+];
+const ART = { kommando: ["Kommando", ""], wechsel: ["Wechsel", ""], verwundet: ["verwundet", "k"], gefallen: ["gefallen", "f"], verunglueckt: ["tödlich verunglückt", "f"],
+  selbstmord: ["Selbstmord", ""], natuerlich: ["natürlicher Tod", ""], ereignis: ["Ereignis", ""] };
+const DEATH = new Set(["gefallen", "verunglueckt", "selbstmord", "natuerlich"]);
+const YEARS = [
+  { key: "1916", label: "1916", ctx: "Aufstellung der Jagdstaffeln während der Somme-Schlacht", test: d => d.startsWith("1916") },
+  { key: "1917", label: "1917", ctx: "Arras, Flandern, Aufstellung des Jagdgeschwaders I", test: d => d.startsWith("1917") },
+  { key: "1918", label: "1918", ctx: "Frühjahrsoffensive, Richthofens Tod, Rückzug und Auflösung", test: d => d.startsWith("1918") },
+  { key: "nach", label: "1922–1946", ctx: "Nach dem Krieg", test: d => d >= "1919" }
+];
+
+const $ = id => document.getElementById(id);
+const chip = u => `<span class="uchip" style="--c:${U[u][1]}">${U[u][0]}</span>`;
+const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+
+// Personenregister
+const order = Object.keys(P);
+$("roster").innerHTML = order.map(id => {
+  const p = P[id];
+  return `<button type="button" class="who" data-p="${id}" aria-pressed="false" style="--c:${U[p.u][1]}"><b>${p.k ? "† " : ""}${p.n}</b><span><span class="t">${p.t}</span><br><span class="t${p.k ? " d" : ""}">${p.tod}</span></span></button>`;
+}).join("");
+
+// Jahresabschnitte
+E.sort((a, b) => a.d.localeCompare(b.d));
+$("years").innerHTML = YEARS.map((y, i) => {
+  const ev = E.filter(e => y.test(e.d));
+  const deaths = ev.filter(e => DEATH.has(e.a)).length;
+  return `<details class="year" data-y="${y.key}"${i === 0 ? " open" : ""}>
+    <summary><span class="yr">${y.label}</span><span class="ctx">${y.ctx}</span>
+      <span class="cnt" data-cnt><span data-n>${ev.length}</span> <span data-nw>${ev.length === 1 ? "Eintrag" : "Einträge"}</span>${deaths ? ` · <span class="k"><span data-k>${deaths}</span> <span data-kw>${deaths === 1 ? "Todesfall" : "Todesfälle"}</span></span>` : ""}<span class="chev" aria-hidden="true">›</span></span></summary>
+    <ol class="tl">${ev.map(e => {
+      const p = P[e.p], a = ART[e.a], death = DEATH.has(e.a);
+      return `<li class="ev${death ? " death" : ""}" data-p="${e.p}" style="--c:${U[e.u][1]}">
+        <span class="dt">${e.dl}</span><span class="rail" aria-hidden="true"></span>
+        <div class="body"><div class="head"><span class="nm">${death ? "† " : ""}${p.n}</span><span class="badge ${a[1]}">${a[0]}</span>${chip(e.u)}</div>
+        <span class="txt">${esc(e.x)}</span>${e.no ? `<span class="note">${esc(e.no)}</span>` : ""}</div></li>`;
+    }).join("")}</ol></details>`;
+}).join("");
+
+// Filter nach Person
+let sel = null;
+function apply() {
+  document.querySelectorAll(".who").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.p === sel)));
+  document.querySelectorAll("details.year").forEach(d => {
+    const items = [...d.querySelectorAll(".ev")];
+    let n = 0, k = 0;
+    items.forEach(li => { const show = !sel || li.dataset.p === sel; li.hidden = !show; if (show) { n++; if (li.classList.contains("death")) k++; } });
+    d.hidden = n === 0;
+    const nn = d.querySelector("[data-n]"); if (nn) nn.textContent = n;
+    const nw = d.querySelector("[data-nw]"); if (nw) nw.textContent = n === 1 ? "Eintrag" : "Einträge";
+    const kk = d.querySelector("[data-k]"); if (kk) { kk.textContent = k; kk.parentElement.hidden = k === 0; d.querySelector("[data-kw]").textContent = k === 1 ? "Todesfall" : "Todesfälle"; }
+    if (sel && n) d.open = true;
+  });
+  $("reset").hidden = !sel;
+  $("state").textContent = sel ? `Gefiltert: ${P[sel].n}` : "";
+}
+$("roster").addEventListener("click", e => {
+  const b = e.target.closest(".who"); if (!b) return;
+  sel = sel === b.dataset.p ? null : b.dataset.p; apply();
+  if (sel) $("chrH").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+});
+$("reset").addEventListener("click", () => { sel = null; apply(); });
+$("openAll").addEventListener("click", () => document.querySelectorAll("details.year").forEach(d => d.open = true));
+$("closeAll").addEventListener("click", () => document.querySelectorAll("details.year").forEach(d => d.open = false));
+// Direktlink: personen.html#voss filtert auf diese Person
+const h = location.hash.slice(1); if (P[h]) { sel = h; apply(); }
+</script>
+</body>
+</html>

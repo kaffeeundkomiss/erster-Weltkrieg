@@ -55,6 +55,12 @@ body { background: var(--paper); color: var(--ink); font: 400 16px/1.55 var(--f-
 header { display: grid; gap: 6px }
 .brand { display: flex; align-items: center; gap: 16px }
 .brand-text { display: grid; gap: 6px; min-width: 0 }
+nav.pages { display: flex; gap: 8px; flex-wrap: wrap }
+nav.pages a { font: 600 14px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); text-decoration: none;
+  border: 1px solid var(--border); border-radius: 2px; padding: 9px 12px 8px; background: var(--panel) }
+nav.pages a[aria-current="page"] { background: var(--ink); color: var(--paper); border-color: var(--ink) }
+nav.pages a:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
+.more { margin: 0; font-size: 15px } .more a { color: var(--ink); font-weight: 600 }
 .logo { width: 76px; height: 76px; flex: none }
 .logo-ring { fill: var(--panel); stroke: var(--ink); stroke-width: 3 }
 .logo-inner { fill: none; stroke: var(--ink); stroke-width: 1; opacity: .5 }
@@ -218,6 +224,10 @@ h3 { font: 700 20px/1 var(--f-display); text-transform: uppercase; letter-spacin
         <h1>Jagdgeschwader Richthofen</h1>
       </div>
     </div>
+    <nav class="pages" aria-label="Seiten">
+      <a href="index.html" aria-current="page">Karte</a>
+      <a href="personen.html">Personen</a>
+    </nav>
     <p class="lede">Der Weg des Jagdgeschwaders I (ab Mai 1918 „Freiherr von Richthofen Nr. 1“) von der Aufstellung seiner vier Jagdstaffeln 1916 bis zur Auflösung im November 1918. Farbige Linien zeigen die Staffeln vor dem Zusammenschluss, die rote Linie den Geschwaderstab danach. † markiert gefallene oder tödlich verunglückte bekannte Flieger.</p>
   </header>
 
@@ -303,6 +313,7 @@ h3 { font: 700 20px/1 var(--f-display); text-transform: uppercase; letter-spacin
 
   <section class="persons" aria-labelledby="perH">
     <h3 id="perH">Bekannte Flieger der Staffeln</h3>
+    <p class="more">Alle Personen mit Kommandos, Wechseln und Todesdaten, nach Jahren geordnet: <a href="personen.html">Seite „Personen“ öffnen</a></p>
     <div class="person-grid" id="persons"></div>
     <h3 id="othH">Weitere erwähnte Personen</h3>
     <div class="list"><table class="others" aria-labelledby="othH">
