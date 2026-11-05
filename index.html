@@ -202,11 +202,13 @@ h3 { font: 700 20px/1 var(--f-display); text-transform: uppercase; letter-spacin
 .chron > summary::-webkit-details-marker { display: none }
 .chron > summary h3 { margin: 0 }
 .chron > summary .cnt { font: 500 13px/1 var(--f-mono); color: var(--muted) }
-.chron > summary .chev { margin-left: auto; font: 700 22px/1 var(--f-display); color: var(--muted); transition: transform .2s }
-.chron[open] > summary .chev { transform: rotate(90deg) }
+.chron > summary { align-items: center; flex-wrap: wrap }
+.chron > summary .tgl { font: 600 13px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); background: var(--paper);
+  border: 1px solid var(--border); border-radius: 2px; padding: 8px 11px 7px }
+.chron > summary:hover .tgl { border-color: var(--ink) }
+.chron .tgl .cl, .chron[open] .tgl .op { display: none } .chron[open] .tgl .cl { display: inline }
 .chron > summary:hover h3, .chron > summary:focus-visible h3 { color: var(--red) }
 .chron > summary:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
-@media (prefers-reduced-motion: reduce) { .chron > summary .chev { transition: none } }
 .insignia { display: grid; gap: 10px }
 .ins-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px 22px }
 .ins { display: flex; gap: 12px; align-items: flex-start; font-size: 14.5px; min-width: 0 }
@@ -312,7 +314,7 @@ h3 { font: 700 20px/1 var(--f-display); text-transform: uppercase; letter-spacin
 
   <section>
     <details class="chron" id="chron">
-    <summary><h3>Chronologie</h3><span class="cnt"><span id="chronN"></span> Einträge</span><span class="chev" aria-hidden="true">›</span></summary>
+    <summary><h3>Chronologie</h3><span class="cnt"><span id="chronN"></span> Einträge</span><span class="tgl" aria-hidden="true"><span class="op">Aufklappen</span><span class="cl">Zuklappen</span></span></summary>
     <div class="list">
       <table>
         <thead><tr><th>Nr.</th><th>Datum</th><th>Ort / Ereignis</th><th>Verband</th></tr></thead>
