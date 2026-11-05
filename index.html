@@ -75,9 +75,11 @@ h1 { font: 700 clamp(30px, 5vw, 50px)/1 var(--f-display); letter-spacing: .01em;
 .stage { display: grid; grid-template-columns: minmax(0, 1fr) 340px; grid-template-rows: auto 1fr; gap: 18px; align-items: start }
 .stage > .map { grid-column: 1; grid-row: 1 }
 .stage > .controls { grid-column: 1; grid-row: 2 }
-.stage > .panel { grid-column: 2; grid-row: 1 / span 2 }
+/* Feste Höhe des Schrittbereichs: längere Texte scrollen darin, damit nichts darunter springt */
+.stage > .panel { grid-column: 2; grid-row: 1 / span 2; align-self: stretch; contain: size; overflow-y: auto; overscroll-behavior: contain; align-content: start }
 @media (max-width: 900px) { .stage { grid-template-columns: minmax(0, 1fr); grid-template-rows: none }
-  .stage > .map, .stage > .controls, .stage > .panel { grid-column: 1; grid-row: auto } }
+  .stage > .map, .stage > .controls, .stage > .panel { grid-column: 1; grid-row: auto }
+  .stage > .panel { align-self: start; height: 400px } }
 
 .map { position: relative; background: var(--sea); border: 1px solid var(--rule); border-radius: 3px; overflow: hidden }
 .map svg { display: block; width: 100%; height: auto; aspect-ratio: 1000 / 640; max-width: 100%; touch-action: manipulation }
@@ -849,7 +851,7 @@ function render(i) {
   $("pCount").textContent = `Schritt ${i + 1} / ${N}`;
   $("pFront").textContent = FRONT_LABEL[frontFor(s.date)];
   const kia = s.mark && MARKS[s.mark].kind === "kia";
-  $("pName").textContent = (kia ? "† " : "") + s.title;
+  $("pName").textContent = (kia ? "† " : "") + s.title; $("panel").scrollTop = 0;
   $("pName").classList.toggle("kia-t", !!kia);
   $("pSub").textContent = s.sub;
   $("pDates").textContent = s.dl;
