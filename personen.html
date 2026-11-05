@@ -128,6 +128,9 @@ button.tf[aria-pressed="true"] .lbl, button.tf[aria-pressed="true"] .num { color
 button.tf:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
 .sources { font-size: 13.5px; color: var(--muted); max-width: 90ch; margin: 0 }
 .sources a { color: var(--ink) }
+
+/* Steckbriefe und Tabelle (übernommen von der Kartenseite) */
+.note { font-size: 13.5px; color: var(--muted); font-style: italic; margin: 0 }
 @media (prefers-reduced-motion: reduce) { summary .chev { transition: none } }
 </style>
 </head>
@@ -149,7 +152,7 @@ button.tf:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
       <a href="index.html">Karte</a>
       <a href="personen.html" aria-current="page">Personen</a>
     </nav>
-    <p class="lede">Die bekannten Flieger der Jagdstaffeln 4, 6, 10 und 11 und des Jagdgeschwaders I sowie weitere Personen, die auf der Karte erwähnt werden. Die Chronologie zeigt Kommandos, Wechsel, Verwundungen und Todesfälle, nach Jahren aufklappbar.</p>
+    <p class="lede">Die bekannten Flieger der Jagdstaffeln 4, 6, 10 und 11 und des Jagdgeschwaders I sowie weitere Personen, die auf der Karte erwähnt werden: im Register mit Verband, Luftsiegen und Tod, in der Chronologie mit Kommandos, Wechseln, Verwundungen und Todesfällen, nach Jahren aufklappbar.</p>
   </header>
 
   <section class="sect" aria-labelledby="rosH">
@@ -168,9 +171,11 @@ button.tf:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
     </div>
     <p class="hint">Nach Art filtern (mehrere wählbar):</p>
     <div class="typefilter" id="types" role="group" aria-label="Nach Art filtern"></div>
+    <p class="note">„Tödlich verunglückt“ steht für Flugunfälle und Zusammenstöße ohne Feindeinwirkung. Ist kein Todesdatum belegt, steht im Register „unbekannt“.</p>
     <div id="years"></div>
     <p class="hint" id="empty" hidden>Keine Einträge für diese Auswahl. „Filter aufheben“ zeigt wieder alle.</p>
   </section>
+
 
   <p class="sources">Alle Angaben wurden im November 2026 an den Quellseiten geprüft; abweichende Quellenangaben sind vermerkt. Für Rudolf Lang und Alfred Wenz ist kein Todesdatum belegt.
   Quellen: Wikipedia-Artikel zu <a href="https://en.wikipedia.org/wiki/Jagdstaffel_4">Jasta 4</a>, <a href="https://en.wikipedia.org/wiki/Jagdstaffel_6">Jasta 6</a>, <a href="https://en.wikipedia.org/wiki/Jagdstaffel_10">Jasta 10</a>, <a href="https://en.wikipedia.org/wiki/Jagdstaffel_11">Jasta 11</a>, <a href="https://en.wikipedia.org/wiki/Jagdgeschwader_I_(World_War_I)">JG I</a>, <a href="https://en.wikipedia.org/wiki/La_Brayelle_Airfield">La Brayelle</a> sowie zu den einzelnen Personen (<a href="https://en.wikipedia.org/wiki/Manfred_von_Richthofen">M. v. Richthofen</a>, <a href="https://en.wikipedia.org/wiki/Lothar_von_Richthofen">L. v. Richthofen</a>, <a href="https://en.wikipedia.org/wiki/Karl_Emil_Sch%C3%A4fer">Schäfer</a>, <a href="https://en.wikipedia.org/wiki/Karl_Allmenr%C3%B6der">Allmenröder</a>, <a href="https://en.wikipedia.org/wiki/Kurt_Wolff_(aviator)">Wolff</a>, <a href="https://en.wikipedia.org/wiki/Werner_Voss">Voss</a>, <a href="https://en.wikipedia.org/wiki/Wilhelm_Reinhard_(pilot)">Reinhard</a>, <a href="https://en.wikipedia.org/wiki/Hans_Kirschstein">Kirschstein</a>, <a href="https://en.wikipedia.org/wiki/Erich_Loewenhardt">Löwenhardt</a>, <a href="https://en.wikipedia.org/wiki/Ernst_Udet">Udet</a>, <a href="https://en.wikipedia.org/wiki/Hermann_G%C3%B6ring">Göring</a>, <a href="https://en.wikipedia.org/wiki/Oswald_Boelcke">Boelcke</a>, <a href="https://de.wikipedia.org/wiki/Hans-Joachim_Buddecke">Buddecke</a>, <a href="https://en.wikipedia.org/wiki/Arthur_Rhys-Davids">Rhys-Davids</a>, <a href="https://en.wikipedia.org/wiki/Roy_Brown_(RAF_officer)">Brown</a>, <a href="https://en.wikipedia.org/wiki/Erich_Ludendorff">Ludendorff</a>); <a href="https://historynet.com/fighter-pilot-hermann-goring/">HistoryNet (Göring)</a>, <a href="https://www.ospreypublishing.com/ca/osprey-blog/2016/ernst-udet-26-april-1896-17-november-1941">Osprey (Udet)</a>, <a href="https://warfarehistorynetwork.com/article/the-red-barons-band-of-brothers/">Warfare History Network (Wolff)</a>, <a href="https://www.dhm.de/lemo/biografie/ernst-udet">LeMO (Udet)</a>.</p>
@@ -228,7 +233,7 @@ const E = [
   { d: "1917-07-06", dl: "06.07.1917", p: "mvr", a: "verwundet", u: "jg", x: "Schwere Kopfverletzung im Luftkampf bei Wervik; Rückkehr in den Dienst am 25.07.1917.", no: "Eine Quelle nennt den 16.08.1917 als Rückkehr." },
   { d: "1917-07-30", dl: "30.07.1917", p: "voss", a: "kommando", u: "j10", x: "Wird Führer der Jasta 10." },
   { d: "1917-09-15", dl: "15.09.1917", p: "wolff", a: "gefallen", u: "j11", x: "Fällt in einem Fokker-Dreidecker-Prototyp bei Moorslede im Luftkampf mit Sopwith Camel der No. 10 Naval Squadron." },
-  { d: "1917-09-15", dl: "15.09.1917", p: "lvr", a: "kommando", u: "j11", x: "Übernimmt nach Wolffs Tod die Jasta 11." },
+  { d: "1917-09-15", dl: "15.09.1917", p: "lvr", a: "kommando", u: "j11", x: "Übernimmt nach Wolffs Tod die Jasta 11; zuvor führte er sie bereits in Abwesenheit seines Bruders." },
   { d: "1917-09-23", dl: "23.09.1917", p: "voss", a: "gefallen", u: "j10", x: "Fällt bei Poelkapelle im Kampf gegen Flieger der No. 56 Squadron, wenige Stunden nach seinem 48. Luftsieg.", no: "Andere Quelle: nördlich von Frezenberg. Wikipedia nennt acht Gegner, andere Quellen sechs." },
   { d: "1917-09-23", dl: "23.09.1917", p: "rhys", a: "ereignis", u: "rfc", x: "Ihm wird der Abschuss von Werner Voss zugeschrieben." },
   { d: "1917-10-27", dl: "27.10.1917", p: "rhys", a: "gefallen", u: "rfc", x: "Verfolgt deutsche Flugzeuge über Roeselare und bleibt verschollen; ein Grab ist nicht bekannt." },
@@ -240,14 +245,14 @@ const E = [
   { d: "1918-04-21", dl: "21.04.1918", p: "brown", a: "ereignis", u: "raf", x: "Greift Richthofen an, um May zu helfen. Die RAF schreibt ihm den Abschuss zu; heute gilt Bodenfeuer als nahezu sicher." },
   { d: "1918-04-22", dl: "22.04.1918", p: "reinhard", a: "kommando", u: "jg", x: "Wird Kommandeur des Jagdgeschwaders I." },
   { d: "1918-05-20", dl: "20.05.1918", p: "udet", a: "kommando", u: "j4", x: "Wird Führer der Jasta 4.", no: "Eine Quelle nennt den 22.05.1918." },
-  { d: "1918-06-10", dl: "10.06.1918", p: "kirsch", a: "kommando", u: "j6", x: "Wird Führer der Jasta 6." },
+  { d: "1918-06-10", dl: "10.06.1918", p: "kirsch", a: "kommando", u: "j6", x: "Wird Führer der Jasta 6.", no: "Laut einer Quelle bereits ab 27.04.1918 stellvertretend." },
   { d: "1918-07-03", dl: "03.07.1918", p: "reinhard", a: "verunglueckt", u: "jg", x: "Stirbt in Berlin-Adlershof beim Testflug einer Dornier-Zeppelin D.I, als eine Strebe bricht und die obere Tragfläche versagt." },
-  { d: "1918-07-08", dl: "Juli 1918", p: "goering", a: "kommando", u: "jg", x: "Wird letzter Kommandeur des Jagdgeschwaders I.", no: "Quellen nennen den 7., 8. oder 14.07.1918." },
+  { d: "1918-07-08", dl: "Juli 1918", p: "goering", a: "kommando", u: "jg", x: "Wird letzter Kommandeur des Jagdgeschwaders I; zuvor Führer der Jasta 27, bis dahin 21 Luftsiege (insgesamt 22).", no: "Ernennung am 08.07., Dienstantritt laut einer Quelle am 14.07.; andere Quellen nennen den 6. oder 7.07.1918." },
   { d: "1918-07-16", dl: "16.07.1918", p: "kirsch", a: "verunglueckt", u: "j6", x: "Stirbt bei Fismes als Passagier eines Zweisitzers, der beim Start abkippt." },
   { d: "1918-08-08", dl: "08.08.1918", p: "ludendorff", a: "ereignis", u: "ohl", x: "Nennt den Beginn der alliierten Offensive bei Amiens den „schwarzen Tag des deutschen Heeres“." },
   { d: "1918-08-10", dl: "10.08.1918", p: "loew", a: "gefallen", u: "j10", x: "Stößt bei Chaulnes mit Alfred Wenz (Jasta 11) zusammen; sein Fallschirm öffnet sich nicht." },
   { d: "1918-08-10", dl: "10.08.1918", p: "wenz", a: "ereignis", u: "j11", x: "Rettet sich nach dem Zusammenstoß mit Löwenhardt mit dem Fallschirm." },
-  { d: "1918-11-10", dl: "Nov. 1918", p: "goering", a: "ereignis", u: "jg", x: "Verweigert die Übergabe der Flugzeuge an die Alliierten; seine Flieger zerstören sie. Das Geschwader wird aufgelöst." },
+  { d: "1918-11-10", dl: "Nov. 1918", p: "goering", a: "ereignis", u: "jg", x: "Verweigert die Übergabe der Flugzeuge an die Alliierten; seine Flieger zerstören sie. Das Geschwader wird aufgelöst. Unter Görings Führung hatte es in vier Monaten 144 weitere Luftsiege gemeldet." },
   { d: "1922-07-04", dl: "04.07.1922", p: "lvr", a: "verunglueckt", u: "j11", x: "Stirbt bei Hamburg-Fuhlsbüttel als Pilot einer LVG C VI nach Motorausfall.", no: "Eine Quelle nennt den 02.07.1922." },
   { d: "1937-12-20", dl: "20.12.1937", p: "ludendorff", a: "natuerlich", u: "ohl", x: "Stirbt in München an Leberkrebs.", no: "Andere Quellen nennen Tutzing als Sterbeort." },
   { d: "1941-11-17", dl: "17.11.1941", p: "udet", a: "selbstmord", u: "j4", x: "Erschießt sich in Berlin; das NS-Regime stellt seinen Tod öffentlich als Flugunfall dar." },
@@ -264,6 +269,7 @@ const YEARS = [
   { key: "nach", label: "1922–1946", ctx: "Nach dem Krieg", test: d => d >= "1919" }
 ];
 
+
 const $ = id => document.getElementById(id);
 const chip = u => `<span class="uchip" style="--c:${U[u][1]}">${U[u][0]}</span>`;
 const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
@@ -274,6 +280,7 @@ $("roster").innerHTML = order.map(id => {
   const p = P[id];
   return `<button type="button" class="who" data-p="${id}" aria-pressed="false" style="--c:${U[p.u][1]}"><b>${p.k ? "† " : ""}${p.n}</b><span><span class="t">${p.t}</span><br><span class="t${p.k ? " d" : ""}">${p.tod}</span></span></button>`;
 }).join("");
+
 
 // Jahresabschnitte
 E.sort((a, b) => a.d.localeCompare(b.d));
@@ -318,11 +325,8 @@ function apply() {
   $("state").textContent = parts.length ? `Gefiltert: ${parts.join(" · ")} (${shown} ${shown === 1 ? "Eintrag" : "Einträge"})` : "";
   $("empty").hidden = shown > 0;
 }
-$("roster").addEventListener("click", e => {
-  const b = e.target.closest(".who"); if (!b) return;
-  sel = sel === b.dataset.p ? null : b.dataset.p; apply();
-  if (sel) $("chrH").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
-});
+function pick(id) { sel = sel === id ? null : id; apply(); if (sel) $("chrH").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" }); }
+$("roster").addEventListener("click", e => { const b = e.target.closest(".who"); if (b) pick(b.dataset.p); });
 $("reset").addEventListener("click", () => { sel = null; types.clear(); apply(); });
 $("types").addEventListener("click", e => {
   const b = e.target.closest(".tf"); if (!b) return;

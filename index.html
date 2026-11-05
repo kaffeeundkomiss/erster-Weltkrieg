@@ -312,15 +312,8 @@ h3 { font: 700 20px/1 var(--f-display); text-transform: uppercase; letter-spacin
   </section>
 
   <section class="persons" aria-labelledby="perH">
-    <h3 id="perH">Bekannte Flieger der Staffeln</h3>
-    <p class="more">Alle Personen mit Kommandos, Wechseln und Todesdaten, nach Jahren geordnet: <a href="personen.html">Seite „Personen“ öffnen</a></p>
-    <div class="person-grid" id="persons"></div>
-    <h3 id="othH">Weitere erwähnte Personen</h3>
-    <div class="list"><table class="others" aria-labelledby="othH">
-      <thead><tr><th>Name</th><th>Bezug</th><th>Tod</th></tr></thead>
-      <tbody id="others"></tbody>
-    </table></div>
-    <p class="note">Todesart: gefallen, tödlich verunglückt, Selbstmord, natürlicher Tod. „Tödlich verunglückt“ steht für Flugunfälle und Zusammenstöße ohne Feindeinwirkung. Ist kein Datum belegt, steht „unbekannt“.</p>
+    <h3 id="perH">Personen</h3>
+    <p class="more">Die bekannten Flieger der Staffeln und alle weiteren erwähnten Personen, mit Steckbriefen und Chronologie: <a href="personen.html">Seite „Personen“ öffnen</a></p>
   </section>
 
   <section class="insignia" aria-labelledby="insH">
@@ -691,16 +684,6 @@ const rows = STEPS.map((s, i) => {
   tr.addEventListener("click", () => { go(i); $("map").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" }); });
   $("tbody").appendChild(tr); return tr;
 });
-for (const [id, p] of Object.entries(PERSONS)) {
-  const d = document.createElement("div"); d.className = "person" + (p.kia ? " is-kia" : "");
-  const stepIdx = STEPS.findIndex(s => s.mark === id || (p.kia && s.persons && s.persons.includes(id) && s.dl === p.kia));
-  d.innerHTML = `<b>${p.kia ? "† " : ""}${p.n}</b><div class="chips">${p.u.map(chip).join(" ")}</div><span>${p.role}</span><span class="fate">${p.fate}</span>${todHTML(TOD[id])}`;
-  if (stepIdx >= 0) { d.tabIndex = 0; d.setAttribute("role", "button"); d.title = "Auf der Karte zeigen";
-    const open = () => { go(stepIdx); $("map").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" }); };
-    d.addEventListener("click", open); d.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } }); }
-  $("persons").appendChild(d);
-}
-$("others").innerHTML = OTHERS.map(o => `<tr><td><b>${o.n}</b></td><td>${o.ctx}</td><td>${todHTML(o.tod)}</td></tr>`).join("");
 
 // ---------- Zustand und Animation ----------
 // g = Fortschritt in Schritten (0 … N-1, gebrochen während der Animation). Linien, Punkte, Zeitleiste, Front
