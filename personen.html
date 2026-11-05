@@ -128,6 +128,26 @@ button.tf[aria-pressed="true"] .lbl, button.tf[aria-pressed="true"] .num { color
 button.tf:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
 .sources { font-size: 13.5px; color: var(--muted); max-width: 90ch; margin: 0 }
 .sources a { color: var(--ink) }
+
+/* Steckbriefe und Tabelle (übernommen von der Kartenseite) */
+.person-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px 22px }
+.person { display: grid; gap: 4px; align-content: start; font-size: 14.5px; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 3px; background: var(--panel); min-width: 0; cursor: pointer }
+.person:hover { border-color: var(--border) } .person:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
+.person > b { font: 700 17px/1.2 var(--f-display); letter-spacing: .03em; text-transform: uppercase }
+.person.is-kia > b { color: var(--red) }
+.person .chips { display: flex; flex-wrap: wrap; gap: 5px }
+.person span { color: var(--muted) } .person .fate { color: var(--ink) }
+.person.is-kia { border-left: 3px solid var(--red) }
+.tod { font-size: 14px; color: var(--muted) } .tod b { color: var(--ink); font-weight: 600 }
+.tod-k b, .tod-s b { color: var(--red) }
+.list { overflow-x: auto }
+table.others { border-collapse: collapse; width: 100%; font-size: 15px }
+table.others th { font: 600 12px/1 var(--f-display); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 8px 10px; border-bottom: 1.5px solid var(--ink) }
+table.others td { padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: top }
+table.others tr[data-p] { cursor: pointer } table.others tr[data-p]:hover td { background: var(--red-soft) }
+.note { font-size: 13.5px; color: var(--muted); font-style: italic; margin: 0 }
+@media (max-width: 600px) { table.others thead { display: none } table.others tr { display: grid; grid-template-columns: 1fr; border-bottom: 1px solid var(--rule); padding: 8px 0 }
+  table.others td { border: 0; padding: 2px 6px } }
 @media (prefers-reduced-motion: reduce) { summary .chev { transition: none } }
 </style>
 </head>
@@ -170,6 +190,20 @@ button.tf:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
     <div class="typefilter" id="types" role="group" aria-label="Nach Art filtern"></div>
     <div id="years"></div>
     <p class="hint" id="empty" hidden>Keine Einträge für diese Auswahl. „Filter aufheben“ zeigt wieder alle.</p>
+  </section>
+
+  <section class="sect persons" aria-labelledby="perH">
+    <h2 id="perH">Bekannte Flieger der Staffeln</h2>
+    <div class="person-grid" id="persons"></div>
+  </section>
+
+  <section class="sect" aria-labelledby="othH">
+    <h2 id="othH">Weitere erwähnte Personen</h2>
+    <div class="list"><table class="others" aria-labelledby="othH">
+      <thead><tr><th>Name</th><th>Bezug</th><th>Tod</th></tr></thead>
+      <tbody id="others"></tbody>
+    </table></div>
+    <p class="note">Todesart: gefallen, tödlich verunglückt, Selbstmord, natürlicher Tod. „Tödlich verunglückt“ steht für Flugunfälle und Zusammenstöße ohne Feindeinwirkung. Ist kein Datum belegt, steht „unbekannt“.</p>
   </section>
 
   <p class="sources">Alle Angaben wurden im November 2026 an den Quellseiten geprüft; abweichende Quellenangaben sind vermerkt. Für Rudolf Lang und Alfred Wenz ist kein Todesdatum belegt.
@@ -264,6 +298,45 @@ const YEARS = [
   { key: "nach", label: "1922–1946", ctx: "Nach dem Krieg", test: d => d >= "1919" }
 ];
 
+
+// ---------- Übernommen von der Kartenseite: Steckbriefe ----------
+const FLIEGER = {
+  mvr:      { n: "Manfred von Richthofen", u: ["j11", "jg"], role: "Zuvor Jasta 2 „Boelcke“. Ab Januar 1917 Führer der Jasta 11, ab Juni 1917 Kommandeur des JG I.", fate: "Gefallen am 21.04.1918 bei Vaux-sur-Somme. 80 Luftsiege.", kia: "21.04.1918" },
+  lvr:      { n: "Lothar von Richthofen", u: ["j11"], role: "Bruder Manfreds, ab 06.03.1917 in der Jasta 11. Führte sie in Abwesenheit seines Bruders und nach dem Tod von Kurt Wolff.", fate: "Überlebte den Krieg. 40 Luftsiege." },
+  schaefer: { n: "Karl Emil Schäfer", u: ["j11"], role: "Jasta 11 ab 21.02.1917, ab 26.04.1917 Führer der Jasta 28.", fate: "Gefallen am 05.06.1917 bei Becelaere-Zandvoorde im Luftkampf mit der britischen No. 20 Squadron. 30 Luftsiege.", kia: "05.06.1917" },
+  allm:     { n: "Karl Allmenröder", u: ["j11"], role: "Jasta 11, ab 13.05.1917 vertretungsweise, ab 25.06.1917 fest ihr Führer.", fate: "Gefallen am 27.06.1917 bei Zillebeke; Umstände umstritten (möglicherweise Flakbeschuss). 30 Luftsiege.", kia: "27.06.1917" },
+  wolff:    { n: "Kurt Wolff", u: ["j11"], role: "Jasta 11; ab Mai 1917 Führer der Jasta 29, ab Juli 1917 (laut einer Quelle 02.07.) Führer der Jasta 11.", fate: "Gefallen am 15.09.1917 bei Moorslede im Luftkampf mit Sopwith Camel der No. 10 Naval Squadron. 33 Luftsiege.", kia: "15.09.1917" },
+  voss:     { n: "Werner Voss", u: ["j10"], role: "Führer der Jasta 10 ab 30.07.1917.", fate: "Gefallen am 23.09.1917 bei Poelkapelle (andere Quelle: nördlich von Frezenberg). 48 Luftsiege.", kia: "23.09.1917" },
+  reinhard: { n: "Wilhelm Reinhard", u: ["j6", "jg"], role: "Jasta 6, ab 22.04.1918 Kommandeur des JG I.", fate: "Tödlich verunglückt am 03.07.1918 in Berlin-Adlershof beim Testflug eines Prototyps (Tragflächenbruch). 20 Luftsiege.", kia: "03.07.1918" },
+  kirsch:   { n: "Hans Kirschstein", u: ["j6"], role: "Führer der Jasta 6 ab 10.06.1918 (laut einer Quelle bereits ab 27.04.1918 stellvertretend).", fate: "Tödlich verunglückt am 16.07.1918 bei Fismes. 27 Luftsiege.", kia: "16.07.1918" },
+  udet:     { n: "Ernst Udet", u: ["j11", "j4"], role: "März bis 08.04.1918 Führer der Jasta 11, ab 20.05.1918 Führer der Jasta 4 (eine Quelle nennt den 22.05.).", fate: "Überlebte den Krieg. 62 Luftsiege." },
+  loew:     { n: "Erich Löwenhardt", u: ["j10"], role: "Führer der Jasta 10 ab 01.04.1918.", fate: "Gefallen am 10.08.1918 bei Chaulnes nach einem Zusammenstoß mit Lt. Alfred Wenz (Jasta 11). 54 Luftsiege.", kia: "10.08.1918" },
+  goering:  { n: "Hermann Göring", u: ["jg"], role: "Zuvor Führer der Jasta 27. Ab Juli 1918 letzter Kommandeur des JG I (ernannt am 8. Juli, Dienstantritt laut einer Quelle am 14. Juli; andere Quellen nennen den 6. oder 7. Juli). Verweigerte im November 1918 die Übergabe der Flugzeuge an die Alliierten. Unter seiner Führung meldete das Geschwader in vier Monaten 144 weitere Luftsiege.", fate: "22 Luftsiege (21 zum Zeitpunkt der Ernennung)." }
+};
+const TOD = {
+  mvr:      ["gefallen", "21.04.1918", "bei Vaux-sur-Somme"],
+  lvr:      ["tödlich verunglückt", "04.07.1922", "Absturz bei Hamburg-Fuhlsbüttel als Pilot im Linienflugdienst (eine Quelle nennt den 02.07.1922)"],
+  schaefer: ["gefallen", "05.06.1917", "bei Becelaere-Zandvoorde"],
+  allm:     ["gefallen", "27.06.1917", "bei Zillebeke"],
+  wolff:    ["gefallen", "15.09.1917", "bei Moorslede"],
+  voss:     ["gefallen", "23.09.1917", "bei Poelkapelle (andere Quelle: nördlich von Frezenberg)"],
+  reinhard: ["tödlich verunglückt", "03.07.1918", "Testflug in Berlin-Adlershof"],
+  kirsch:   ["tödlich verunglückt", "16.07.1918", "bei Fismes"],
+  udet:     ["Selbstmord", "17.11.1941", "in Berlin; vom NS-Regime öffentlich als Flugunfall dargestellt"],
+  loew:     ["gefallen", "10.08.1918", "bei Chaulnes"],
+  goering:  ["Selbstmord", "15.10.1946", "in Nürnberg, am Vorabend der Vollstreckung des Todesurteils"]
+};
+const OTHERS = [
+  { id: "boelcke", n: "Oswald Boelcke", ctx: "Namensgeber der Jasta 2 „Boelcke“, in der Richthofen vor 1917 flog", tod: ["tödlich verunglückt", "28.10.1916", "bei Bapaume, nach Zusammenstoß mit Erwin Böhme im Luftkampf"] },
+  { id: "linck", n: "Ludwig Linck", ctx: "Erster Führer der Jasta 10 („Jagdstaffel Linck“)", tod: ["gefallen", "Oktober 1916", "genaues Datum unbekannt; sein Kommando endete am 22.10.1916"] },
+  { id: "lang", n: "Rudolf Lang", ctx: "Erster Führer der Jasta 11 bis 14.01.1917", tod: ["unbekannt", "unbekannt", ""] },
+  { id: "buddecke", n: "Hans-Joachim Buddecke", ctx: "Führer der Jasta 4 ab Ende August bzw. September 1916", tod: ["gefallen", "10.03.1918", "über Harnes bei Lens (andere Angabe: bei Lille)"] },
+  { id: "rhys", n: "Arthur Rhys-Davids", ctx: "Britischer Flieger (No. 56 Squadron), dem der Abschuss von Werner Voss zugeschrieben wird", tod: ["gefallen", "27.10.1917", "vermisst bei Roeselare"] },
+  { id: "brown", n: "Roy Brown", ctx: "Kanadischer Flieger (No. 209 Squadron); die RAF schrieb ihm Richthofens Abschuss zu", tod: ["natürlicher Tod", "09.03.1944", "in Stouffville (Ontario), Herzinfarkt"] },
+  { id: "wenz", n: "Alfred Wenz", ctx: "Flieger der Jasta 11, Zusammenstoß mit Löwenhardt am 10.08.1918 (rettete sich mit dem Fallschirm)", tod: ["unbekannt", "unbekannt", ""] },
+  { id: "ludendorff", n: "Erich Ludendorff", ctx: "Erster Generalquartiermeister; nannte den 08.08.1918 den „schwarzen Tag des deutschen Heeres“", tod: ["natürlicher Tod", "20.12.1937", "in München, Leberkrebs (andere Quellen nennen Tutzing als Sterbeort)"] }
+];
+const todHTML = t => t ? `<span class="tod tod-${t[0] === "unbekannt" ? "x" : t[0] === "natürlicher Tod" ? "n" : t[0] === "Selbstmord" ? "s" : "k"}"><b>Tod:</b> ${t[0] === "unbekannt" ? "unbekannt" : `${t[0]}, ${t[1]}${t[2] ? " – " + t[2] : ""}`}</span>` : "";
 const $ = id => document.getElementById(id);
 const chip = u => `<span class="uchip" style="--c:${U[u][1]}">${U[u][0]}</span>`;
 const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
@@ -274,6 +347,11 @@ $("roster").innerHTML = order.map(id => {
   const p = P[id];
   return `<button type="button" class="who" data-p="${id}" aria-pressed="false" style="--c:${U[p.u][1]}"><b>${p.k ? "† " : ""}${p.n}</b><span><span class="t">${p.t}</span><br><span class="t${p.k ? " d" : ""}">${p.tod}</span></span></button>`;
 }).join("");
+
+// Steckbriefe (übernommen von der Kartenseite); Klick filtert die Chronologie auf die Person
+$("persons").innerHTML = Object.entries(FLIEGER).map(([id, f]) =>
+  `<div class="person${f.kia ? " is-kia" : ""}" role="button" tabindex="0" data-p="${id}" title="Chronologie auf diese Person filtern"><b>${f.kia ? "† " : ""}${f.n}</b><div class="chips">${f.u.map(chip).join(" ")}</div><span>${f.role}</span><span class="fate">${f.fate}</span>${todHTML(TOD[id])}</div>`).join("");
+$("others").innerHTML = OTHERS.map(o => `<tr data-p="${o.id}" title="Chronologie auf diese Person filtern"><td><b>${o.n}</b></td><td>${o.ctx}</td><td>${todHTML(o.tod)}</td></tr>`).join("");
 
 // Jahresabschnitte
 E.sort((a, b) => a.d.localeCompare(b.d));
@@ -323,6 +401,10 @@ $("roster").addEventListener("click", e => {
   sel = sel === b.dataset.p ? null : b.dataset.p; apply();
   if (sel) $("chrH").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
 });
+function pick(id) { sel = sel === id ? null : id; apply(); if (sel) $("chrH").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" }); }
+$("persons").addEventListener("click", e => { const c = e.target.closest(".person"); if (c) pick(c.dataset.p); });
+$("persons").addEventListener("keydown", e => { const c = e.target.closest(".person"); if (c && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); pick(c.dataset.p); } });
+$("others").addEventListener("click", e => { const r = e.target.closest("tr[data-p]"); if (r) pick(r.dataset.p); });
 $("reset").addEventListener("click", () => { sel = null; types.clear(); apply(); });
 $("types").addEventListener("click", e => {
   const b = e.target.closest(".tf"); if (!b) return;
