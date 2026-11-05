@@ -71,8 +71,13 @@ nav.pages a:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
 h1 { font: 700 clamp(30px, 5vw, 50px)/1 var(--f-display); letter-spacing: .01em; margin: 0; text-wrap: balance; text-transform: uppercase }
 .lede { margin: 4px 0 0; max-width: 68ch; color: var(--muted) }
 
-.stage { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 18px; align-items: start }
-@media (max-width: 900px) { .stage { grid-template-columns: minmax(0, 1fr) } }
+/* Zeitleiste fest unter der Karte; der Schrittbereich steht rechts daneben und darf länger sein, ohne die Zeitleiste zu verschieben */
+.stage { display: grid; grid-template-columns: minmax(0, 1fr) 340px; grid-template-rows: auto 1fr; gap: 18px; align-items: start }
+.stage > .map { grid-column: 1; grid-row: 1 }
+.stage > .controls { grid-column: 1; grid-row: 2 }
+.stage > .panel { grid-column: 2; grid-row: 1 / span 2 }
+@media (max-width: 900px) { .stage { grid-template-columns: minmax(0, 1fr); grid-template-rows: none }
+  .stage > .map, .stage > .controls, .stage > .panel { grid-column: 1; grid-row: auto } }
 
 .map { position: relative; background: var(--sea); border: 1px solid var(--rule); border-radius: 3px; overflow: hidden }
 .map svg { display: block; width: 100%; height: auto; aspect-ratio: 1000 / 640; max-width: 100%; touch-action: manipulation }
@@ -286,6 +291,20 @@ h3 { font: 700 20px/1 var(--f-display); text-transform: uppercase; letter-spacin
       </div>
     </div>
 
+    <section class="controls" aria-label="Zeitleiste">
+      <div class="btns">
+        <button type="button" id="prev" aria-label="Vorheriger Schritt">◀ Zurück</button>
+        <button type="button" class="primary" id="play">▶ Abspielen</button>
+        <button type="button" id="next" aria-label="Nächster Schritt">Weiter ▶</button>
+        <button type="button" id="reset">Anfang</button>
+        <span class="nowdate" id="nowDate" aria-live="off" title="Dargestelltes Datum"></span>
+        <label class="speed" for="speedSel">Tempo
+          <select id="speedSel"><option value="4200">langsam</option><option value="2800" selected>normal</option><option value="1600">schnell</option></select>
+        </label>
+      </div>
+      <div class="ruler" id="ruler"><div class="axis"></div><div class="prog" id="prog"></div><div class="playhead" id="playhead"></div></div>
+    </section>
+
     <aside class="panel" id="panel" aria-live="polite">
       <div class="count"><span id="pCount"></span><span id="pFront"></span></div>
       <h2 id="pName"></h2>
@@ -298,19 +317,6 @@ h3 { font: 700 20px/1 var(--f-display); text-transform: uppercase; letter-spacin
     </aside>
   </section>
 
-  <section class="controls" aria-label="Zeitleiste">
-    <div class="btns">
-      <button type="button" id="prev" aria-label="Vorheriger Schritt">◀ Zurück</button>
-      <button type="button" class="primary" id="play">▶ Abspielen</button>
-      <button type="button" id="next" aria-label="Nächster Schritt">Weiter ▶</button>
-      <button type="button" id="reset">Anfang</button>
-      <span class="nowdate" id="nowDate" aria-live="off" title="Dargestelltes Datum"></span>
-      <label class="speed" for="speedSel">Tempo
-        <select id="speedSel"><option value="4200">langsam</option><option value="2800" selected>normal</option><option value="1600">schnell</option></select>
-      </label>
-    </div>
-    <div class="ruler" id="ruler"><div class="axis"></div><div class="prog" id="prog"></div><div class="playhead" id="playhead"></div></div>
-  </section>
 
   <section>
     <details class="chron" id="chron">
