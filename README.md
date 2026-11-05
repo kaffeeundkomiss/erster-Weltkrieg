@@ -11,6 +11,7 @@ Online: https://kirchnerjan-cell.github.io/richthofen/
   Externe Abhängigkeit sind nur die Schriften von Google Fonts.
 - `icons/` – App-Symbol für den Home-Bildschirm (`apple-touch-icon.png`), PNG-Symbole 192/512 px,
   SVG-Varianten.
+- `personen.html` – zweite Seite: bekannte Flieger und weitere Personen, chronologisch nach Jahren aufklappbar; Filter nach Person (Direktlink z. B. `personen.html#voss`).
 - `manifest.webmanifest` – Web-App-Manifest, damit die Seite vom Home-Bildschirm als App öffnet.
 
 ## Veröffentlichung
