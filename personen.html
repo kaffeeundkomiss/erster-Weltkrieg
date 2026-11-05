@@ -116,7 +116,16 @@ ol.tl { list-style: none; margin: 0 0 18px; padding: 0 0 0 0; display: grid; gap
   .ev .rail { grid-column: 1; grid-row: 1 / span 2 }
   .ev .body { grid-column: 2; padding-top: 2px }
 }
-.legend { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: 14px; color: var(--muted); align-items: center }
+.typefilter { display: flex; flex-wrap: wrap; gap: 8px }
+button.tf { display: inline-flex; align-items: center; gap: 8px; font: inherit; color: var(--muted); background: var(--panel); cursor: pointer;
+  border: 1px solid var(--border); border-radius: 3px; padding: 6px 11px; min-height: 38px }
+button.tf > span { pointer-events: none }
+button.tf .lbl { font: 600 12.5px/1 var(--f-display); letter-spacing: .1em; text-transform: uppercase; color: var(--ink) }
+button.tf .num { font: 500 12.5px var(--f-mono); color: var(--muted) }
+button.tf:hover { border-color: var(--border) }
+button.tf[aria-pressed="true"] { background: var(--red); border-color: var(--red) }
+button.tf[aria-pressed="true"] .lbl, button.tf[aria-pressed="true"] .num { color: var(--panel) }
+button.tf:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
 .sources { font-size: 13.5px; color: var(--muted); max-width: 90ch; margin: 0 }
 .sources a { color: var(--ink) }
 @media (prefers-reduced-motion: reduce) { summary .chev { transition: none } }
@@ -157,14 +166,10 @@ ol.tl { list-style: none; margin: 0 0 18px; padding: 0 0 0 0; display: grid; gap
       <button type="button" class="tool" id="reset" hidden>Filter aufheben</button>
       <span class="filterstate" id="state" aria-live="polite"></span>
     </div>
-    <div class="legend" aria-hidden="true">
-      <span><span class="badge">Kommando</span> Führung übernommen</span>
-      <span><span class="badge">Wechsel</span> Versetzung</span>
-      <span><span class="badge k">verwundet</span></span>
-      <span><span class="badge f">gefallen</span> / <span class="badge f">verunglückt</span></span>
-      <span><span class="badge">Selbstmord</span> / <span class="badge">natürlicher Tod</span> nach dem Krieg</span>
-    </div>
+    <p class="hint">Nach Art filtern (mehrere wählbar):</p>
+    <div class="typefilter" id="types" role="group" aria-label="Nach Art filtern"></div>
     <div id="years"></div>
+    <p class="hint" id="empty" hidden>Keine Einträge für diese Auswahl. „Filter aufheben“ zeigt wieder alle.</p>
   </section>
 
   <p class="sources">Alle Angaben wurden im November 2026 an den Quellseiten geprüft; abweichende Quellenangaben sind vermerkt. Für Rudolf Lang und Alfred Wenz ist kein Todesdatum belegt.
@@ -250,7 +255,7 @@ const E = [
   { d: "1946-10-15", dl: "15.10.1946", p: "goering", a: "selbstmord", u: "jg", x: "Vergiftet sich in Nürnberg mit Zyankali, am Vorabend der Vollstreckung seines Todesurteils." }
 ];
 const ART = { kommando: ["Kommando", ""], wechsel: ["Wechsel", ""], verwundet: ["verwundet", "k"], gefallen: ["gefallen", "f"], verunglueckt: ["tödlich verunglückt", "f"],
-  selbstmord: ["Selbstmord", ""], natuerlich: ["natürlicher Tod", ""], ereignis: ["Ereignis", ""] };
+  selbstmord: ["Selbstmord", ""], natuerlich: ["natürlicher Tod", ""], ereignis: ["Sonstiges", ""] };
 const DEATH = new Set(["gefallen", "verunglueckt", "selbstmord", "natuerlich"]);
 const YEARS = [
   { key: "1916", label: "1916", ctx: "Aufstellung der Jagdstaffeln während der Somme-Schlacht", test: d => d.startsWith("1916") },
@@ -280,7 +285,7 @@ $("years").innerHTML = YEARS.map((y, i) => {
       <span class="cnt" data-cnt><span data-n>${ev.length}</span> <span data-nw>${ev.length === 1 ? "Eintrag" : "Einträge"}</span>${deaths ? ` · <span class="k"><span data-k>${deaths}</span> <span data-kw>${deaths === 1 ? "Todesfall" : "Todesfälle"}</span></span>` : ""}<span class="chev" aria-hidden="true">›</span></span></summary>
     <ol class="tl">${ev.map(e => {
       const p = P[e.p], a = ART[e.a], death = DEATH.has(e.a);
-      return `<li class="ev${death ? " death" : ""}" data-p="${e.p}" style="--c:${U[e.u][1]}">
+      return `<li class="ev${death ? " death" : ""}" data-p="${e.p}" data-a="${e.a}" style="--c:${U[e.u][1]}">
         <span class="dt">${e.dl}</span><span class="rail" aria-hidden="true"></span>
         <div class="body"><div class="head"><span class="nm">${death ? "† " : ""}${p.n}</span><span class="badge ${a[1]}">${a[0]}</span>${chip(e.u)}</div>
         <span class="txt">${esc(e.x)}</span>${e.no ? `<span class="note">${esc(e.no)}</span>` : ""}</div></li>`;
@@ -288,28 +293,41 @@ $("years").innerHTML = YEARS.map((y, i) => {
 }).join("");
 
 // Filter nach Person
+// Filter nach Art: Schaltflächen mit Anzahl
+const TYPE_ORDER = ["kommando", "wechsel", "verwundet", "gefallen", "verunglueckt", "selbstmord", "natuerlich", "ereignis"];
+$("types").innerHTML = TYPE_ORDER.map(a => `<button type="button" class="tf" data-a="${a}" aria-pressed="false"><span class="lbl">${ART[a][0]}</span><span class="num">${E.filter(e => e.a === a).length}</span></button>`).join("");
+const types = new Set();
 let sel = null;
 function apply() {
   document.querySelectorAll(".who").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.p === sel)));
+  document.querySelectorAll(".tf").forEach(b => b.setAttribute("aria-pressed", String(types.has(b.dataset.a))));
+  $("types").classList.toggle("active", types.size > 0);
   document.querySelectorAll("details.year").forEach(d => {
     const items = [...d.querySelectorAll(".ev")];
     let n = 0, k = 0;
-    items.forEach(li => { const show = !sel || li.dataset.p === sel; li.hidden = !show; if (show) { n++; if (li.classList.contains("death")) k++; } });
+    items.forEach(li => { const show = (!sel || li.dataset.p === sel) && (!types.size || types.has(li.dataset.a)); li.hidden = !show; if (show) { n++; if (li.classList.contains("death")) k++; } });
     d.hidden = n === 0;
     const nn = d.querySelector("[data-n]"); if (nn) nn.textContent = n;
     const nw = d.querySelector("[data-nw]"); if (nw) nw.textContent = n === 1 ? "Eintrag" : "Einträge";
     const kk = d.querySelector("[data-k]"); if (kk) { kk.textContent = k; kk.parentElement.hidden = k === 0; d.querySelector("[data-kw]").textContent = k === 1 ? "Todesfall" : "Todesfälle"; }
-    if (sel && n) d.open = true;
+    if ((sel || types.size) && n) d.open = true;
   });
-  $("reset").hidden = !sel;
-  $("state").textContent = sel ? `Gefiltert: ${P[sel].n}` : "";
+  const shown = document.querySelectorAll(".ev:not([hidden])").length;
+  $("reset").hidden = !sel && !types.size;
+  const parts = [sel ? P[sel].n : "", [...types].map(a => ART[a][0]).join(", ")].filter(Boolean);
+  $("state").textContent = parts.length ? `Gefiltert: ${parts.join(" · ")} (${shown} ${shown === 1 ? "Eintrag" : "Einträge"})` : "";
+  $("empty").hidden = shown > 0;
 }
 $("roster").addEventListener("click", e => {
   const b = e.target.closest(".who"); if (!b) return;
   sel = sel === b.dataset.p ? null : b.dataset.p; apply();
   if (sel) $("chrH").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
 });
-$("reset").addEventListener("click", () => { sel = null; apply(); });
+$("reset").addEventListener("click", () => { sel = null; types.clear(); apply(); });
+$("types").addEventListener("click", e => {
+  const b = e.target.closest(".tf"); if (!b) return;
+  types.has(b.dataset.a) ? types.delete(b.dataset.a) : types.add(b.dataset.a); apply();
+});
 $("openAll").addEventListener("click", () => document.querySelectorAll("details.year").forEach(d => d.open = true));
 $("closeAll").addEventListener("click", () => document.querySelectorAll("details.year").forEach(d => d.open = false));
 // Direktlink: personen.html#voss filtert auf diese Person
