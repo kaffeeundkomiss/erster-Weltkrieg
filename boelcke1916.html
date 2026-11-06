@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Boelckes Tod 1916</title>
+<meta name="description" content="Zeitleiste zum Tod Oswald Boelckes am 28. Oktober 1916 mit Belegstatus je Aussage">
+<meta name="theme-color" content="#eceee8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121614" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="JG Richthofen">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: Kopf wie auf den anderen Seiten, darunter Zeitleiste, Thesen, Widersprüche, Quellen */
+:root {
+  --paper: #eceee8; --panel: #f6f7f3; --ink: #1d2420; --muted: #5d6861; --rule: #c3c9c1; --border: #6f7a72;
+  --j2: #6b6f6c; --j4: #2a5d91; --j6: #3f7a2e; --j10: #b07d0a; --j11: #7a3d8f; --ally: #4f6d7a; --red: #ad281d; --red-soft: rgba(173,40,29,.12);
+  --f-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #121614; --panel: #181d1a; --ink: #e2e6e1; --muted: #98a39b; --rule: #313a35; --border: #7d8a82;
+  --j2: #a4aaa6; --j4: #6fa3e0; --j6: #7dbb5f; --j10: #e0b33c; --j11: #c08ad6; --ally: #8fb3c4; --red: #e4533f; --red-soft: rgba(228,83,63,.16);
+  color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #121614; --panel: #181d1a; --ink: #e2e6e1; --muted: #98a39b; --rule: #313a35; --border: #7d8a82;
+  --j2: #a4aaa6; --j4: #6fa3e0; --j6: #7dbb5f; --j10: #e0b33c; --j11: #c08ad6; --ally: #8fb3c4; --red: #e4533f; --red-soft: rgba(228,83,63,.16);
+  color-scheme: dark }
+
+* { box-sizing: border-box }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 16px/1.55 var(--f-body) }
+[hidden] { display: none !important }
+.wrap { max-width: 1040px; margin: 0 auto; padding-block: 28px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 26px }
+.wrap > * { min-width: 0 }
+header { display: grid; gap: 10px }
+.brand { display: flex; align-items: center; gap: 16px }
+.brand-text { display: grid; gap: 6px; min-width: 0 }
+.logo { width: 76px; height: 76px; flex: none }
+.logo-ring { fill: var(--panel); stroke: var(--ink); stroke-width: 3 }
+.logo-inner { fill: none; stroke: var(--ink); stroke-width: 1; opacity: .5 }
+.logo-plane { fill: var(--red) }
+.logo-text { fill: var(--ink); font: 700 12.5px var(--f-display); letter-spacing: .16em }
+.eyebrow { font: 600 13px/1 var(--f-display); letter-spacing: .14em; text-transform: uppercase; color: var(--red) }
+h1 { font: 700 clamp(28px, 5vw, 46px)/1 var(--f-display); margin: 0; text-transform: uppercase; text-wrap: balance }
+.lede { margin: 0; max-width: 68ch; color: var(--muted) }
+nav.pages { display: flex; gap: 8px; flex-wrap: wrap }
+nav.pages a { font: 600 14px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); text-decoration: none;
+  border: 1px solid var(--border); border-radius: 2px; padding: 9px 12px 8px; background: var(--panel) }
+nav.pages a[aria-current="page"] { background: var(--ink); color: var(--paper); border-color: var(--ink) }
+nav.pages a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
+@media (max-width: 560px) { .logo { width: 56px; height: 56px } .brand { gap: 12px } }
+
+h2 { font: 700 20px/1 var(--f-display); text-transform: uppercase; letter-spacing: .04em; margin: 0 }
+.sect { display: grid; gap: 12px }
+.hint { font-size: 14px; color: var(--muted); margin: 0 }
+
+
+/* Zeitleiste */
+.status { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 14px; color: var(--muted); margin: 0; padding: 0; list-style: none }
+.status li { display: inline-flex; align-items: center; gap: 7px }
+.b { display: inline-block; font: 600 11.5px/1 var(--f-display); letter-spacing: .1em; text-transform: uppercase; padding: 4px 7px 3px; border-radius: 2px; border: 1px solid; white-space: nowrap }
+.b.ok { color: var(--j6); border-color: var(--j6) }
+.b.part { color: var(--j10); border-color: var(--j10) }
+.b.one { color: var(--muted); border-color: var(--border); border-style: dashed }
+.b.wid { color: var(--panel); background: var(--red); border-color: var(--red) }
+.day { margin: 6px 0 0; font: 600 14px/1 var(--f-display); letter-spacing: .12em; text-transform: uppercase; color: var(--muted) }
+ol.tl { list-style: none; margin: 0; padding: 0; display: grid; gap: 0 }
+ol.tl > li { display: grid; grid-template-columns: 92px 14px minmax(0, 1fr); gap: 0 12px }
+.t { font: 500 13px/1.3 var(--f-mono); color: var(--muted); padding-top: 14px; text-align: right }
+.rail { position: relative }
+.rail::before { content: ""; position: absolute; left: 6px; top: 0; bottom: 0; width: 2px; background: var(--rule) }
+.rail::after { content: ""; position: absolute; left: 1px; top: 17px; width: 12px; height: 12px; border-radius: 50%; background: var(--panel); border: 2px solid var(--ink) }
+ol.tl > li.key .rail::after { background: var(--red); border-color: var(--red) }
+.card { background: var(--panel); border: 1px solid var(--rule); border-radius: 3px; padding: 11px 14px 12px; margin: 6px 0; display: grid; gap: 6px }
+.card h3 { font: 600 18px/1.15 var(--f-display); margin: 0; letter-spacing: .02em }
+.card p { margin: 0 }
+.meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 13.5px; color: var(--muted) }
+.meta a, .src a { color: var(--ink); font-family: var(--f-mono); font-size: 12.5px }
+.why { font-size: 14px; color: var(--muted); font-style: italic }
+@media (max-width: 560px) {
+  ol.tl > li { grid-template-columns: 14px minmax(0, 1fr); gap: 0 10px }
+  .t { grid-column: 2; text-align: left; padding-top: 10px }
+  .rail { grid-row: 1 / span 2; grid-column: 1 }
+  .card { grid-column: 2 }
+}
+
+/* Thesen */
+.theses { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px }
+.th { background: var(--panel); border: 1px solid var(--rule); border-top: 3px solid var(--border); border-radius: 3px; padding: 12px 14px; display: grid; gap: 8px; align-content: start }
+.th.lead { border-top-color: var(--red) }
+.th h3 { font: 600 18px/1.15 var(--f-display); margin: 0 }
+.th .who2 { font-size: 13.5px; color: var(--muted); margin: 0 }
+.th dl { margin: 0; display: grid; gap: 6px; font-size: 14.5px }
+.th dt { font: 600 12px/1 var(--f-display); letter-spacing: .12em; text-transform: uppercase; color: var(--muted) }
+.th dd { margin: 0 }
+
+/* Widersprüche, Quellen */
+.tbl { width: 100%; border-collapse: collapse; font-size: 14.5px }
+.tbl th, .tbl td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--rule) }
+.tbl th { font: 600 12.5px/1.2 var(--f-display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted) }
+.tblwrap { overflow-x: auto; -webkit-overflow-scrolling: touch }
+ol.srcs { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; font-size: 14.5px }
+ol.srcs li { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 10px }
+ol.srcs .id { font: 500 13px/1.5 var(--f-mono); color: var(--red) }
+ol.srcs .dep { color: var(--muted); font-size: 13.5px }
+ol.srcs a { color: var(--ink); overflow-wrap: anywhere }
+ol.srcs li:target { background: var(--red-soft); outline: 6px solid var(--red-soft) }
+.note { font-size: 13.5px; color: var(--muted); font-style: italic; margin: 0 }
+.hint a, .note a, .why a, .th dd a, .meta span a { color: var(--ink) }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <svg class="logo" viewBox="-40 -40 80 80" role="img" aria-label="Logo: Flugzeugsilhouette im Abzeichen des Jagdgeschwaders I">
+        <circle r="37" class="logo-ring"/><circle r="31.5" class="logo-inner"/>
+        <g transform="translate(0,-4) scale(1.8)"><path class="logo-plane" d="M-11,-3.6 h22 v4.2 h-22 z M-1.8,-8.5 h3.6 v16.5 h-3.6 z M-5.2,5.6 h10.4 v3 h-10.4 z M-3.4,-9.6 h6.8 v1.2 h-6.8 z"/></g>
+        <text y="23.5" text-anchor="middle" class="logo-text">JG I</text>
+      </svg>
+      <div class="brand-text">
+        <div class="eyebrow">Bapaume · 28. Oktober 1916</div>
+        <h1>Boelckes Tod</h1>
+      </div>
+    </div>
+    <nav class="pages" aria-label="Seiten">
+      <a href="index.html">Karte</a>
+      <a href="personen.html">Personen</a>
+      <a href="boelcke1916.html" aria-current="page">28.10.1916</a>
+      <a href="april1917.html">April 1917</a>
+      <a href="tod.html">21.04.1918</a>
+    </nav>
+    <p class="lede">Oswald Boelcke, Führer der Jasta 2 und Lehrer Manfred von Richthofens, starb am Nachmittag des 28. Oktober 1916 nach einer Berührung mit der Maschine seines Freundes Erwin Böhme. Richthofen flog im selben Luftkampf mit. Die wichtigsten Zeugnisse stammen von Richthofen und Böhme selbst. Jede Aussage unten trägt ihren Belegstatus.</p>
+  </header>
+
+  <section class="sect" aria-labelledby="stH">
+    <h2 id="stH">Belegstatus</h2>
+    <ul class="status">
+      <li><span class="b ok">belegt</span>zwei unabhängige Quellen</li>
+      <li><span class="b part">teilweise</span>zwei Quellen, aber voneinander abhängig</li>
+      <li><span class="b one">eine Quelle</span>nicht ausreichend belegt</li>
+      <li><span class="b wid">Widerspruch</span>Quellen widersprechen sich</li>
+    </ul>
+    <p class="note">Böhmes Brief liegt hier nur in englischer Übersetzung (<a href="#b2">B2</a>) und in der Wiedergabe von <a href="#b3">B3</a> vor. Beide zählen für seinen Inhalt als eine Quelle.</p>
+  </section>
+
+  <section class="sect" aria-labelledby="tlH">
+    <h2 id="tlH">Ablauf</h2>
+
+    <p class="day">Vorgeschichte</p>
+    <ol class="tl">
+      <li>
+        <div class="t">Aug. 1916</div><div class="rail"></div>
+        <div class="card">
+          <h3>Boelcke stellt die Jasta 2 auf</h3>
+          <p>Boelcke übernimmt eine neue Jagdstaffel und wählt selbst Piloten aus, darunter Manfred von Richthofen und Erwin Böhme.</p>
+          <div class="meta"><span class="b ok">belegt</span><a href="#b4">B4</a><a href="#b5">B5</a><a href="#b6">B6</a></div>
+          <div class="meta"><span class="b one">eine Quelle</span>Aufstellung am 10.08.1916 nur <a href="#b5">B5</a></div>
+        </div>
+      </li>
+      <li>
+        <div class="t">Sept.–Okt.</div><div class="rail"></div>
+        <div class="card">
+          <h3>Erfolge an der Somme</h3>
+          <p>Boelcke steigt auf 40 Luftsiege und ist damit der erfolgreichste Jagdflieger seiner Zeit.</p>
+          <div class="meta"><span class="b ok">belegt</span>40 Siege: <a href="#b4">B4</a><a href="#b5">B5</a><a href="#b6">B6</a></div>
+          <div class="meta"><span class="b wid">Widerspruch</span>Davon an der Somme 22 (<a href="#b4">B4</a>) oder 20 (<a href="#b5">B5</a>)</div>
+        </div>
+      </li>
+    </ol>
+
+    <p class="day">Samstag, 28. Oktober 1916</p>
+    <ol class="tl">
+      <li>
+        <div class="t">vormittags</div><div class="rail"></div>
+        <div class="card">
+          <h3>Schlechtes Wetter, viele Starts</h3>
+          <p>Stürmisches Wetter mit tiefen Wolken. Die Staffel startet mehrmals, ohne in einen Luftkampf zu geraten.</p>
+          <div class="meta"><span class="b ok">belegt</span>Wetter: <a href="#b1">B1</a><a href="#b3">B3</a></div>
+          <div class="meta"><span class="b one">eine Quelle</span>Starts am Vormittag: <a href="#b3">B3</a></div>
+        </div>
+      </li>
+      <li>
+        <div class="t">gegen 16 Uhr</div><div class="rail"></div>
+        <div class="card">
+          <h3>Alarm beim Schachspiel</h3>
+          <p>Boelcke und Böhme spielen in der Bereitschaftsbaracke Schach, als die Infanterie einen britischen Angriff meldet. Die Staffel startet zum sechsten Einsatz des Tages.</p>
+          <div class="meta"><span class="b part">teilweise</span><a href="#b2">B2</a><a href="#b3">B3</a><a href="#b6">B6</a></div>
+          <p class="why">Die Uhrzeit stammt nur aus Böhmes Brief: „shortly after 4 o'clock“ (<a href="#b2">B2</a>), bei <a href="#b3">B3</a> „gegen 16.30 Uhr“.</p>
+        </div>
+      </li>
+      <li>
+        <div class="t">über Flers</div><div class="rail"></div>
+        <div class="card">
+          <h3>Angriff auf die No. 24 Squadron</h3>
+          <p>Die Jasta 2 greift einsitzige Airco DH.2 der No. 24 Squadron RFC an. Die Deutschen versuchen, den Gegnern abwechselnd den Weg abzuschneiden.</p>
+          <div class="meta"><span class="b ok">belegt</span><a href="#b2">B2</a><a href="#b3">B3</a><a href="#b6">B6</a></div>
+          <div class="meta"><span class="b wid">Widerspruch</span>Wie viele? Richthofen: sechs gegen zwei (<a href="#b1">B1</a>). Böhme: „mehrere“ Engländer (<a href="#b2">B2</a>, <a href="#b3">B3</a>). <a href="#b3">B3</a> nennt Hawker als Führer des britischen Verbands, <a href="#b2">B2</a> nur Knight und McKay.</div>
+        </div>
+      </li>
+      <li class="key">
+        <div class="t">Sekunden</div><div class="rail"></div>
+        <div class="card">
+          <h3>Die Berührung</h3>
+          <p>Boelcke und Böhme jagen denselben Briten. Richthofen, hinter einem zweiten Briten her, kreuzt plötzlich vor ihnen. Beide weichen aus und streifen sich. Böhme verliert einen Teil des Fahrwerks, Boelcke das äußere Stück der linken Tragfläche.</p>
+          <div class="meta"><span class="b ok">belegt</span>Berührung und Richthofens Kreuzen: <a href="#b1">B1</a><a href="#b2">B2</a><a href="#b6">B6</a></div>
+          <div class="meta"><span class="b part">teilweise</span>Schäden im Einzelnen: <a href="#b2">B2</a><a href="#b3">B3</a> (beide nach Böhme), <a href="#b6">B6</a></div>
+          <p class="why">Richthofen nennt die Berührung, aber nicht seine eigene Rolle: „Es war auch kein Zusammenstoß, sondern mehr ein Berühren.“</p>
+        </div>
+      </li>
+      <li>
+        <div class="t">danach</div><div class="rail"></div>
+        <div class="card">
+          <h3>Gleitflug und Absturz</h3>
+          <p>Boelcke gleitet zunächst flach auf die deutschen Linien zu. In einer Wolkenschicht wird die Maschine unkontrollierbar und schlägt neben einer deutschen Batteriestellung bei Bapaume auf. Boelcke trug keinen Sturzhelm und war nicht angeschnallt.</p>
+          <div class="meta"><span class="b ok">belegt</span><a href="#b1">B1</a><a href="#b2">B2</a><a href="#b6">B6</a><a href="#b4">B4</a></div>
+          <div class="meta"><span class="b wid">Widerspruch</span>Ursache: Er „verlor eine Tragfläche ganz“ (<a href="#b1">B1</a>) oder Böen drückten die Maschine steiler (Böhme, <a href="#b2">B2</a>)</div>
+        </div>
+      </li>
+      <li>
+        <div class="t">danach</div><div class="rail"></div>
+        <div class="card">
+          <h3>Böhme kehrt zurück</h3>
+          <p>Böhme kann im Trichterfeld nicht landen, fliegt zum Flugplatz zurück und überschlägt sich bei der Landung.</p>
+          <div class="meta"><span class="b ok">belegt</span><a href="#b2">B2</a><a href="#b6">B6</a></div>
+        </div>
+      </li>
+      <li>
+        <div class="t">gleicher Tag</div><div class="rail"></div>
+        <div class="card">
+          <h3>Die britische Sicht</h3>
+          <p>Laut dem Gefechtsbericht der No. 24 Squadron stießen nach etwa fünf Minuten zwei deutsche Maschinen zusammen, eine glitt nach Osten ab. Beide britischen Piloten entkamen.</p>
+          <div class="meta"><span class="b one">eine Quelle</span>Gefechtsbericht: <a href="#b3">B3</a></div>
+          <div class="meta"><span class="b part">teilweise</span>Beide entkamen: <a href="#b2">B2</a><a href="#b6">B6</a></div>
+        </div>
+      </li>
+    </ol>
+
+    <p class="day">Abschied</p>
+    <ol class="tl">
+      <li class="key">
+        <div class="t">31.10.1916</div><div class="rail"></div>
+        <div class="card">
+          <h3>Trauerfeier in Cambrai</h3>
+          <p>Trauerfeier in der katholischen Kathedrale von Cambrai, obwohl Boelcke Protestant war. Richthofen geht mit dem Ordenskissen vor dem Sarg.</p>
+          <div class="meta"><span class="b ok">belegt</span><a href="#b6">B6</a><a href="#b3">B3</a></div>
+          <div class="meta"><span class="b one">eine Quelle</span>Ansprache von Hauptmann Stefan Kirmaier, dem neuen Führer der Jasta 2, am Bahnhof von Cambrai: <a href="#b3">B3</a></div>
+        </div>
+      </li>
+      <li class="key">
+        <div class="t">02.11.1916</div><div class="rail"></div>
+        <div class="card">
+          <h3>Staatsbegräbnis in Dessau</h3>
+          <p>Beisetzung auf dem Ehrenfriedhof seiner Heimatstadt Dessau. General von Lyncker, Chef des Militärkabinetts, hält die Trauerrede.</p>
+          <div class="meta"><span class="b ok">belegt</span><a href="#b6">B6</a><a href="#b3">B3</a><a href="#b5">B5</a></div>
+        </div>
+      </li>
+      <li>
+        <div class="t">11.11.1916</div><div class="rail"></div>
+        <div class="card">
+          <h3>Ein Kranz von der Gegenseite</h3>
+          <p>Ein Flugzeug der No. 3 Squadron RFC wirft hinter den deutschen Linien einen Kranz „to the memory of Captain Boelke, our brave and chivalrous opponent“ ab.</p>
+          <div class="meta"><span class="b one">eine Quelle</span><a href="#b3">B3</a></div>
+        </div>
+      </li>
+      <li>
+        <div class="t">23.11.1916</div><div class="rail"></div>
+        <div class="card">
+          <h3>Richthofen besiegt Hawker</h3>
+          <p>Knapp vier Wochen später schießt Richthofen Major Lanoe Hawker ab, den Kommandeur der No. 24 Squadron.</p>
+          <div class="meta"><span class="b ok">belegt</span><a href="#b7">B7</a><a href="#b3">B3</a></div>
+          <p class="why">Das Ereignis steht auch auf der <a href="index.html">Karte</a>.</p>
+        </div>
+      </li>
+      <li>
+        <div class="t">1916</div><div class="rail"></div>
+        <div class="card">
+          <h3>„Jagdstaffel Boelcke“</h3>
+          <p>Die Jasta 2 erhält den Namen ihres gefallenen Führers.</p>
+          <div class="meta"><span class="b wid">Widerspruch</span>„Unmittelbar nach Boelckes Tod“ (<a href="#b5">B5</a>) oder per Kaiserlicher Order im Dezember 1916 (<a href="#b3">B3</a>)</div>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section class="sect" aria-labelledby="zH">
+    <h2 id="zH">Zwei Augenzeugen</h2>
+    <div class="theses">
+      <article class="th lead">
+        <h3>Manfred von Richthofen</h3>
+        <p class="who2">„Der rote Kampfflieger“, 1917</p>
+        <dl>
+          <dt>Sicht</dt><dd>Im selben Luftkampf. Sechs Deutsche gegen zwei Briten. „Kein Zusammenstoß, sondern mehr ein Berühren.“ In den Wolken habe Boelcke eine Tragfläche ganz verloren.</dd>
+          <dt>Lücke</dt><dd>Erwähnt nicht, dass sein eigenes Kreuzen das Ausweichmanöver auslöste. Das Buch erschien 1917 unter Kriegszensur.</dd>
+        </dl>
+        <div class="meta"><a href="#b1">B1</a></div>
+      </article>
+      <article class="th">
+        <h3>Erwin Böhme</h3>
+        <p class="who2">Brief an seine Verlobte, wenige Tage danach</p>
+        <dl>
+          <dt>Sicht</dt><dd>Mitbeteiligter. Richthofen habe ihnen den Weg abgeschnitten; beide wichen aus und verloren sich für einen Augenblick aus den Augen. Nur eine leichte Berührung, aber bei hoher Geschwindigkeit ein Aufprall.</dd>
+          <dt>Lücke</dt><dd>Hier nur als englische Übersetzung und Wiedergabe gelesen; die Druckausgabe ist nicht geprüft.</dd>
+        </dl>
+        <div class="meta"><a href="#b2">B2</a><a href="#b3">B3</a></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="sect" aria-labelledby="qH">
+    <h2 id="qH">Quellen</h2>
+    <p class="hint">Alle Quellen am 06.11.2026 abgerufen. Die vollständige Belegmatrix mit Originalpassagen liegt im Projektordner.</p>
+    <ol class="srcs">
+      <li id="b1"><span class="id">B1</span><span>Manfred von Richthofen: <i>Der rote Kampfflieger</i>, Ullstein 1917, Kap. 30 „Boelcke †“. <a href="https://projekt-gutenberg.org/authors/manfred-von-richthofen/books/der-rote-kampfflieger/chapter/30/">Projekt Gutenberg</a> <span class="dep">Augenzeugenbericht; im Krieg veröffentlicht.</span></span></li>
+      <li id="b2"><span class="id">B2</span><span>Erwin Böhme, Brief an seine Verlobte (engl. Übersetzung), mit Begleittext im Blog airwar19141918. <a href="https://airwar19141918.wordpress.com/tag/arthur-gerald-knight/">wordpress.com</a> <span class="dep">Druckausgabe der Briefe nicht ermittelt.</span></span></li>
+      <li id="b3"><span class="id">B3</span><span>MortHomme: „Oswald Boelcke“, bearbeitet 06.10.2026. <a href="https://www.morthomme.com/oswald-boelcke/">morthomme.com</a> <span class="dep">Stützt sich auf Böhmes Bericht und Hawkers Gefechtsbericht.</span></span></li>
+      <li id="b4"><span class="id">B4</span><span>Heinz Kraft: „Boelcke, Oswald“, in: <i>Neue Deutsche Biographie</i> 2 (1955), S. 398. <a href="https://www.deutsche-biographie.de/gnd119256843.html">deutsche-biographie.de</a></span></li>
+      <li id="b5"><span class="id">B5</span><span>Wikipedia (de): <a href="https://de.wikipedia.org/wiki/Oswald_Boelcke">Oswald Boelcke</a>. <span class="dep">Einzelnachweise nicht geprüft.</span></span></li>
+      <li id="b6"><span class="id">B6</span><span>Wikipedia (en): <a href="https://en.wikipedia.org/wiki/Oswald_Boelcke">Oswald Boelcke</a>. <span class="dep">Nur Suchauszug gelesen; zählt mit The Aerodrome als eine Quelle.</span></span></li>
+      <li id="b7"><span class="id">B7</span><span>Robert Rennie: „Richthofen, Manfred, Freiherr von“, in: <i>1914-1918-online</i>, 20.08.2018, DOI 10.15463/ie1418.11293. <a href="https://encyclopedia.1914-1918-online.net/article/richthofen-manfred-freiherr-von/">1914-1918-online</a></span></li>
+    </ol>
+  </section>
+</div>
+</body>
+</html>
