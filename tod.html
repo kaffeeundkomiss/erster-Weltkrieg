@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Richthofens Tod 1918</title>
+<meta name="description" content="Zeitleiste des 21. April 1918 mit Belegstatus je Aussage und den konkurrierenden Thesen zum tödlichen Schuss.">
+<meta name="theme-color" content="#eceee8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121614" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="JG Richthofen">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: Kopf wie auf den anderen Seiten, darunter Zeitleiste, Thesen, Widersprüche, Quellen */
+:root {
+  --paper: #eceee8; --panel: #f6f7f3; --ink: #1d2420; --muted: #5d6861; --rule: #c3c9c1; --border: #6f7a72;
+  --j2: #6b6f6c; --j4: #2a5d91; --j6: #3f7a2e; --j10: #b07d0a; --j11: #7a3d8f; --ally: #4f6d7a; --red: #ad281d; --red-soft: rgba(173,40,29,.12);
+  --f-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #121614; --panel: #181d1a; --ink: #e2e6e1; --muted: #98a39b; --rule: #313a35; --border: #7d8a82;
+  --j2: #a4aaa6; --j4: #6fa3e0; --j6: #7dbb5f; --j10: #e0b33c; --j11: #c08ad6; --ally: #8fb3c4; --red: #e4533f; --red-soft: rgba(228,83,63,.16);
+  color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #121614; --panel: #181d1a; --ink: #e2e6e1; --muted: #98a39b; --rule: #313a35; --border: #7d8a82;
+  --j2: #a4aaa6; --j4: #6fa3e0; --j6: #7dbb5f; --j10: #e0b33c; --j11: #c08ad6; --ally: #8fb3c4; --red: #e4533f; --red-soft: rgba(228,83,63,.16);
+  color-scheme: dark }
+
+* { box-sizing: border-box }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 16px/1.55 var(--f-body) }
+[hidden] { display: none !important }
+.wrap { max-width: 1040px; margin: 0 auto; padding-block: 28px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 26px }
+.wrap > * { min-width: 0 }
+header { display: grid; gap: 10px }
+.brand { display: flex; align-items: center; gap: 16px }
+.brand-text { display: grid; gap: 6px; min-width: 0 }
+.logo { width: 76px; height: 76px; flex: none }
+.logo-ring { fill: var(--panel); stroke: var(--ink); stroke-width: 3 }
+.logo-inner { fill: none; stroke: var(--ink); stroke-width: 1; opacity: .5 }
+.logo-plane { fill: var(--red) }
+.logo-text { fill: var(--ink); font: 700 12.5px var(--f-display); letter-spacing: .16em }
+.eyebrow { font: 600 13px/1 var(--f-display); letter-spacing: .14em; text-transform: uppercase; color: var(--red) }
+h1 { font: 700 clamp(28px, 5vw, 46px)/1 var(--f-display); margin: 0; text-transform: uppercase; text-wrap: balance }
+.lede { margin: 0; max-width: 68ch; color: var(--muted) }
+nav.pages { display: flex; gap: 8px; flex-wrap: wrap }
+nav.pages a { font: 600 14px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); text-decoration: none;
+  border: 1px solid var(--border); border-radius: 2px; padding: 9px 12px 8px; background: var(--panel) }
+nav.pages a[aria-current="page"] { background: var(--ink); color: var(--paper); border-color: var(--ink) }
+nav.pages a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
+@media (max-width: 560px) { .logo { width: 56px; height: 56px } .brand { gap: 12px } }
+
+h2 { font: 700 20px/1 var(--f-display); text-transform: uppercase; letter-spacing: .04em; margin: 0 }
+.sect { display: grid; gap: 12px }
+.hint { font-size: 14px; color: var(--muted); margin: 0 }
+
+
+/* Zeitleiste */
+.status { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 14px; color: var(--muted); margin: 0; padding: 0; list-style: none }
+.status li { display: inline-flex; align-items: center; gap: 7px }
+.b { display: inline-block; font: 600 11.5px/1 var(--f-display); letter-spacing: .1em; text-transform: uppercase; padding: 4px 7px 3px; border-radius: 2px; border: 1px solid; white-space: nowrap }
+.b.ok { color: var(--j6); border-color: var(--j6) }
+.b.part { color: var(--j10); border-color: var(--j10) }
+.b.one { color: var(--muted); border-color: var(--border); border-style: dashed }
+.b.wid { color: var(--panel); background: var(--red); border-color: var(--red) }
+.day { margin: 6px 0 0; font: 600 14px/1 var(--f-display); letter-spacing: .12em; text-transform: uppercase; color: var(--muted) }
+ol.tl { list-style: none; margin: 0; padding: 0; display: grid; gap: 0 }
+ol.tl > li { display: grid; grid-template-columns: 92px 14px minmax(0, 1fr); gap: 0 12px }
+.t { font: 500 13px/1.3 var(--f-mono); color: var(--muted); padding-top: 14px; text-align: right }
+.rail { position: relative }
+.rail::before { content: ""; position: absolute; left: 6px; top: 0; bottom: 0; width: 2px; background: var(--rule) }
+.rail::after { content: ""; position: absolute; left: 1px; top: 17px; width: 12px; height: 12px; border-radius: 50%; background: var(--panel); border: 2px solid var(--ink) }
+ol.tl > li.key .rail::after { background: var(--red); border-color: var(--red) }
+.card { background: var(--panel); border: 1px solid var(--rule); border-radius: 3px; padding: 11px 14px 12px; margin: 6px 0; display: grid; gap: 6px }
+.card h3 { font: 600 18px/1.15 var(--f-display); margin: 0; letter-spacing: .02em }
+.card p { margin: 0 }
+.meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 13.5px; color: var(--muted) }
+.meta a, .src a { color: var(--ink); font-family: var(--f-mono); font-size: 12.5px }
+.why { font-size: 14px; color: var(--muted); font-style: italic }
+@media (max-width: 560px) {
+  ol.tl > li { grid-template-columns: 14px minmax(0, 1fr); gap: 0 10px }
+  .t { grid-column: 2; text-align: left; padding-top: 10px }
+  .rail { grid-row: 1 / span 2; grid-column: 1 }
+  .card { grid-column: 2 }
+}
+
+/* Thesen */
+.theses { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px }
+.th { background: var(--panel); border: 1px solid var(--rule); border-top: 3px solid var(--border); border-radius: 3px; padding: 12px 14px; display: grid; gap: 8px; align-content: start }
+.th.lead { border-top-color: var(--red) }
+.th h3 { font: 600 18px/1.15 var(--f-display); margin: 0 }
+.th .who2 { font-size: 13.5px; color: var(--muted); margin: 0 }
+.th dl { margin: 0; display: grid; gap: 6px; font-size: 14.5px }
+.th dt { font: 600 12px/1 var(--f-display); letter-spacing: .12em; text-transform: uppercase; color: var(--muted) }
+.th dd { margin: 0 }
+
+/* Widersprüche, Quellen */
+.tbl { width: 100%; border-collapse: collapse; font-size: 14.5px }
+.tbl th, .tbl td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--rule) }
+.tbl th { font: 600 12.5px/1.2 var(--f-display); letter-spacing: .1em; text-transform: uppercase; color: var(--muted) }
+.tblwrap { overflow-x: auto; -webkit-overflow-scrolling: touch }
+ol.srcs { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; font-size: 14.5px }
+ol.srcs li { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 10px }
+ol.srcs .id { font: 500 13px/1.5 var(--f-mono); color: var(--red) }
+ol.srcs .dep { color: var(--muted); font-size: 13.5px }
+ol.srcs a { color: var(--ink); overflow-wrap: anywhere }
+ol.srcs li:target { background: var(--red-soft); outline: 6px solid var(--red-soft) }
+.note { font-size: 13.5px; color: var(--muted); font-style: italic; margin: 0 }
+.hint a, .note a, .why a, .th dd a, .meta span a { color: var(--ink) }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <svg class="logo" viewBox="-40 -40 80 80" role="img" aria-label="Logo: Flugzeugsilhouette im Abzeichen des Jagdgeschwaders I">
+        <circle r="37" class="logo-ring"/><circle r="31.5" class="logo-inner"/>
+        <g transform="translate(0,-4) scale(1.8)"><path class="logo-plane" d="M-11,-3.6 h22 v4.2 h-22 z M-1.8,-8.5 h3.6 v16.5 h-3.6 z M-5.2,5.6 h10.4 v3 h-10.4 z M-3.4,-9.6 h6.8 v1.2 h-6.8 z"/></g>
+        <text y="23.5" text-anchor="middle" class="logo-text">JG I</text>
+      </svg>
+      <div class="brand-text">
+        <div class="eyebrow">Somme-Tal · 21. April 1918</div>
+        <h1>Der letzte Flug</h1>
+      </div>
+    </div>
+    <nav class="pages" aria-label="Seiten">
+      <a href="index.html">Karte</a>
+      <a href="personen.html">Personen</a>
+      <a href="tod.html" aria-current="page">21.04.1918</a>
+    </nav>
+    <p class="lede">Manfred von Richthofen fiel am Vormittag des 21. April 1918 über den australischen Linien bei Vaux-sur-Somme. Sicher ist, dass ihn ein einziges Geschoss traf und dass er zuvor eine britische Sopwith Camel tief durch das Somme-Tal verfolgt hatte. Wer schoss, ist bis heute offen. Jede Aussage unten trägt ihren Belegstatus.</p>
+  </header>
+
+  <section class="sect" aria-labelledby="stH">
+    <h2 id="stH">Belegstatus</h2>
+    <ul class="status">
+      <li><span class="b ok">belegt</span>zwei unabhängige Quellen</li>
+      <li><span class="b part">teilweise</span>zwei Quellen, aber voneinander abhängig</li>
+      <li><span class="b one">eine Quelle</span>nicht ausreichend belegt</li>
+      <li><span class="b wid">Widerspruch</span>Quellen widersprechen sich</li>
+    </ul>
+    <p class="note">Uhrzeiten stehen so, wie die jeweilige Quelle sie nennt. Deutsche und britische Seite rechneten mit unterschiedlicher Ortszeit; die genaue Differenz am 21.04.1918 ist hier nicht belegt (<a href="#s16">S16</a>).</p>
+  </section>
+
+  <section class="sect" aria-labelledby="tlH">
+    <h2 id="tlH">Ablauf</h2>
+
+    <p class="day">Samstag, 20. April 1918</p>
+    <ol class="tl">
+      <li>
+        <div class="t">20.04.</div><div class="rail"></div>
+        <div class="card">
+          <h3>80. Luftsieg</h3>
+          <p>Richthofen erzielt seine Luftsiege 79 und 80. Es sind seine letzten.</p>
+          <div class="meta"><span class="b ok">belegt</span><a href="#s4">S4</a><a href="#s3">S3</a></div>
+          <p class="why">S3 nennt kein Datum, nur „the day before“.</p>
+        </div>
+      </li>
+    </ol>
+
+    <p class="day">Sonntag, 21. April 1918</p>
+    <ol class="tl">
+      <li>
+        <div class="t">vormittags<br>dt. Zeit</div><div class="rail"></div>
+        <div class="card">
+          <h3>Start in Cappy</h3>
+          <p>Vom Flugplatz Cappy an der Somme startet die Jasta 11 in zwei Ketten mit Fokker-Dr.I-Dreideckern, eine führt Richthofen.</p>
+          <div class="meta"><span class="b ok">belegt</span><a href="#s6">S6</a><a href="#s9">S9</a><a href="#s8">S8</a></div>
+          <div class="meta"><span class="b one">eine Quelle</span>Startzeit „around 11 o'clock“ nur <a href="#s9">S9</a>; „neun weitere Piloten“ nur <a href="#s6">S6</a></div>
+        </div>
+      </li>
+      <li>
+        <div class="t">vormittags</div><div class="rail"></div>
+        <div class="card">
+          <h3>Luftkampf mit No. 209 Squadron</h3>
+          <p>Über dem Somme-Tal treffen die Dreidecker auf Sopwith Camels der No. 209 Squadron RAF unter Capt. A. R. Brown. Beteiligt sind auch zwei Neulinge: Lt. W. R. May auf britischer Seite und Richthofens Vetter Wolfram.</p>
+          <div class="meta"><span class="b ok">belegt</span><a href="#s1">S1</a><a href="#s14">S14</a><a href="#s6">S6</a></div>
+          <div class="meta"><span class="b one">eine Quelle</span>Dass May Wolfram angriff und Manfred dem Vetter half, steht nur in <a href="#s6">S6</a> (und im Auszug von <a href="#s7">S7</a>).</div>
+        </div>
+      </li>
+      <li>
+        <div class="t">danach</div><div class="rail"></div>
+        <div class="card">
+          <h3>Jagd im Tiefflug</h3>
+          <p>May flieht befehlsgemäß nach Westen, Richthofen folgt ihm dicht über dem Boden durch das Somme-Tal hinter die eigenen Linien des Gegners, über Vaux-sur-Somme hinweg, und feuert kurze Stöße.</p>
+          <div class="meta"><span class="b ok">belegt</span><a href="#s1">S1</a><a href="#s4">S4</a><a href="#s2">S2</a></div>
+        </div>
+      </li>
+      <li class="key">
+        <div class="t">„about 11:00“<br>brit. Zeit</div><div class="rail"></div>
+        <div class="card">
+          <h3>Brown stößt herab</h3>
+          <p>Brown stürzt von oben hinten auf den roten Dreidecker und schießt einen langen Feuerstoß. In seinem Bericht schreibt er, der Gegner sei „vertical“ abgestürzt.</p>
+          <div class="meta"><span class="b part">teilweise</span><a href="#s1">S1</a><a href="#s2">S2</a></div>
+          <p class="why">Beide Quellen geben denselben Gefechtsbericht wieder. Bean nennt die Absturzmeldung „mistaken“: Brown habe die weitere Jagd nicht gesehen.</p>
+        </div>
+      </li>
+      <li>
+        <div class="t">„about 10.45“<br>brit. Zeit</div><div class="rail"></div>
+        <div class="card">
+          <h3>Überflug der 11th Brigade</h3>
+          <p>Brigadegeneral Cannan notiert, ein feindlicher Dreidecker habe einen britischen Flieger etwa 100 Fuß über seinem Stab verfolgt und auf ihn geschossen.</p>
+          <div class="meta"><span class="b one">eine Quelle</span><a href="#s1">S1</a></div>
+          <p class="why">Die Uhrzeit liegt vor Browns „about 11:00“. Beide Angaben sind Schätzungen.</p>
+        </div>
+      </li>
+      <li>
+        <div class="t">etwa 1 Minute</div><div class="rail"></div>
+        <div class="card">
+          <h3>Die Jagd geht weiter</h3>
+          <p>Nach Browns Angriff setzt Richthofen die Verfolgung fort, laut Bean „almost exactly a mile“, und folgt Mays Ausweichbewegungen. Bodenzeugen sehen nur noch zwei Flugzeuge.</p>
+          <div class="meta"><span class="b ok">belegt</span><a href="#s1">S1</a><a href="#s3">S3</a><a href="#s2">S2</a></div>
+          <p class="why">Die Entfernung nennt nur S1.</p>
+        </div>
+      </li>
+      <li>
+        <div class="t">am Höhenrücken</div><div class="rail"></div>
+        <div class="card">
+          <h3>Feuer vom Boden</h3>
+          <p>Australische Flak-MGs eröffnen das Feuer, sobald May aus der Schusslinie ist: die Vickers von Sgt. Cedric Popkin (24th Machine Gun Company) und die Lewis-MGs der 53rd Battery mit den Gunnern Robert Buie und W. J. „Snowy“ Evans. Dazu schießen viele Soldaten mit Gewehren.</p>
+          <div class="meta"><span class="b ok">belegt</span><a href="#s1">S1</a><a href="#s13">S13</a><a href="#s3">S3</a></div>
+        </div>
+      </li>
+      <li>
+        <div class="t">Sekunden</div><div class="rail"></div>
+        <div class="card">
+          <h3>Richthofen dreht ab</h3>
+          <p>Der Dreidecker bricht die Verfolgung ab, wendet scharf, steigt kurz und geht dann zu Boden.</p>
+          <div class="meta"><span class="b wid">Widerspruch</span>Richtung der Wende</div>
+          <p class="why">Rechts: Travers in <a href="#s1">S1</a>, <a href="#s13">S13</a>. Links: Wiltshire in <a href="#s1">S1</a>, <a href="#s3">S3</a>. „Nach Norden“: Beavis in <a href="#s1">S1</a>. Die Zeugen standen an verschiedenen Stellen; nicht auflösbar.</p>
+        </div>
+      </li>
+      <li class="key">
+        <div class="t">Minuten später</div><div class="rail"></div>
+        <div class="card">
+          <h3>Landung neben der Straße Bray–Corbie</h3>
+          <p>Der Dreidecker 425/17 setzt auf dem Höhenrücken nördlich von Vaux-sur-Somme (Morlancourt-Rücken) neben der Straße Bray–Corbie auf, an einem Rübenhaufen. Soldaten strömen hin, Souvenirjäger zerlegen die Maschine.</p>
+          <div class="meta"><span class="b ok">belegt</span><a href="#s1">S1</a><a href="#s13">S13</a><a href="#s4">S4</a><a href="#s10">S10</a></div>
+          <div class="meta"><span class="b wid">Widerspruch</span>Lebte er noch? <a href="#s1">S1</a>: „The pilot was in it, dead“. <a href="#s6">S6</a>: starb „kurz nach Ankunft der australischen Soldaten“. <a href="#s3">S3</a>: letzte Worte nur „allegedly“.</div>
+        </div>
+      </li>
+      <li>
+        <div class="t">mittags<br>dt. Zeit</div><div class="rail"></div>
+        <div class="card">
+          <h3>Cappy wartet</h3>
+          <p>Die Jasta 11 landet ohne ihren Kommandeur. Ein deutscher Artilleriebeobachter meldet, ein roter Dreidecker sei bei Höhe 102 nördlich von Vaux glatt gelandet. Man hofft auf eine Notlandung.</p>
+          <div class="meta"><span class="b one">eine Quelle</span><a href="#s9">S9</a></div>
+        </div>
+      </li>
+      <li>
+        <div class="t">nach Dunkelheit</div><div class="rail"></div>
+        <div class="card">
+          <h3>Überführung nach Poulainville</h3>
+          <p>Die Leiche wird zunächst zur Batterie gebracht und abends von der No. 3 Squadron, Australian Flying Corps, zum Flugplatz Poulainville geholt.</p>
+          <div class="meta"><span class="b ok">belegt</span><a href="#s1">S1</a><a href="#s3">S3</a></div>
+        </div>
+      </li>
+      <li class="key">
+        <div class="t">21./22.04.</div><div class="rail"></div>
+        <div class="card">
+          <h3>Ärztliche Untersuchung</h3>
+          <p>Keine Obduktion, nur äußere Untersuchung mit Sondierung. Befund: ein Geschoss, Einschuss rechts etwa auf Höhe der 9. Rippe, Ausschuss links vorn etwas höher, durch Brust und Herz.</p>
+          <div class="meta"><span class="b ok">belegt</span><a href="#s1">S1</a><a href="#s2">S2</a><a href="#s3">S3</a></div>
+          <div class="meta"><span class="b part">teilweise</span>Deutung uneinig: Graham und Downs „could not have been caused by fire from the ground“; Barber: Schuss von unten bei Schräglage. <a href="#s1">S1</a><a href="#s2">S2</a></div>
+          <p class="why">S1 und S2 stützen sich hier auf dieselben Akten (Bean Papers). Laut Barber diente ein Stück Zaundraht als Sonde.</p>
+        </div>
+      </li>
+    </ol>
+
+    <p class="day">Montag, 22. April 1918</p>
+    <ol class="tl">
+      <li class="key">
+        <div class="t">22.04.</div><div class="rail"></div>
+        <div class="card">
+          <h3>Beerdigung in Bertangles</h3>
+          <p>Die No. 3 Squadron AFC richtet die Beerdigung aus; Richthofen wird auf dem Friedhof von Bertangles mit militärischen Ehren beigesetzt.</p>
+          <div class="meta"><span class="b ok">belegt</span><a href="#s11">S11</a><a href="#s12">S12</a><a href="#s6">S6</a></div>
+          <p class="why">Von S11 und S12 sind nur die Bildunterschriften gelesen.</p>
+        </div>
+      </li>
+    </ol>
+
+    <p class="day">Danach</p>
+    <ol class="tl">
+      <li>
+        <div class="t">1918</div><div class="rail"></div>
+        <div class="card">
+          <h3>Brown wird ausgezeichnet</h3>
+          <p>Die RAF schreibt den Abschuss Brown zu. Er erhält die Spange zum Distinguished Service Cross.</p>
+          <div class="meta"><span class="b ok">belegt</span><a href="#s14">S14</a><a href="#s2">S2</a><a href="#s1">S1</a></div>
+          <p class="why">S3 nennt fälschlich das Distinguished Flying Cross.</p>
+        </div>
+      </li>
+      <li>
+        <div class="t">1920er</div><div class="rail"></div>
+        <div class="card">
+          <h3>Umbettung nach Fricourt</h3>
+          <p>Französische Militärbehörden betten Richthofen auf die deutsche Kriegsgräberstätte Fricourt um.</p>
+          <div class="meta"><span class="b ok">belegt</span><a href="#s5">S5</a><a href="#s6">S6</a></div>
+          <p class="why">Das Jahr ist offen: S6 schreibt „Fünf Jahre später“, S5 nennt keines.</p>
+        </div>
+      </li>
+      <li class="key">
+        <div class="t">Nov. 1925</div><div class="rail"></div>
+        <div class="card">
+          <h3>Staatsbegräbnis in Berlin</h3>
+          <p>Sein Bruder Karl-Bolko überführt den Leichnam nach Berlin. Beisetzung in einem Ehrengrab auf dem Invalidenfriedhof.</p>
+          <div class="meta"><span class="b ok">belegt</span><a href="#s5">S5</a><a href="#s6">S6</a><a href="#s4">S4</a></div>
+          <div class="meta"><span class="b one">eine Quelle</span>Tag 20.11.1925 und Feier in der Gnadenkirche mit Hindenburg nur <a href="#s6">S6</a></div>
+        </div>
+      </li>
+      <li>
+        <div class="t">1935</div><div class="rail"></div>
+        <div class="card">
+          <h3>Bean veröffentlicht die Zeugenaussagen</h3>
+          <p>Die australische amtliche Geschichte sammelt die Berichte zahlreicher Augenzeugen und hält Sgt. Popkin für den wahrscheinlichsten Schützen.</p>
+          <div class="meta"><span class="b ok">belegt</span><a href="#s1">S1</a><a href="#s2">S2</a><a href="#s13">S13</a></div>
+        </div>
+      </li>
+      <li>
+        <div class="t">1975</div><div class="rail"></div>
+        <div class="card">
+          <h3>Familiengrab in Wiesbaden</h3>
+          <p>Vor der Einebnung des Invalidenfriedhofs durch die DDR lässt die Familie ihn umbetten. Seitdem liegt er im Familiengrab auf dem Südfriedhof Wiesbaden.</p>
+          <div class="meta"><span class="b ok">belegt</span><a href="#s5">S5</a><a href="#s6">S6</a></div>
+          <div class="meta"><span class="b wid">Widerspruch</span>Eine von <a href="#s15">S15</a> zitierte Meldung von 1976 nennt „Ende vorigen Jahres“ und den Nordfriedhof; <a href="#s6">S6</a> nennt den 11.02.1975.</div>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section class="sect" aria-labelledby="thH">
+    <h2 id="thH">Wer traf?</h2>
+    <p class="hint">Gesichert ist nur: ein Geschoss vom Kaliber .303, von rechts, und es war rasch tödlich. Das Kaliber verschossen Gewehr, Lewis- und Vickers-MG gleichermaßen (<a href="#s2">S2</a>). Die Fachliteratur geht heute überwiegend von einem Schuss vom Boden aus (<a href="#s4">S4</a>, <a href="#s2">S2</a>, <a href="#s3">S3</a>).</p>
+    <div class="theses">
+      <article class="th">
+        <h3>Capt. A. Roy Brown</h3>
+        <p class="who2">No. 209 Squadron RAF, aus der Luft</p>
+        <dl>
+          <dt>Dafür</dt><dd>Gefechtsbericht, offizielle Anerkennung durch die RAF, Bericht der Ärzte Graham und Downs.</dd>
+          <dt>Dagegen</dt><dd>Richthofen flog nach dem Angriff noch rund eine Meile gezielt weiter. Mit einem Herzschuss bleibt laut Miller nur 20 bis 30 Sekunden Bewusstsein.</dd>
+        </dl>
+        <div class="meta"><a href="#s1">S1</a><a href="#s2">S2</a><a href="#s14">S14</a></div>
+      </article>
+      <article class="th lead">
+        <h3>Sgt. Cedric Popkin</h3>
+        <p class="who2">24th Machine Gun Company, Vickers-MG</p>
+        <dl>
+          <dt>Dafür</dt><dd>Sein zweiter Feuerstoß konnte den abdrehenden Dreidecker von rechts, unten und leicht hinten treffen, passend zum Wundkanal. Bean (1935), Miller (1998) und Holmes halten ihn für am wahrscheinlichsten.</dd>
+          <dt>Dagegen</dt><dd>Popkin selbst glaubte offenbar, beim frontalen Anflug getroffen zu haben (nur <a href="#s7">S7</a>-Auszug).</dd>
+        </dl>
+        <div class="meta"><a href="#s1">S1</a><a href="#s2">S2</a><a href="#s3">S3</a></div>
+      </article>
+      <article class="th">
+        <h3>Gnr. W. J. „Snowy“ Evans</h3>
+        <p class="who2">53rd Battery, Lewis-MG</p>
+        <dl>
+          <dt>Dafür</dt><dd>Eine Fernsehdokumentation von 2002 kam per Computersimulation zu Evans.</dd>
+          <dt>Dagegen</dt><dd>Laut Bean kam das Feuer der 53rd Battery nicht von rechts.</dd>
+        </dl>
+        <div class="meta"><a href="#s13">S13</a><a href="#s7">S7</a><a href="#s1">S1</a></div>
+      </article>
+      <article class="th">
+        <h3>Gnr. Robert Buie</h3>
+        <p class="who2">53rd Battery, Lewis-MG</p>
+        <dl>
+          <dt>Dafür</dt><dd>Eigene Schilderung bei Dale Titler (1973).</dd>
+          <dt>Dagegen</dt><dd>Buie schoss nach eigener Aussage frontal; der Einschuss lag hinten seitlich (Miller).</dd>
+        </dl>
+        <div class="meta"><a href="#s2">S2</a><a href="#s13">S13</a></div>
+      </article>
+      <article class="th">
+        <h3>Unbekannter Schütze</h3>
+        <p class="who2">Gewehr Kaliber .303</p>
+        <dl>
+          <dt>Dafür</dt><dd>Viele Soldaten schossen; gleiche Munition wie die MGs.</dd>
+          <dt>Dagegen</dt><dd>Nicht prüfbar, aber auch nicht auszuschließen.</dd>
+        </dl>
+        <div class="meta"><a href="#s2">S2</a><a href="#s8">S8</a></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="sect" aria-labelledby="qH">
+    <h2 id="qH">Quellen</h2>
+    <p class="hint">Alle Quellen am 06.11.2026 abgerufen. Die vollständige Belegmatrix mit Originalpassagen liegt im Projektordner.</p>
+    <ol class="srcs">
+      <li id="s1"><span class="id">S1</span><span>C. E. W. Bean: <i>Official History of Australia in the War of 1914–1918</i>, Bd. V, Anhang 4 „The Death of Richthofen“, 1935. <a href="https://s3-ap-southeast-2.amazonaws.com/awm-media/collection/RCDIG1069686/document/5519178.PDF">PDF beim Australian War Memorial</a> <span class="dep">Abdruck der Berichte von 1918 und späterer Zeugenbriefe; Grundlage fast aller späteren Darstellungen.</span></span></li>
+      <li id="s2"><span class="id">S2</span><span>M. Geoffrey Miller: „The Death of Manfred von Richthofen: Who fired the fatal shot?“, <i>Sabretache</i> XXXIX/2, Juni 1998. <a href="http://www.gwpda.org/comment/richt.htm">gwpda.org</a> <span class="dep">Wertet die Originale in den Bean Papers aus, also dasselbe Archiv wie S1.</span></span></li>
+      <li id="s3"><span class="id">S3</span><span>Frederick Holmes: „The Death of The Red Baron“, University of Kansas School of Medicine, undatiert. <a href="https://www.kumc.edu/school-of-medicine/academics/departments/history-and-philosophy-of-medicine/archives/wwi/essays/biography/red-baron.html">kumc.edu</a> <span class="dep">Sekundär; enthält mindestens einen Fehler (Auszeichnung Browns).</span></span></li>
+      <li id="s4"><span class="id">S4</span><span>Robert Rennie: „Richthofen, Manfred, Freiherr von“, in: <i>1914-1918-online</i>, 20.08.2018, DOI 10.15463/ie1418.11293. <a href="https://encyclopedia.1914-1918-online.net/article/richthofen-manfred-freiherr-von/">1914-1918-online</a></span></li>
+      <li id="s5"><span class="id">S5</span><span>Volksbund Deutsche Kriegsgräberfürsorge: <a href="https://kriegsgraeberstaetten.volksbund.de/en/military-cemetery/fricourt">Kriegsgräberstätte Fricourt</a>; Volksbund Hessen: <a href="https://hessen.volksbund.de/aktuell/projekte/artikel/kriegsgraeber-auf-dem-wiesbadener-suedfriedhof">Kriegsgräber auf dem Wiesbadener Südfriedhof</a> (Stand 26.06.2026). <span class="dep">Beide Seiten zählen als eine Quelle.</span></span></li>
+      <li id="s6"><span class="id">S6</span><span>Wikipedia (de): <a href="https://de.wikipedia.org/wiki/Manfred_von_Richthofen">Manfred von Richthofen</a>. <span class="dep">Einzelnachweise dort nicht geprüft.</span></span></li>
+      <li id="s7"><span class="id">S7</span><span>Wikipedia (en): <a href="https://en.wikipedia.org/wiki/Manfred_von_Richthofen">Manfred von Richthofen</a>, Abschnitt „Death“. <span class="dep">Nur als Suchauszug gelesen; zählt mit The Aerodrome als eine Quelle.</span></span></li>
+      <li id="s8"><span class="id">S8</span><span>Rolf Steiner: „The Red Baron’s Last Flight“, Aerostories, undatiert. <a href="http://aerostories.free.fr/events/MvR/Richthofen-eng.pdf">PDF</a></span></li>
+      <li id="s9"><span class="id">S9</span><span>Bericht des Adjutanten Karl Bodenschatz, englische Übersetzung bei Meet The Red Baron. <a href="https://new.meettheredbaron.com/event/bodenschatz-account-part-1">meettheredbaron.com</a> <span class="dep">Einzige deutsche Quelle hier; Buchausgabe nicht geprüft.</span></span></li>
+      <li id="s10"><span class="id">S10</span><span>Australian War Memorial: <a href="https://www.awm.gov.au/collection/C111414">Steuerknüppel des Fokker Dr I 425/17</a> (RELAWM00704).</span></li>
+      <li id="s11"><span class="id">S11</span><span>Australian War Memorial: <a href="https://www.awm.gov.au/collection/C49193">Foto Bertangles Cemetery, 22.04.1918</a> (C49193). <span class="dep">Nur Bildunterschrift gelesen.</span></span></li>
+      <li id="s12"><span class="id">S12</span><span>Imperial War Museums: <a href="https://www.iwm.org.uk/collections/item/object/205246563">The Funeral of Rittmeister Manfred von Richthofen</a>. <span class="dep">Nur Bildunterschrift gelesen.</span></span></li>
+      <li id="s13"><span class="id">S13</span><span>Michael Hall: „Who Shot the Red Baron?“, Libraries ACT, 2010, Stand 05.10.2022. <a href="https://www.library.act.gov.au/find/history/stories_from_the_act_memorial/who_shot_the_red_baron">library.act.gov.au</a> <span class="dep">Stützt sich auf Bean und eine Dokumentation von 2002.</span></span></li>
+      <li id="s14"><span class="id">S14</span><span>The Canadian Encyclopedia: <a href="https://thecanadianencyclopedia.ca/en/article/arthur-roy-brown">Arthur Roy Brown</a>, 2008, bearbeitet 18.03.2021.</span></li>
+      <li id="s15"><span class="id">S15</span><span>Andreas Conrad: „Der tote Baron“, <i>Der Tagesspiegel</i>, 20.04.2018. <a href="https://www.tagesspiegel.de/berlin/der-tote-baron-3946156.html">tagesspiegel.de</a></span></li>
+      <li id="s16"><span class="id">S16</span><span>The Long, Long Trail: <a href="https://www.longlongtrail.co.uk/time-on-the-western-front/">Time on the Western Front</a>, undatiert.</span></li>
+    </ol>
+  </section>
+</div>
+</body>
+</html>
