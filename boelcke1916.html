@@ -53,6 +53,8 @@ header { display: grid; gap: 10px }
 .eyebrow { font: 600 13px/1 var(--f-display); letter-spacing: .14em; text-transform: uppercase; color: var(--red) }
 h1 { font: 700 clamp(28px, 5vw, 46px)/1 var(--f-display); margin: 0; text-transform: uppercase; text-wrap: balance }
 .lede { margin: 0; max-width: 68ch; color: var(--muted) }
+.evhead { display: grid; gap: 6px; margin-top: 8px }
+.evhead h2.evtitle { font: 700 clamp(26px, 4vw, 36px)/1.05 var(--f-display); text-transform: uppercase; letter-spacing: .01em; margin: 0; text-wrap: balance }
 nav.pages { display: flex; gap: 8px; flex-wrap: wrap }
 nav.pages a { font: 600 14px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); text-decoration: none;
   border: 1px solid var(--border); border-radius: 2px; padding: 9px 12px 8px; background: var(--panel) }
@@ -137,8 +139,8 @@ ol.srcs li:target { background: var(--red-soft); outline: 6px solid var(--red-so
         <text y="23.5" text-anchor="middle" class="logo-text">JG I</text>
       </svg>
       <div class="brand-text">
-        <div class="eyebrow">Bapaume · 28. Oktober 1916</div>
-        <h1>Boelckes Tod</h1>
+        <div class="eyebrow">Ereignisse · 1916 – 1918</div>
+        <h1>Besondere Ereignisse im Geschwader Richthofen</h1>
       </div>
     </div>
     <nav class="pages" aria-label="Seiten">
@@ -151,6 +153,10 @@ ol.srcs li:target { background: var(--red-soft); outline: 6px solid var(--red-so
       <a href="april1917.html" title="Der „Blutige April“">April 1917</a>
       <a href="tod.html" title="Der letzte Flug">21.04.1918</a>
     </nav>
+    <div class="evhead">
+      <div class="eyebrow">Bapaume · 28. Oktober 1916</div>
+      <h2 class="evtitle">Boelckes Tod</h2>
+    </div>
     <p class="lede">Oswald Boelcke, Führer der Jasta 2 und Lehrer Manfred von Richthofens, starb am Nachmittag des 28. Oktober 1916 nach einer Berührung mit der Maschine seines Freundes Erwin Böhme. Richthofen flog im selben Luftkampf mit. Die wichtigsten Zeugnisse stammen von Richthofen und Böhme selbst. Jede Aussage unten trägt ihren Belegstatus.</p>
   </header>
 
