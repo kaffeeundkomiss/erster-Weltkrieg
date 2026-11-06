@@ -12,6 +12,7 @@ Online: https://kirchnerjan-cell.github.io/richthofen/
 - `icons/` – App-Symbol für den Home-Bildschirm (`apple-touch-icon.png`), PNG-Symbole 192/512 px,
   SVG-Varianten.
 - `personen.html` – zweite Seite: Personenregister (19 Personen) und Chronologie, nach Jahren aufklappbar; Filter nach Person und Art (Direktlink z. B. `personen.html#voss`).
+- `boelcke1916.html` – Seite zu Oswald Boelckes Tod am 28.10.1916: Zeitleiste, Augenzeugen, je Aussage mit Belegstatus.
 - `april1917.html` – Seite zum „Blutigen April“ 1917 bei Arras: Zahlen, Zeitleiste, Deutungen, je Aussage mit Belegstatus.
 - `tod.html` – dritte Seite: Zeitleiste des 21. April 1918 (Richthofens letzter Flug) mit Belegstatus je Aussage, Thesen zum tödlichen Schuss und Quellenliste.
 - `manifest.webmanifest` – Web-App-Manifest, damit die Seite vom Home-Bildschirm als App öffnet.
