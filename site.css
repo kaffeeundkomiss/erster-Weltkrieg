@@ -44,3 +44,15 @@ details.statuslegend[open] > summary::before { transform: rotate(90deg) }
 details.statuslegend > summary:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
 details.statuslegend[open] > summary { margin-bottom: 10px }
 details.statuslegend > *:not(summary) + * { margin-top: 10px }
+
+/* Schaltfläche „Quellen“ am Seitenende und Rückweg auf den Quellenseiten */
+.qnav { margin: 8px 0 0 }
+a.qbtn { display: inline-flex; align-items: center; min-height: 44px; box-sizing: border-box; padding: 0 18px;
+  font: 600 14px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase; text-decoration: none;
+  color: var(--paper, #fff); background: var(--ink); border: 1px solid var(--ink); border-radius: 2px }
+a.qbtn:hover { background: var(--red); border-color: var(--red) }
+a.qbtn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
+/* Quellenseiten: aktueller Bereich in der Navigation */
+nav.pages a[aria-current="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink) }
+nav.sub a[aria-current="true"] { color: var(--ink); border-bottom-color: var(--red) }
+header .lede a { color: var(--ink) }

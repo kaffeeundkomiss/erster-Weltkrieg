@@ -107,11 +107,7 @@ ol.gsrcs { margin: 0; padding-left: 2.4em; display: grid; gap: 4px; font-size: 1
     <dl class="gloss glnone" id="gloss"></dl>
   </section>
 
-  <section class="sect" aria-labelledby="qH">
-    <h2 id="qH">Quellen</h2>
-    <p class="hint">Alle Quellen am 06.11.2026 abgerufen. „Suchauszug“ heißt: nur der Textauszug in der Suchergebnisliste wurde gelesen. Begriffe ohne Quellenangabe sind reine Worterklärungen ohne Einzelbeleg. „Angaben dieser Website“ verweist auf die belegten Aussagen von Karte und Ereignisseiten.</p>
-    <ol class="gsrcs" id="gsrcs"></ol>
-  </section>
+  <p class="qnav"><a class="qbtn" href="quellen-glossar.html">Quellen</a></p>
 </div>
 <script src="site.js"></script>
 <script>
@@ -121,10 +117,9 @@ ol.gsrcs { margin: 0; padding-left: 2.4em; display: grid; gap: 4px; font-size: 1
   const esc = t => t.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const sorted = G.slice().sort((a, b) => a.t.localeCompare(b.t, "de"));
   document.getElementById("gloss").innerHTML = sorted.map(g => `<div id="${g.id}"><dt>${esc(g.t)}</dt><dd>${esc(g.d)}</dd><dd class="gsrc">${
-    g.src.join() === "web" ? `Beleg: <a href="index.html#srcList">Angaben dieser Website</a> mit den dort genannten Quellen`
-    : g.src.length ? "Belege: " + g.src.map(k => `<a href="#q-${k}">[${no(k)}]</a>`).join(" ") + (g.src.length < 2 ? " (nur eine Quelle, nicht ausreichend belegt)" : "")
+    g.src.join() === "web" ? `Beleg: <a href="quellen-karte.html">Angaben dieser Website</a> mit den dort genannten Quellen`
+    : g.src.length ? "Belege: " + g.src.map(k => `<a href="quellen-glossar.html#q-${k}">[${no(k)}]</a>`).join(" ") + (g.src.length < 2 ? " (nur eine Quelle, nicht ausreichend belegt)" : "")
                : "Worterklärung ohne Einzelbeleg"}</dd></div>`).join("");
-  document.getElementById("gsrcs").innerHTML = keys.map(k => `<li id="q-${k}"><a href="${S[k][1]}"${S[k][1].startsWith("http") ? ' target="_blank" rel="noopener"' : ""}>${esc(S[k][0])}</a></li>`).join("");
   if (location.hash) { const t = document.getElementById(location.hash.slice(1)); if (t) t.scrollIntoView(); }
 })();
 </script>
