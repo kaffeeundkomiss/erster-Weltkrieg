@@ -56,3 +56,15 @@ a.qbtn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
 nav.pages a[aria-current="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink) }
 nav.sub a[aria-current="true"] { color: var(--ink); border-bottom-color: var(--red) }
 header .lede a { color: var(--ink) }
+
+/* Ereignisseiten: Porträtfoto rechts neben Überschrift und Einleitung, auf schmalen Bildschirmen darunter */
+.evintro { display: grid; grid-template-columns: minmax(0, 1fr) 200px; gap: 10px 28px; align-items: start }
+.evintro > .evtext { display: grid; gap: 10px; min-width: 0 }
+figure.evfoto { margin: 8px 0 0; display: grid; gap: 6px }
+figure.evfoto img { display: block; width: 100%; height: auto; border: 1px solid var(--rule); border-radius: 2px; background: var(--panel) }
+figure.evfoto figcaption { font-size: 13px; line-height: 1.4; color: var(--muted) }
+figure.evfoto figcaption a { color: var(--ink) }
+@media (max-width: 720px) {
+  .evintro { grid-template-columns: minmax(0, 1fr) }
+  figure.evfoto { margin-top: 4px; max-width: 180px }
+}
