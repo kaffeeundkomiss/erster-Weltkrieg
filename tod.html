@@ -56,6 +56,14 @@ nav.pages { display: flex; gap: 8px; flex-wrap: wrap }
 nav.pages a { font: 600 14px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); text-decoration: none;
   border: 1px solid var(--border); border-radius: 2px; padding: 9px 12px 8px; background: var(--panel) }
 nav.pages a[aria-current="page"] { background: var(--ink); color: var(--paper); border-color: var(--ink) }
+nav.pages a[aria-current="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink) }
+nav.sub { display: flex; gap: 20px; border-bottom: 1px solid var(--rule); overflow-x: auto; scrollbar-width: none; margin-top: -2px }
+nav.sub::-webkit-scrollbar { display: none }
+nav.sub a { font: 600 13px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); text-decoration: none;
+  white-space: nowrap; padding: 8px 0 9px; border-bottom: 3px solid transparent; margin-bottom: -1px }
+nav.sub a:hover { color: var(--ink) }
+nav.sub a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--red) }
+nav.sub a:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
 nav.pages a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
 @media (max-width: 560px) { .logo { width: 56px; height: 56px } .brand { gap: 12px } }
 
@@ -135,9 +143,12 @@ ol.srcs li:target { background: var(--red-soft); outline: 6px solid var(--red-so
     <nav class="pages" aria-label="Seiten">
       <a href="index.html">Karte</a>
       <a href="personen.html">Personen</a>
-      <a href="boelcke1916.html">28.10.1916</a>
-      <a href="april1917.html">April 1917</a>
-      <a href="tod.html" aria-current="page">21.04.1918</a>
+      <a href="boelcke1916.html" aria-current="true">Ereignisse</a>
+    </nav>
+    <nav class="sub" aria-label="Ereignisse">
+      <a href="boelcke1916.html" title="Boelckes Tod">28.10.1916</a>
+      <a href="april1917.html" title="Der „Blutige April“">April 1917</a>
+      <a href="tod.html" title="Der letzte Flug" aria-current="page">21.04.1918</a>
     </nav>
     <p class="lede">Manfred von Richthofen fiel am Vormittag des 21. April 1918 über den australischen Linien bei Vaux-sur-Somme. Sicher ist, dass ihn ein einziges Geschoss traf und dass er zuvor eine britische Sopwith Camel tief durch das Somme-Tal verfolgt hatte. Wer schoss, ist bis heute offen. Jede Aussage unten trägt ihren Belegstatus.</p>
   </header>
