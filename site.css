@@ -1,0 +1,46 @@
+/* Gemeinsame Bausteine aller Seiten: Begriffserklärungen, Kontextzeile, einklappbare Belege.
+   Nutzt die Farb- und Schrift-Variablen der jeweiligen Seite (--ink, --muted, --panel, --rule, --border, --red, --f-*). */
+
+/* Antippbare Begriffe */
+button.gl { all: unset; cursor: help; color: inherit; font: inherit; text-decoration: underline dotted; text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px; text-decoration-color: var(--muted); border-radius: 2px }
+button.gl:hover { text-decoration-color: var(--red) }
+button.gl:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
+button.gl[aria-expanded="true"] { background: var(--red-soft, rgba(173,40,29,.14)) }
+.glpop { position: absolute; z-index: 50; max-width: min(340px, calc(100vw - 32px)); background: var(--panel); color: var(--ink);
+  border: 1px solid var(--border); border-left: 4px solid var(--red); border-radius: 3px; padding: 10px 12px 10px;
+  box-shadow: 0 6px 22px rgba(0,0,0,.18); font: 400 15px/1.45 var(--f-body); display: grid; gap: 6px }
+.glpop b { font: 700 16px/1.15 var(--f-display); letter-spacing: .03em; text-transform: uppercase }
+.glpop p { margin: 0 }
+.glpop .glmore { font-size: 13.5px; color: var(--muted) } .glpop .glmore a { color: var(--ink) }
+.glpop .glx { all: unset; position: absolute; right: 6px; top: 4px; width: 28px; height: 28px; text-align: center; line-height: 28px; cursor: pointer; color: var(--muted); font-size: 18px }
+.glpop .glx:focus-visible { outline: 2px solid var(--red) }
+
+/* Kontextzeile unter der Navigation (Seiten ohne Einführungskasten) */
+.ctx { margin: 0; font-size: 14px; color: var(--muted) }
+.ctx a { color: var(--ink) }
+
+/* Einklappbare Belege in Ablaufkarten und Zahlenkästen */
+details.belege { margin-top: 2px }
+details.belege > summary { list-style: none; cursor: pointer; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 32px;
+  font: 600 12.5px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--muted) }
+details.belege > summary::-webkit-details-marker { display: none }
+details.belege > summary::before { content: "▸"; font-size: 12px; width: 10px; transition: transform .15s }
+details.belege[open] > summary::before { transform: rotate(90deg) }
+details.belege > summary .b { font-size: 10.5px; padding: 3px 5px 2px }
+details.belege > summary:hover { color: var(--ink) }
+details.belege > summary:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
+details.belege > .belin { display: grid; gap: 6px; padding: 6px 0 2px 16px; border-left: 2px solid var(--rule); margin-top: 4px }
+.beltoggle { all: unset; cursor: pointer; justify-self: start; font: 600 13px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase;
+  border: 1px solid var(--border); border-radius: 2px; padding: 9px 11px 8px; background: var(--panel); color: var(--ink) }
+.beltoggle:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
+.belhead { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px }
+
+/* Legende des Belegstatus als aufklappbare Zeile */
+details.statuslegend > summary { list-style: none; cursor: pointer; font: 600 14px/1.2 var(--f-display); letter-spacing: .06em; text-transform: uppercase; color: var(--ink); min-height: 32px; display: flex; align-items: center; gap: 8px }
+details.statuslegend > summary::-webkit-details-marker { display: none }
+details.statuslegend > summary::before { content: "▸"; font-size: 12px; width: 10px; transition: transform .15s }
+details.statuslegend[open] > summary::before { transform: rotate(90deg) }
+details.statuslegend > summary:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
+details.statuslegend[open] > summary { margin-bottom: 10px }
+details.statuslegend > *:not(summary) + * { margin-top: 10px }

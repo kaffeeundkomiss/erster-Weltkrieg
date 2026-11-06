@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Glossar: Jagdgeschwader Richthofen</title>
+<meta name="description" content="Erklärungen der Fachbegriffe und Abkürzungen zum Luftkrieg 1914–1918 mit Belegen">
+<meta name="theme-color" content="#eceee8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121614" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="JG Richthofen">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="site.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Glossar: Kopf wie auf den anderen Seiten, darunter die Begriffe aus site.js */
+:root {
+  --paper: #eceee8; --panel: #f6f7f3; --ink: #1d2420; --muted: #5d6861; --rule: #c3c9c1; --border: #6f7a72;
+  --j2: #6b6f6c; --j4: #2a5d91; --j6: #3f7a2e; --j10: #b07d0a; --j11: #7a3d8f; --ally: #4f6d7a; --red: #ad281d; --red-soft: rgba(173,40,29,.12);
+  --f-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #121614; --panel: #181d1a; --ink: #e2e6e1; --muted: #98a39b; --rule: #313a35; --border: #7d8a82;
+  --j2: #a4aaa6; --j4: #6fa3e0; --j6: #7dbb5f; --j10: #e0b33c; --j11: #c08ad6; --ally: #8fb3c4; --red: #e4533f; --red-soft: rgba(228,83,63,.16);
+  color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #121614; --panel: #181d1a; --ink: #e2e6e1; --muted: #98a39b; --rule: #313a35; --border: #7d8a82;
+  --j2: #a4aaa6; --j4: #6fa3e0; --j6: #7dbb5f; --j10: #e0b33c; --j11: #c08ad6; --ally: #8fb3c4; --red: #e4533f; --red-soft: rgba(228,83,63,.16);
+  color-scheme: dark }
+
+* { box-sizing: border-box }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 16px/1.55 var(--f-body) }
+[hidden] { display: none !important }
+.wrap { max-width: 1040px; margin: 0 auto; padding-block: 28px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 26px }
+.wrap > * { min-width: 0 }
+header { display: grid; gap: 10px }
+.brand { display: flex; align-items: center; gap: 16px }
+.brand-text { display: grid; gap: 6px; min-width: 0 }
+.logo { width: 76px; height: 76px; flex: none }
+.logo-ring { fill: var(--panel); stroke: var(--ink); stroke-width: 3 }
+.logo-inner { fill: none; stroke: var(--ink); stroke-width: 1; opacity: .5 }
+.logo-plane { fill: var(--red) }
+.logo-text { fill: var(--ink); font: 700 12.5px var(--f-display); letter-spacing: .16em }
+.eyebrow { font: 600 13px/1 var(--f-display); letter-spacing: .14em; text-transform: uppercase; color: var(--red) }
+h1 { font: 700 clamp(28px, 5vw, 46px)/1 var(--f-display); margin: 0; text-transform: uppercase; text-wrap: balance }
+.lede { margin: 0; max-width: 68ch; color: var(--muted) }
+nav.pages { display: flex; gap: 8px; flex-wrap: wrap }
+nav.pages a { font: 600 14px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); text-decoration: none;
+  border: 1px solid var(--border); border-radius: 2px; padding: 9px 12px 8px; background: var(--panel) }
+nav.pages a[aria-current="page"] { background: var(--ink); color: var(--paper); border-color: var(--ink) }
+nav.pages a[aria-current="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink) }
+nav.sub { display: flex; gap: 20px; border-bottom: 1px solid var(--rule); overflow-x: auto; scrollbar-width: none; margin-top: -2px }
+nav.sub::-webkit-scrollbar { display: none }
+nav.sub a { font: 600 13px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); text-decoration: none;
+  white-space: nowrap; padding: 8px 0 9px; border-bottom: 3px solid transparent; margin-bottom: -1px }
+nav.sub a:hover { color: var(--ink) }
+nav.sub a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--red) }
+nav.sub a:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
+nav.pages a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
+@media (max-width: 560px) { .logo { width: 56px; height: 56px } .brand { gap: 12px } }
+
+h2 { font: 700 20px/1 var(--f-display); text-transform: uppercase; letter-spacing: .04em; margin: 0 }
+.sect { display: grid; gap: 12px }
+.hint { font-size: 14px; color: var(--muted); margin: 0 } .hint a { color: var(--ink) }
+dl.gloss { margin: 0; display: grid; gap: 10px }
+dl.gloss > div { background: var(--panel); border: 1px solid var(--rule); border-radius: 3px; padding: 11px 14px 12px; display: grid; gap: 5px; scroll-margin-top: 16px }
+dl.gloss > div:target { border-left: 4px solid var(--red) }
+dl.gloss dt { font: 700 18px/1.15 var(--f-display); letter-spacing: .03em }
+dl.gloss dd { margin: 0 }
+dl.gloss .gsrc { font-size: 13.5px; color: var(--muted) } dl.gloss .gsrc a { color: var(--ink) }
+ol.gsrcs { margin: 0; padding-left: 2.4em; display: grid; gap: 4px; font-size: 14px; color: var(--muted) } ol.gsrcs a { color: var(--ink); overflow-wrap: anywhere }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <svg class="logo" viewBox="-40 -40 80 80" role="img" aria-label="Logo: Flugzeugsilhouette im Abzeichen des Jagdgeschwaders I">
+        <circle r="37" class="logo-ring"/><circle r="31.5" class="logo-inner"/>
+        <g transform="translate(0,-4) scale(1.8)"><path class="logo-plane" d="M-11,-3.6 h22 v4.2 h-22 z M-1.8,-8.5 h3.6 v16.5 h-3.6 z M-5.2,5.6 h10.4 v3 h-10.4 z M-3.4,-9.6 h6.8 v1.2 h-6.8 z"/></g>
+        <text y="23.5" text-anchor="middle" class="logo-text">JG I</text>
+      </svg>
+      <div class="brand-text">
+        <div class="eyebrow">Begriffe und Abkürzungen</div>
+        <h1>Glossar</h1>
+      </div>
+    </div>
+    <nav class="pages" aria-label="Seiten">
+      <a href="index.html">Karte</a>
+      <a href="personen.html">Personen</a>
+      <a href="boelcke1916.html">Ereignisse</a>
+    </nav>
+    <p class="lede">Kurze Erklärungen der Fachbegriffe, die auf den Seiten vorkommen. Auf den anderen Seiten lassen sich die Begriffe beim ersten Vorkommen antippen.</p>
+  </header>
+
+  <section class="sect" aria-labelledby="gH">
+    <h2 id="gH">Begriffe</h2>
+    <dl class="gloss glnone" id="gloss"></dl>
+  </section>
+
+  <section class="sect" aria-labelledby="qH">
+    <h2 id="qH">Quellen</h2>
+    <p class="hint">Alle Quellen am 06.11.2026 abgerufen. „Suchauszug“ heißt: nur der Textauszug in der Suchergebnisliste wurde gelesen. Begriffe ohne Quellenangabe sind reine Worterklärungen ohne Einzelbeleg. „Angaben dieser Website“ verweist auf die belegten Aussagen von Karte und Ereignisseiten.</p>
+    <ol class="gsrcs" id="gsrcs"></ol>
+  </section>
+</div>
+<script src="site.js"></script>
+<script>
+(() => {
+  const G = window.GLOSSAR || [], S = window.GSRC || {};
+  const keys = Object.keys(S); const no = k => keys.indexOf(k) + 1;
+  const esc = t => t.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const sorted = G.slice().sort((a, b) => a.t.localeCompare(b.t, "de"));
+  document.getElementById("gloss").innerHTML = sorted.map(g => `<div id="${g.id}"><dt>${esc(g.t)}</dt><dd>${esc(g.d)}</dd><dd class="gsrc">${
+    g.src.join() === "web" ? `Beleg: <a href="index.html#srcList">Angaben dieser Website</a> mit den dort genannten Quellen`
+    : g.src.length ? "Belege: " + g.src.map(k => `<a href="#q-${k}">[${no(k)}]</a>`).join(" ") + (g.src.length < 2 ? " (nur eine Quelle, nicht ausreichend belegt)" : "")
+               : "Worterklärung ohne Einzelbeleg"}</dd></div>`).join("");
+  document.getElementById("gsrcs").innerHTML = keys.map(k => `<li id="q-${k}"><a href="${S[k][1]}"${S[k][1].startsWith("http") ? ' target="_blank" rel="noopener"' : ""}>${esc(S[k][0])}</a></li>`).join("");
+  if (location.hash) { const t = document.getElementById(location.hash.slice(1)); if (t) t.scrollIntoView(); }
+})();
+</script>
+</body>
+</html>
