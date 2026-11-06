@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Quellenverzeichnis zur Seite „Karte“.">
+<meta name="theme-color" content="#eceee8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121614" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="JG Richthofen">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="site.css">
+<style>
+/* Grundgerüst, das auf claude.ai die Artefakt-Hülle liefert */
+:root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px) }
+body { margin: 0; font: 14px system-ui, -apple-system, sans-serif }
+img { max-width: 100% }
+[hidden] { display: none !important }
+/* Quellenseite */
+.sect { display: grid; gap: 12px }
+.sect h2 { font: 700 22px/1 var(--f-display); text-transform: uppercase; letter-spacing: .04em; margin: 0 }
+</style>
+<title>Quellen: Jagdgeschwader Richthofen 1916–1918</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: Karte als Hauptfläche, Detailspalte rechts (mobil darunter), Zeitleiste mit echter Datumsskala, darunter Stationsliste */
+:root {
+  --paper: #eceee8; --panel: #f6f7f3; --ink: #1d2420; --muted: #5d6861; --rule: #c3c9c1;
+  --sea: #9fbdcb; --land-fr: #d3dcea; --land-be: #ece0ae; --land-uk: #ead2cf; --land-nl: #f2d6b8; --land-lu: #dcd2e8; --land-de: #c7c1b6;
+  --border: #6f7a72; --j4: #2a5d91; --j6: #3f7a2e; --j10: #b07d0a; --j11: #7a3d8f; --red: #ad281d; --red-soft: rgba(173,40,29,.16); --front: #6e4c2c; --grat: rgba(29,36,32,.07);
+  --f-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #121614; --panel: #181d1a; --ink: #e2e6e1; --muted: #98a39b; --rule: #313a35;
+  --sea: #0e1518; --land-fr: #1f2b3c; --land-be: #3a3419; --land-uk: #3d2626; --land-nl: #40301c; --land-lu: #2e2840; --land-de: #3a3834;
+  --border: #7d8a82; --j4: #6fa3e0; --j6: #7dbb5f; --j10: #e0b33c; --j11: #c08ad6; --red: #e4533f; --red-soft: rgba(228,83,63,.2); --front: #c29462; --grat: rgba(226,230,225,.05);
+  color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #121614; --panel: #181d1a; --ink: #e2e6e1; --muted: #98a39b; --rule: #313a35;
+  --sea: #0e1518; --land-fr: #1f2b3c; --land-be: #3a3419; --land-uk: #3d2626; --land-nl: #40301c; --land-lu: #2e2840; --land-de: #3a3834;
+  --border: #7d8a82; --j4: #6fa3e0; --j6: #7dbb5f; --j10: #e0b33c; --j11: #c08ad6; --red: #e4533f; --red-soft: rgba(228,83,63,.2); --front: #c29462; --grat: rgba(226,230,225,.05);
+  color-scheme: dark }
+
+* { box-sizing: border-box }
+body { background: var(--paper); color: var(--ink); font: 400 16px/1.55 var(--f-body); }
+.wrap { max-width: 1240px; margin: 0 auto; padding-block: 28px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
+.wrap > * { min-width: 0 }
+header { display: grid; gap: 6px }
+.brand { display: flex; align-items: center; gap: 16px }
+.brand-text { display: grid; gap: 6px; min-width: 0 }
+nav.pages { display: flex; gap: 8px; flex-wrap: wrap }
+nav.pages a { font: 600 14px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); text-decoration: none;
+  border: 1px solid var(--border); border-radius: 2px; padding: 9px 12px 8px; background: var(--panel) }
+nav.pages a[aria-current="page"] { background: var(--ink); color: var(--paper); border-color: var(--ink) }
+nav.pages a:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
+.more { margin: 0; font-size: 15px } .more a { color: var(--ink); font-weight: 600 }
+.logo { width: 76px; height: 76px; flex: none }
+.logo-ring { fill: var(--panel); stroke: var(--ink); stroke-width: 3 }
+.logo-inner { fill: none; stroke: var(--ink); stroke-width: 1; opacity: .5 }
+.logo-plane { fill: var(--red) }
+.logo-text { fill: var(--ink); font: 700 12.5px var(--f-display); letter-spacing: .16em }
+@media (max-width: 560px) { .logo { width: 56px; height: 56px } .brand { gap: 12px } }
+.eyebrow { font: 600 13px/1 var(--f-display); letter-spacing: .14em; text-transform: uppercase; color: var(--red) }
+h1 { font: 700 clamp(30px, 5vw, 50px)/1 var(--f-display); letter-spacing: .01em; margin: 0; text-wrap: balance; text-transform: uppercase }
+.lede { margin: 4px 0 0; max-width: 68ch; color: var(--muted) }
+.intro { background: var(--panel); border: 1px solid var(--rule); border-left: 4px solid var(--red); border-radius: 3px; padding: 14px 18px 16px; display: grid; gap: 8px; max-width: 860px }
+.intro h2 { font: 700 22px/1 var(--f-display); text-transform: uppercase; letter-spacing: .04em; margin: 0 }
+.intro > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px }
+.intro > summary::-webkit-details-marker { display: none }
+.intro > summary:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
+.intro .tgl { font: 600 13px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase; border: 1px solid var(--border); border-radius: 2px; padding: 8px 10px 7px; background: var(--paper) }
+.intro .tgl .op, .intro:not([open]) .tgl .cl { display: none } .intro:not([open]) .tgl .op { display: inline }
+.intro:not([open]) { padding-bottom: 14px }
+.intro p { margin: 0 } .intro .how { font-size: 15px; color: var(--muted) } .intro .how b { color: var(--ink); font-weight: 600 } .intro a { color: var(--ink); font-weight: 600 }
+.side-label { font-family: var(--f-display); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; fill: var(--front); paint-order: stroke; stroke: var(--paper); stroke-linejoin: round; pointer-events: none; transition: opacity .3s }
+.legend-m { display: none }
+
+/* Zeitleiste fest unter der Karte; der Schrittbereich steht rechts daneben und darf länger sein, ohne die Zeitleiste zu verschieben */
+.stage { display: grid; grid-template-columns: minmax(0, 1fr) 340px; grid-template-rows: auto 1fr; gap: 18px; align-items: start }
+.stage > .map { grid-column: 1; grid-row: 1 }
+.stage > .controls { grid-column: 1; grid-row: 2 }
+/* Feste Höhe des Schrittbereichs: längere Texte scrollen darin, damit nichts darunter springt */
+.stage > .panel { grid-column: 2; grid-row: 1 / span 2; align-self: stretch; contain: size; overflow-y: auto; overscroll-behavior: contain; align-content: start }
+@media (max-width: 900px) { .stage { grid-template-columns: minmax(0, 1fr); grid-template-rows: none }
+  .stage > .map, .stage > .controls, .stage > .panel { grid-column: 1; grid-row: auto }
+  .stage > .panel { align-self: start; height: 400px } }
+
+.map { position: relative; background: var(--sea); border: 1px solid var(--rule); border-radius: 3px; overflow: hidden }
+.map svg { display: block; width: 100%; height: auto; aspect-ratio: 1000 / 640; max-width: 100%; touch-action: manipulation }
+@media (max-width: 640px) { .map svg { aspect-ratio: 1 / 1 } }
+.c-250 { fill: var(--land-fr) } .c-056 { fill: var(--land-be) } .c-826 { fill: var(--land-uk) } .c-528 { fill: var(--land-nl) } .c-442 { fill: var(--land-lu) } .c-276 { fill: var(--land-de) }
+.country { stroke: var(--border); stroke-width: 1.3; vector-effect: non-scaling-stroke; stroke-linejoin: round }
+.al { fill: var(--land-de); stroke: var(--land-de); stroke-width: .6; vector-effect: non-scaling-stroke }
+.alline { fill: none; stroke: var(--border); stroke-width: 1.3; stroke-dasharray: 5 3; vector-effect: non-scaling-stroke }
+.grat { fill: none; stroke: var(--grat); stroke-width: 1; vector-effect: non-scaling-stroke }
+.front { fill: none; stroke: var(--front); stroke-width: 2.4; vector-effect: non-scaling-stroke; transition: opacity .7s; opacity: 0; stroke-linejoin: round }
+.front.on { opacity: .85 }
+.front-teeth { fill: none; stroke: var(--front); stroke-width: 6; stroke-dasharray: 1.5 7; vector-effect: non-scaling-stroke; opacity: 0; transition: opacity .7s }
+.front-teeth.on { opacity: .45 }
+.city circle { fill: var(--muted) }
+.city text, .clabel { fill: var(--muted); font-family: var(--f-display); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round }
+.clabel { fill: var(--ink); opacity: .62; letter-spacing: .2em; font-weight: 700; stroke: none }
+.emb { pointer-events: auto }
+.emb-ring { stroke: rgba(0,0,0,.35); stroke-width: .4 }
+.route-all { fill: none; stroke: var(--red); stroke-opacity: .28; stroke-width: 1.2; stroke-dasharray: 3 4; vector-effect: non-scaling-stroke }
+.route-done { fill: none; stroke: var(--red); stroke-width: 2.6; vector-effect: non-scaling-stroke; stroke-linecap: round; stroke-linejoin: round }
+.trk path { fill: none; stroke: var(--c); vector-effect: non-scaling-stroke; stroke-linecap: round; stroke-linejoin: round }
+.trk-solid { stroke-width: 2.2 } .trk-dash { stroke-width: 2; stroke-dasharray: 5 4 }
+.trk-jg .trk-solid { stroke-width: 2.8 }
+.trk-dot { fill: var(--c); stroke: var(--paper); stroke-width: 1.2; vector-effect: non-scaling-stroke; cursor: pointer }
+.trk-plane { fill: var(--c); stroke: var(--paper); stroke-width: .9; paint-order: stroke; stroke-linejoin: round; cursor: pointer }
+#cur { transition: none }
+.trk { transition: opacity .6s } .trk.merged { opacity: .45 }
+.mk { opacity: 0; transition: opacity .4s; cursor: pointer } .mk.on { opacity: 1 }
+.mk-x { stroke: var(--ink); stroke-width: 1.8; vector-effect: non-scaling-stroke; fill: none }
+.mk-sym { fill: var(--ink); font-family: var(--f-body); font-weight: 600; paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round }
+.ev-label { fill: var(--ink); font-family: var(--f-display); font-weight: 600; paint-order: stroke; stroke: var(--paper); stroke-linejoin: round }
+.cur-ring { fill: var(--red-soft); stroke: var(--red); stroke-width: 1.2; vector-effect: non-scaling-stroke }
+.cur-label { font-family: var(--f-display); font-weight: 700; fill: var(--ink); paint-order: stroke; stroke: var(--paper); stroke-linejoin: round }
+@keyframes pulse { 0% { transform: scale(.6); opacity: .9 } 100% { transform: scale(1.8); opacity: 0 } }
+.pulse { transform-box: fill-box; transform-origin: center; animation: pulse 2s ease-out infinite; fill: none; stroke: var(--red); vector-effect: non-scaling-stroke; stroke-width: 1.5 }
+
+.legend { position: absolute; left: 10px; bottom: 10px; background: color-mix(in srgb, var(--panel) 88%, transparent); border: 1px solid var(--rule);
+  border-radius: 3px; padding: 7px 10px; font: 500 12px/1.5 var(--f-display); letter-spacing: .03em; display: grid; gap: 2px; color: var(--muted) }
+.legend i { display: inline-block; width: 18px; height: 0; vertical-align: middle; margin-right: 6px; border-top: 2.5px solid var(--red) }
+.legend i.f { border-top-color: var(--front) } .legend i.u { border-top-color: var(--c) } .legend span { white-space: nowrap } .legend .lp { display: inline-block; width: 18px; height: 14px; vertical-align: middle; margin-right: 6px } .legend i.d { border-top: 2px dashed var(--muted) } .legend i.b { border-top: 1.5px dashed var(--border) }
+.legend .x { display: inline-block; width: 18px; margin-right: 6px; text-align: center; color: var(--ink); font-weight: 700 }
+.legend .k { font-family: var(--f-body); font-weight: 700; font-size: 14px; line-height: 1 }
+.legend i.sw { height: 10px; width: 12px; border: 1px solid var(--border) }
+.legend { grid-template-columns: auto auto; column-gap: 14px }
+@media (max-width: 560px) { .legend { position: static; border: 0; border-top: 1px solid var(--rule); border-radius: 0; grid-template-columns: 1fr 1fr } }
+.mapbtn { position: absolute; right: 10px; top: 10px; }
+
+.panel { background: var(--panel); border: 1px solid var(--rule); border-radius: 3px; padding: 18px 18px 16px; display: grid; gap: 10px; min-width: 0 }
+.count { font: 500 12px/1 var(--f-mono); color: var(--muted); letter-spacing: .04em; display: flex; justify-content: space-between }
+.panel h2 { font: 700 30px/1.02 var(--f-display); margin: 0; text-transform: uppercase; text-wrap: balance }
+.sub { color: var(--muted); font-size: 15px; margin-top: -4px }
+.dates { font: 500 14px/1.3 var(--f-mono); color: var(--red); font-variant-numeric: tabular-nums }
+.chip { display: inline-block; font: 600 12px/1 var(--f-display); letter-spacing: .1em; text-transform: uppercase; border: 1px solid var(--rule); padding: 5px 7px 4px; border-radius: 2px; color: var(--muted) }
+.panel p { margin: 0 }
+.panel h2.kia-t, .kia-t { color: var(--red) }
+.uchip { display: inline-block; font: 600 12px/1 var(--f-display); letter-spacing: .06em; text-transform: uppercase; padding: 4px 7px 3px 6px; border-radius: 2px;
+  border: 1px solid var(--rule); border-left: 4px solid var(--c); color: var(--ink); white-space: nowrap }
+#pUnits { display: flex; flex-wrap: wrap; gap: 6px }
+#pPersons { display: grid; gap: 8px; border-top: 1px solid var(--rule); padding-top: 10px }
+.pp { font-size: 14.5px; display: grid; gap: 4px; justify-items: start } .pp .chips { display: flex; flex-wrap: wrap; gap: 5px } .pp b { font-weight: 600 } .pp span { color: var(--muted) }
+.pp.is-kia b, .person.is-kia > b { color: var(--red) }
+.persons { display: grid; gap: 10px }
+.person-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px 22px }
+.person { display: grid; gap: 4px; align-content: start; font-size: 14.5px; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 3px; background: var(--panel); min-width: 0 }
+.person[role="button"] { cursor: pointer } .person[role="button"]:hover { border-color: var(--border) }
+.person:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
+.person > b { font: 700 17px/1.2 var(--f-display); letter-spacing: .03em; text-transform: uppercase }
+.person .chips { display: flex; flex-wrap: wrap; gap: 5px }
+.person span { color: var(--muted) } .person .fate { color: var(--ink) }
+.person.is-kia { border-left: 3px solid var(--red) }
+.tod { font-size: 14px; color: var(--muted) } .tod b { color: var(--ink); font-weight: 600 }
+.tod-k b, .tod-s b { color: var(--red) }
+table.others { min-width: 0 } table.others tr { cursor: default } table.others tr:hover td { background: none }
+@media (max-width: 600px) { table.others tr { grid-template-columns: 1fr } table.others td:first-child { padding-top: 4px } }
+.event { border-top: 1px solid var(--rule); padding-top: 9px; font-size: 15px }
+.event b { font-family: var(--f-mono); font-weight: 500; font-size: 13px; color: var(--ink); display: block }
+.note { font-size: 13.5px; color: var(--muted); font-style: italic }
+
+.controls { display: grid; gap: 10px; background: var(--panel); border: 1px solid var(--rule); border-radius: 3px; padding: 14px 16px 12px }
+.btns { display: flex; gap: 8px; align-items: center; flex-wrap: wrap }
+.btns-main, .btns-sub { display: flex; gap: 8px; align-items: center }
+.btns-sub { flex: 1 1 auto }
+button { font: 600 14px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); background: var(--paper);
+  border: 1px solid var(--border); border-radius: 2px; padding: 9px 12px 8px; cursor: pointer }
+button:hover { border-color: var(--ink) }
+button:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
+button.primary { background: var(--red); border-color: var(--red); color: #fff; min-width: 108px }
+.speed { margin-left: auto; font: 500 12px var(--f-mono); color: var(--muted); display: flex; gap: 6px; align-items: center }
+@media (max-width: 640px) {
+  /* Handy: Karte, direkt darunter Zurück/Abspielen/Weiter, dann der Schritttext; Datum, Tempo, Zeitleiste und Legende folgen danach */
+  .stage { display: flex; flex-direction: column; gap: 10px }
+  .stage > .map { order: 1 } .stage > .controls { display: contents } .controls > .btns { display: contents }
+  .btns-main { order: 2; display: grid; grid-template-columns: 1fr 1.25fr 1fr; gap: 8px }
+  .stage > .panel { order: 3; height: auto; contain: none; overflow: visible }
+  .btns-sub { order: 4; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; align-items: center; margin-top: 6px }
+  .controls > .ruler { order: 5; margin: 0 10px }
+  .legend-m { order: 6; display: block; background: var(--panel); border: 1px solid var(--rule); border-radius: 3px; padding: 10px 14px }
+  .legend-m > summary { cursor: pointer; font: 600 14px/1.2 var(--f-display); letter-spacing: .08em; text-transform: uppercase; min-height: 28px; display: flex; align-items: center }
+  .legend-m .legend { position: static; border: 0; background: none; padding: 8px 0 0; grid-template-columns: 1fr 1fr }
+  .map > .legend { display: none }
+  .btns-main button, .btns-sub button { min-height: 44px; padding-inline: 4px; white-space: nowrap; letter-spacing: .04em; font-size: 13px }
+  .btns { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+  .btns button { min-height: 44px; padding-inline: 4px; white-space: nowrap; letter-spacing: .04em; font-size: 13px }
+  #reset { grid-column: 1 } .nowdate { grid-column: 2; text-align: center } .speed { grid-column: 3; margin-left: 0; justify-content: flex-end }
+  .speed select { min-height: 40px }
+  .ruler .tick { width: 10px; margin-left: -5px; height: 26px; top: 10px }
+  .ruler .tick::after { left: 3px; top: 8px }
+  .panel h2 { font-size: 26px }
+  .mapbtn { padding: 8px 10px 7px; font-size: 13px }
+}
+.speed select { font: inherit; color: var(--ink); background: var(--paper); border: 1px solid var(--border); padding: 4px }
+
+.ruler { position: relative; height: 62px; margin: 4px 6px 0 }
+.ruler .axis { position: absolute; left: 0; right: 0; top: 22px; height: 2px; background: var(--rule) }
+.ruler .prog { position: absolute; left: 0; top: 22px; height: 2px; background: var(--red) }
+.ruler .playhead { position: absolute; top: 10px; width: 4px; height: 26px; margin-left: -2px; background: var(--red); border-radius: 1px; pointer-events: none; box-shadow: 0 0 0 2px var(--panel) }
+.nowdate { font: 500 13px var(--f-mono); color: var(--red); font-variant-numeric: tabular-nums; min-width: 9.5ch }
+.ruler .tick { position: absolute; top: 14px; width: 8px; height: 18px; margin-left: -4px; padding: 0; border: 0; background: none; cursor: pointer }
+.ruler .tick::after { content: ""; position: absolute; left: 2px; top: 4px; width: 4px; height: 10px; background: var(--muted); border-radius: 1px }
+.ruler .tick.visited::after { background: var(--red) }
+.ruler .month { position: absolute; top: 34px; font: 500 11px var(--f-mono); color: var(--muted); transform: translateX(-50%); white-space: nowrap }
+.ruler .month.y { color: var(--ink); top: 0 }
+.ruler .mt { position: absolute; top: 24px; width: 1px; height: 6px; background: var(--rule) }
+
+.list { overflow-x: auto }
+@media (max-width: 600px) {
+  table { min-width: 0 } thead { display: none }
+  tr { display: grid; grid-template-columns: 2.4em minmax(0, 1fr); border-bottom: 1px solid var(--rule); padding: 8px 0 }
+  .list td { border: 0; padding: 1px 6px } .list td.n { grid-row: span 3; padding-top: 3px }
+  .list td:last-child { padding-top: 4px }
+}
+table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 15px }
+th { font: 600 12px/1 var(--f-display); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 8px 10px; border-bottom: 1.5px solid var(--ink) }
+td { padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: top }
+td.n, td.d { font: 400 13px/1.5 var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--muted) }
+tr { cursor: pointer } tr:hover td { background: var(--red-soft) }
+tr.cur td { background: var(--red-soft) } tr.cur td.n { color: var(--red); font-weight: 500 }
+td b { font-weight: 600 }
+h3 { font: 700 20px/1 var(--f-display); text-transform: uppercase; letter-spacing: .04em; margin: 8px 0 0 }
+.chron > summary { display: flex; align-items: baseline; gap: 12px; cursor: pointer; list-style: none; padding: 4px 0 8px; border-bottom: 1px solid var(--rule) }
+.chron > summary::-webkit-details-marker { display: none }
+.chron > summary h3 { margin: 0 }
+.chron > summary .cnt { font: 500 13px/1 var(--f-mono); color: var(--muted) }
+.chron > summary { align-items: center; flex-wrap: wrap }
+.chron > summary .tgl { font: 600 13px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); background: var(--paper);
+  border: 1px solid var(--border); border-radius: 2px; padding: 8px 11px 7px }
+.chron > summary:hover .tgl { border-color: var(--ink) }
+.chron .tgl .cl, .chron[open] .tgl .op { display: none } .chron[open] .tgl .cl { display: inline }
+.chron > summary:hover h3, .chron > summary:focus-visible h3 { color: var(--red) }
+.chron > summary:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
+.insignia { display: grid; gap: 10px }
+.ins-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px 22px }
+.ins { display: flex; gap: 12px; align-items: flex-start; font-size: 14.5px; min-width: 0 }
+.ins svg { width: 40px; height: 40px; flex: none }
+.ins b { display: block; font: 600 15px/1.3 var(--f-display); letter-spacing: .06em; text-transform: uppercase }
+.ins span { color: var(--muted) }
+.sources { font-size: 13.5px; color: var(--muted); max-width: 90ch }
+.sources a { color: var(--ink) }
+.src { font-size: 13.5px; color: var(--muted); display: grid; gap: 6px; border-top: 1px solid var(--rule); padding-top: 9px }
+.src a { color: var(--ink) } .src .refs { line-height: 1.45; display: grid; gap: 3px }
+.bel { justify-self: start; font: 500 12px/1 var(--f-mono); letter-spacing: .02em; padding: 4px 7px 3px; border-radius: 2px; border: 1px solid var(--border); color: var(--ink) }
+.bel-1 { border-style: dashed } .bel-x { border-color: var(--red); color: var(--red) }
+ol.srclist { font-size: 13.5px; color: var(--muted); max-width: 90ch; margin: 4px 0 0; padding-left: 2.6em; display: grid; gap: 3px }
+ol.srclist a { color: var(--ink) } ol.srclist li:target { background: var(--red-soft) }
+.spur-label { fill: var(--ink); stroke: var(--paper); paint-order: stroke; stroke-linejoin: round; font-family: var(--f-display) }
+@media (prefers-reduced-motion: reduce) { .pulse { animation: none } .front, .mk, .trk { transition: none } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <svg class="logo" viewBox="-40 -40 80 80" role="img" aria-label="Logo: Flugzeugsilhouette im Abzeichen des Jagdgeschwaders I">
+        <circle r="37" class="logo-ring"/>
+        <circle r="31.5" class="logo-inner"/>
+        <g transform="translate(0,-4) scale(1.8)"><path class="logo-plane" d="M-11,-3.6 h22 v4.2 h-22 z M-1.8,-8.5 h3.6 v16.5 h-3.6 z M-5.2,5.6 h10.4 v3 h-10.4 z M-3.4,-9.6 h6.8 v1.2 h-6.8 z"/></g>
+        <text y="23.5" text-anchor="middle" class="logo-text">JG I</text>
+      </svg>
+      <div class="brand-text">
+        <div class="eyebrow">Westfront · August 1916 – November 1918</div>
+        <h1>Jagdgeschwader Richthofen</h1>
+      </div>
+    </div>
+    <nav class="pages" aria-label="Seiten">
+      <a href="index.html" aria-current="true">Karte</a>
+      <a href="personen.html">Personen</a>
+      <a href="boelcke1916.html">Ereignisse</a>
+    </nav>
+    <p class="lede">Quellenverzeichnis zur Seite „Karte“. Die Nummern entsprechen den Verweisen in den Kartenschritten. <a href="index.html">Zurück zur Seite</a></p>
+  </header>
+
+  <section class="sect" aria-labelledby="qH">
+  <h2 id="qH">Quellen</h2>
+  <p class="sources">Belege: Jeder Kartenschritt nennt seine Quellen mit den Nummern des Verzeichnisses und einen Belegstand. „Zwei unabhängige Quellen“ heißt, dass zwei Quellen die Hauptaussage tragen, die nicht voneinander abschreiben. „Eine Überlieferung“ heißt, dass es nur eine Quelle gibt oder nur Quellen, die voneinander abhängen. Das betrifft vor allem die Flugplatzlisten der englischen Wikipedia: Sie berufen sich selbst auf The Aerodrome und zählen deshalb mit ihr als eine Quelle. Die Seiten des Vereins Anciens Aérodromes zählen als zweite Quelle nur dort, wo sie Archivakten (SHD, Public Record Office) nennen; sie verwenden daneben auch Webseiten als Quelle. „Quellen widersprechen sich“ heißt, dass Ort oder Datum strittig sind; die Abweichung steht in der Notiz. Die mit „geprüft 11/2026“ markierten Quellen wurden am 05./06.11.2026 im Wortlaut abgeglichen.</p>
+  <ol class="srclist" id="srcList" aria-label="Quellenverzeichnis"></ol>
+  </section>
+
+  <p class="qnav"><a class="qbtn" href="index.html">Zurück zu „Karte“</a></p>
+</div>
+<script src="quellen-karte.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+// Quellenverzeichnis
+SRC.forEach(([k, t, u, chk]) => {
+  const li = document.createElement("li"), a = document.createElement("a");
+  li.id = "q-" + k; a.href = u; a.target = "_blank"; a.rel = "noopener"; a.textContent = t;
+  li.appendChild(a);
+  if (chk) li.append(" · geprüft 11/2026");
+  $("srcList").appendChild(li);
+});
+if (location.hash) { const t = document.getElementById(location.hash.slice(1)); if (t) t.scrollIntoView(); }
+</script>
+<script src="site.js" defer></script>
+</body>
+</html>

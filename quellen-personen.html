@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quellen: Flieger des Jagdgeschwaders Richthofen</title>
+<meta name="description" content="Quellenverzeichnis zur Seite „Personen“.">
+<meta name="theme-color" content="#eceee8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121614" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="JG Richthofen">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="site.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: Kopf wie auf der Kartenseite, darunter Personenregister als Filter, darunter Jahres-Abschnitte (aufklappbar) mit Zeitleiste */
+:root {
+  --paper: #eceee8; --panel: #f6f7f3; --ink: #1d2420; --muted: #5d6861; --rule: #c3c9c1; --border: #6f7a72;
+  --j2: #6b6f6c; --j4: #2a5d91; --j6: #3f7a2e; --j10: #b07d0a; --j11: #7a3d8f; --ally: #4f6d7a; --red: #ad281d; --red-soft: rgba(173,40,29,.12);
+  --f-display: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #121614; --panel: #181d1a; --ink: #e2e6e1; --muted: #98a39b; --rule: #313a35; --border: #7d8a82;
+  --j2: #a4aaa6; --j4: #6fa3e0; --j6: #7dbb5f; --j10: #e0b33c; --j11: #c08ad6; --ally: #8fb3c4; --red: #e4533f; --red-soft: rgba(228,83,63,.16);
+  color-scheme: dark } }
+:root[data-theme="dark"] {
+  --paper: #121614; --panel: #181d1a; --ink: #e2e6e1; --muted: #98a39b; --rule: #313a35; --border: #7d8a82;
+  --j2: #a4aaa6; --j4: #6fa3e0; --j6: #7dbb5f; --j10: #e0b33c; --j11: #c08ad6; --ally: #8fb3c4; --red: #e4533f; --red-soft: rgba(228,83,63,.16);
+  color-scheme: dark }
+
+* { box-sizing: border-box }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 16px/1.55 var(--f-body) }
+[hidden] { display: none !important }
+.wrap { max-width: 1040px; margin: 0 auto; padding-block: 28px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 26px }
+.wrap > * { min-width: 0 }
+header { display: grid; gap: 10px }
+.brand { display: flex; align-items: center; gap: 16px }
+.brand-text { display: grid; gap: 6px; min-width: 0 }
+.logo { width: 76px; height: 76px; flex: none }
+.logo-ring { fill: var(--panel); stroke: var(--ink); stroke-width: 3 }
+.logo-inner { fill: none; stroke: var(--ink); stroke-width: 1; opacity: .5 }
+.logo-plane { fill: var(--red) }
+.logo-text { fill: var(--ink); font: 700 12.5px var(--f-display); letter-spacing: .16em }
+.eyebrow { font: 600 13px/1 var(--f-display); letter-spacing: .14em; text-transform: uppercase; color: var(--red) }
+h1 { font: 700 clamp(28px, 5vw, 46px)/1 var(--f-display); margin: 0; text-transform: uppercase; text-wrap: balance }
+.lede { margin: 0; max-width: 68ch; color: var(--muted) }
+nav.pages { display: flex; gap: 8px; flex-wrap: wrap }
+nav.pages a { font: 600 14px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); text-decoration: none;
+  border: 1px solid var(--border); border-radius: 2px; padding: 9px 12px 8px; background: var(--panel) }
+nav.pages a[aria-current="page"] { background: var(--ink); color: var(--paper); border-color: var(--ink) }
+nav.pages a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
+@media (max-width: 560px) { .logo { width: 56px; height: 56px } .brand { gap: 12px } }
+
+h2 { font: 700 20px/1 var(--f-display); text-transform: uppercase; letter-spacing: .04em; margin: 0 }
+.sect { display: grid; gap: 12px }
+.hint { font-size: 14px; color: var(--muted); margin: 0 }
+
+/* Personenregister */
+.roster { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px }
+.who { display: grid; grid-template-columns: 4px minmax(0, 1fr); gap: 0 10px; text-align: left; font: inherit; color: inherit; cursor: pointer;
+  background: var(--panel); border: 1px solid var(--rule); border-radius: 3px; padding: 9px 10px 9px 0; min-width: 0 }
+.who::before { content: ""; grid-row: span 2; background: var(--c); border-radius: 3px 0 0 3px; margin: -9px 0 }
+.who b { font: 700 16px/1.2 var(--f-display); letter-spacing: .03em; text-transform: uppercase }
+.who .t { font-size: 13.5px; color: var(--muted) }
+.who .t.d { color: var(--red) }
+.who:hover { border-color: var(--border) }
+.who[aria-pressed="true"] { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink) }
+.filterbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center }
+button.tool { font: 600 13px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); background: var(--paper);
+  border: 1px solid var(--border); border-radius: 2px; padding: 8px 11px 7px; cursor: pointer }
+button.tool:hover { border-color: var(--ink) }
+.filterstate { font: 500 13px var(--f-mono); color: var(--muted) }
+
+/* Jahre */
+details.year { border-top: 2px solid var(--ink) }
+details.year:last-of-type { border-bottom: 1px solid var(--rule) }
+summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: baseline; gap: 6px 18px; padding: 14px 2px 12px }
+summary::-webkit-details-marker { display: none }
+summary .yr { font: 700 clamp(34px, 6vw, 48px)/.9 var(--f-display); font-variant-numeric: tabular-nums }
+summary .ctx { color: var(--muted); font-size: 15px; min-width: 0 }
+summary .cnt { font: 500 13px/1.4 var(--f-mono); color: var(--muted); text-align: right; white-space: nowrap }
+summary .cnt .k { color: var(--red) }
+summary .chev { display: inline-block; transition: transform .2s; margin-left: 6px }
+details[open] summary .chev { transform: rotate(90deg) }
+@media (max-width: 600px) { summary { grid-template-columns: auto minmax(0, 1fr) } summary .cnt { grid-column: 1 / -1; text-align: left } }
+
+ol.tl { list-style: none; margin: 0 0 18px; padding: 0 0 0 0; display: grid; gap: 0 }
+.ev { display: grid; grid-template-columns: 8.5em 18px minmax(0, 1fr); gap: 0 12px; position: relative }
+.ev .dt { font: 500 13.5px/1.5 var(--f-mono); color: var(--muted); text-align: right; padding-top: 10px; font-variant-numeric: tabular-nums }
+.ev .rail { position: relative }
+.ev .rail::before { content: ""; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: var(--rule) }
+.ev .rail::after { content: ""; position: absolute; left: 3px; top: 14px; width: 12px; height: 12px; border-radius: 50%; background: var(--panel); border: 2px solid var(--c) }
+.ev.death .rail::after { background: var(--red); border-color: var(--red); border-radius: 1px; transform: rotate(45deg) }
+.ev .body { padding: 8px 0 12px; display: grid; gap: 3px; min-width: 0; border-bottom: 1px solid var(--rule) }
+.ev .head { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline }
+.ev .nm { font: 700 17px/1.2 var(--f-display); letter-spacing: .03em; text-transform: uppercase }
+.ev.death .nm { color: var(--red) }
+.ev .txt { font-size: 15px }
+.ev .note { font-size: 13.5px; color: var(--muted); font-style: italic }
+.badge { font: 600 11.5px/1 var(--f-display); letter-spacing: .1em; text-transform: uppercase; padding: 4px 6px 3px; border-radius: 2px; border: 1px solid var(--rule); color: var(--muted); white-space: nowrap }
+.badge.k { border-color: var(--red); color: var(--red) }
+.badge.f { background: var(--red); border-color: var(--red); color: var(--panel) }
+.uchip { font: 600 11.5px/1 var(--f-display); letter-spacing: .06em; text-transform: uppercase; padding: 3px 6px 2px 5px; border-radius: 2px;
+  border: 1px solid var(--rule); border-left: 4px solid var(--c); color: var(--ink); white-space: nowrap }
+@media (max-width: 600px) {
+  .ev { grid-template-columns: 18px minmax(0, 1fr) }
+  .ev .dt { grid-column: 2; grid-row: 1; text-align: left; padding: 10px 0 0 }
+  .ev .rail { grid-column: 1; grid-row: 1 / span 2 }
+  .ev .body { grid-column: 2; padding-top: 2px }
+}
+.typefilter { display: flex; flex-wrap: wrap; gap: 8px }
+button.tf { display: inline-flex; align-items: center; gap: 8px; font: inherit; color: var(--muted); background: var(--panel); cursor: pointer;
+  border: 1px solid var(--border); border-radius: 3px; padding: 6px 11px; min-height: 38px }
+button.tf > span { pointer-events: none }
+button.tf .lbl { font: 600 12.5px/1 var(--f-display); letter-spacing: .1em; text-transform: uppercase; color: var(--ink) }
+button.tf .num { font: 500 12.5px var(--f-mono); color: var(--muted) }
+button.tf:hover { border-color: var(--border) }
+button.tf[aria-pressed="true"] { background: var(--red); border-color: var(--red) }
+button.tf[aria-pressed="true"] .lbl, button.tf[aria-pressed="true"] .num { color: var(--panel) }
+button.tf:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
+.sources { font-size: 13.5px; color: var(--muted); max-width: 90ch; margin: 0 }
+.sources a { color: var(--ink) }
+
+/* Steckbriefe und Tabelle (übernommen von der Kartenseite) */
+.note { font-size: 13.5px; color: var(--muted); font-style: italic; margin: 0 }
+@media (prefers-reduced-motion: reduce) { summary .chev { transition: none } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <svg class="logo" viewBox="-40 -40 80 80" role="img" aria-label="Logo: Flugzeugsilhouette im Abzeichen des Jagdgeschwaders I">
+        <circle r="37" class="logo-ring"/><circle r="31.5" class="logo-inner"/>
+        <g transform="translate(0,-4) scale(1.8)"><path class="logo-plane" d="M-11,-3.6 h22 v4.2 h-22 z M-1.8,-8.5 h3.6 v16.5 h-3.6 z M-5.2,5.6 h10.4 v3 h-10.4 z M-3.4,-9.6 h6.8 v1.2 h-6.8 z"/></g>
+        <text y="23.5" text-anchor="middle" class="logo-text">JG I</text>
+      </svg>
+      <div class="brand-text">
+        <div class="eyebrow">Personen · 1916 – 1946</div>
+        <h1>Flieger des Jagdgeschwaders Richthofen</h1>
+      </div>
+    </div>
+    <nav class="pages" aria-label="Seiten">
+      <a href="index.html">Karte</a>
+      <a href="personen.html" aria-current="true">Personen</a>
+      <a href="boelcke1916.html">Ereignisse</a>
+    </nav>
+    <p class="lede">Quellenverzeichnis zur Seite „Personen“. <a href="personen.html">Zurück zur Seite</a></p>
+  </header>
+
+  <section class="sect" aria-labelledby="qH">
+  <h2 id="qH">Quellen</h2>
+  <p class="sources">Alle Angaben wurden im November 2026 an den Quellseiten geprüft; abweichende Quellenangaben sind auf der Seite „Personen“ vermerkt.</p>
+  <p class="sources">Wikipedia-Artikel zu <a href="https://en.wikipedia.org/wiki/Jagdstaffel_4">Jasta 4</a>, <a href="https://en.wikipedia.org/wiki/Jagdstaffel_6">Jasta 6</a>, <a href="https://en.wikipedia.org/wiki/Jagdstaffel_10">Jasta 10</a>, <a href="https://en.wikipedia.org/wiki/Jagdstaffel_11">Jasta 11</a>, <a href="https://en.wikipedia.org/wiki/Jagdgeschwader_I_(World_War_I)">JG I</a>, <a href="https://en.wikipedia.org/wiki/La_Brayelle_Airfield">La Brayelle</a> sowie zu den einzelnen Personen (<a href="https://en.wikipedia.org/wiki/Manfred_von_Richthofen">M. v. Richthofen</a>, <a href="https://en.wikipedia.org/wiki/Lothar_von_Richthofen">L. v. Richthofen</a>, <a href="https://en.wikipedia.org/wiki/Karl_Emil_Sch%C3%A4fer">Schäfer</a>, <a href="https://en.wikipedia.org/wiki/Karl_Allmenr%C3%B6der">Allmenröder</a>, <a href="https://en.wikipedia.org/wiki/Kurt_Wolff_(aviator)">Wolff</a>, <a href="https://en.wikipedia.org/wiki/Werner_Voss">Voss</a>, <a href="https://en.wikipedia.org/wiki/Wilhelm_Reinhard_(pilot)">Reinhard</a>, <a href="https://en.wikipedia.org/wiki/Hans_Kirschstein">Kirschstein</a>, <a href="https://en.wikipedia.org/wiki/Erich_Loewenhardt">Löwenhardt</a>, <a href="https://en.wikipedia.org/wiki/Ernst_Udet">Udet</a>, <a href="https://en.wikipedia.org/wiki/Hermann_G%C3%B6ring">Göring</a>, <a href="https://en.wikipedia.org/wiki/Oswald_Boelcke">Boelcke</a>, <a href="https://de.wikipedia.org/wiki/Hans-Joachim_Buddecke">Buddecke</a>, <a href="https://en.wikipedia.org/wiki/Arthur_Rhys-Davids">Rhys-Davids</a>, <a href="https://en.wikipedia.org/wiki/Roy_Brown_(RAF_officer)">Brown</a>, <a href="https://en.wikipedia.org/wiki/Erich_Ludendorff">Ludendorff</a>); <a href="https://historynet.com/fighter-pilot-hermann-goring/">HistoryNet (Göring)</a>, <a href="https://www.ospreypublishing.com/ca/osprey-blog/2016/ernst-udet-26-april-1896-17-november-1941">Osprey (Udet)</a>, <a href="https://warfarehistorynetwork.com/article/the-red-barons-band-of-brothers/">Warfare History Network (Wolff)</a>, <a href="https://www.dhm.de/lemo/biografie/ernst-udet">LeMO (Udet)</a>; The Aerodrome, Personenseiten zu <a href="https://theaerodrome.com/aces/germany/richthofen1.php">L. v. Richthofen</a>, <a href="https://theaerodrome.com/aces/germany/wolff2.php">Wolff</a>, <a href="https://theaerodrome.com/aces/germany/voss.php">Voss</a>, <a href="https://theaerodrome.com/aces/germany/goring.php">Göring</a>, <a href="https://theaerodrome.com/aces/germany/boelcke.php">Boelcke</a> sowie <a href="https://theaerodrome.com/services/germany/jasta/jasta4.php">Jasta 4</a> und <a href="https://theaerodrome.com/services/germany/jasta/jasta10.php">Jasta 10</a>; <a href="https://vintageaviationnews.com/warbird-articles/aces/lothar-von-richthofen.html">Vintage Aviation News (L. v. Richthofen)</a>.</p>
+  </section>
+
+  <p class="qnav"><a class="qbtn" href="personen.html">Zurück zu „Personen“</a></p>
+</div>
+<script src="site.js" defer></script>
+</body>
+</html>

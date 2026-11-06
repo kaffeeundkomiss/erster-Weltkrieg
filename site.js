@@ -24,7 +24,7 @@ const GSRC = {
   g15: ["Wikipedia (de): Luftstreitkräfte (Deutsches Kaiserreich), Suchauszug", "https://de.wikipedia.org/wiki/Luftstreitkr%C3%A4fte_(Deutsches_Kaiserreich)"],
   g16: ["Wikipedia (en): Jagdstaffel, Suchauszug", "https://en.wikipedia.org/wiki/Jagdstaffel"],
   g17: ["The Aerodrome Forum: What was there before Jastas?, Suchauszug", "https://theaerodrome.com/forum/threads/what-was-there-before-jastas.36042/"],
-  web: ["Angaben dieser Website (Karte und Ereignisseiten mit eigenen Quellen)", "index.html#srcList"]
+  web: ["Angaben dieser Website (Karte und Ereignisseiten mit eigenen Quellen)", "quellen-karte.html"]
 };
 
 // Begriffe. re = Suchmuster im Text; src = Belege (leer = reine Worterklärung ohne Einzelbeleg).
