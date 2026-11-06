@@ -14,6 +14,7 @@
 <link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="site.css">
 <style>
 /* Grundgerüst, das auf claude.ai die Artefakt-Hülle liefert */
 :root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px) }
@@ -70,6 +71,17 @@ nav.pages a:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
 .eyebrow { font: 600 13px/1 var(--f-display); letter-spacing: .14em; text-transform: uppercase; color: var(--red) }
 h1 { font: 700 clamp(30px, 5vw, 50px)/1 var(--f-display); letter-spacing: .01em; margin: 0; text-wrap: balance; text-transform: uppercase }
 .lede { margin: 4px 0 0; max-width: 68ch; color: var(--muted) }
+.intro { background: var(--panel); border: 1px solid var(--rule); border-left: 4px solid var(--red); border-radius: 3px; padding: 14px 18px 16px; display: grid; gap: 8px; max-width: 860px }
+.intro h2 { font: 700 22px/1 var(--f-display); text-transform: uppercase; letter-spacing: .04em; margin: 0 }
+.intro > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px }
+.intro > summary::-webkit-details-marker { display: none }
+.intro > summary:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
+.intro .tgl { font: 600 13px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase; border: 1px solid var(--border); border-radius: 2px; padding: 8px 10px 7px; background: var(--paper) }
+.intro .tgl .op, .intro:not([open]) .tgl .cl { display: none } .intro:not([open]) .tgl .op { display: inline }
+.intro:not([open]) { padding-bottom: 14px }
+.intro p { margin: 0 } .intro .how { font-size: 15px; color: var(--muted) } .intro .how b { color: var(--ink); font-weight: 600 } .intro a { color: var(--ink); font-weight: 600 }
+.side-label { font-family: var(--f-display); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; fill: var(--front); paint-order: stroke; stroke: var(--paper); stroke-linejoin: round; pointer-events: none; transition: opacity .3s }
+.legend-m { display: none }
 
 /* Zeitleiste fest unter der Karte; der Schrittbereich steht rechts daneben und darf länger sein, ohne die Zeitleiste zu verschieben */
 .stage { display: grid; grid-template-columns: minmax(0, 1fr) 340px; grid-template-rows: auto 1fr; gap: 18px; align-items: start }
@@ -160,6 +172,8 @@ table.others { min-width: 0 } table.others tr { cursor: default } table.others t
 
 .controls { display: grid; gap: 10px; background: var(--panel); border: 1px solid var(--rule); border-radius: 3px; padding: 14px 16px 12px }
 .btns { display: flex; gap: 8px; align-items: center; flex-wrap: wrap }
+.btns-main, .btns-sub { display: flex; gap: 8px; align-items: center }
+.btns-sub { flex: 1 1 auto }
 button { font: 600 14px/1 var(--f-display); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); background: var(--paper);
   border: 1px solid var(--border); border-radius: 2px; padding: 9px 12px 8px; cursor: pointer }
 button:hover { border-color: var(--ink) }
@@ -167,6 +181,18 @@ button:focus-visible { outline: 2px solid var(--red); outline-offset: 2px }
 button.primary { background: var(--red); border-color: var(--red); color: #fff; min-width: 108px }
 .speed { margin-left: auto; font: 500 12px var(--f-mono); color: var(--muted); display: flex; gap: 6px; align-items: center }
 @media (max-width: 640px) {
+  /* Handy: Karte, direkt darunter Zurück/Abspielen/Weiter, dann der Schritttext; Datum, Tempo, Zeitleiste und Legende folgen danach */
+  .stage { display: flex; flex-direction: column; gap: 10px }
+  .stage > .map { order: 1 } .stage > .controls { display: contents } .controls > .btns { display: contents }
+  .btns-main { order: 2; display: grid; grid-template-columns: 1fr 1.25fr 1fr; gap: 8px }
+  .stage > .panel { order: 3; height: auto; contain: none; overflow: visible }
+  .btns-sub { order: 4; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; align-items: center; margin-top: 6px }
+  .controls > .ruler { order: 5; margin: 0 10px }
+  .legend-m { order: 6; display: block; background: var(--panel); border: 1px solid var(--rule); border-radius: 3px; padding: 10px 14px }
+  .legend-m > summary { cursor: pointer; font: 600 14px/1.2 var(--f-display); letter-spacing: .08em; text-transform: uppercase; min-height: 28px; display: flex; align-items: center }
+  .legend-m .legend { position: static; border: 0; background: none; padding: 8px 0 0; grid-template-columns: 1fr 1fr }
+  .map > .legend { display: none }
+  .btns-main button, .btns-sub button { min-height: 44px; padding-inline: 4px; white-space: nowrap; letter-spacing: .04em; font-size: 13px }
   .btns { display: grid; grid-template-columns: 1fr 1fr 1fr; }
   .btns button { min-height: 44px; padding-inline: 4px; white-space: nowrap; letter-spacing: .04em; font-size: 13px }
   #reset { grid-column: 1 } .nowdate { grid-column: 2; text-align: center } .speed { grid-column: 3; margin-left: 0; justify-content: flex-end }
@@ -254,8 +280,16 @@ ol.srclist a { color: var(--ink) } ol.srclist li:target { background: var(--red-
       <a href="personen.html">Personen</a>
       <a href="boelcke1916.html">Ereignisse</a>
     </nav>
-    <p class="lede">Der Weg des Jagdgeschwaders I (ab Mai 1918 „Freiherr von Richthofen Nr. 1“) von der Aufstellung seiner vier Jagdstaffeln 1916 bis zur Auflösung im November 1918. Farbige Linien zeigen die Staffeln vor dem Zusammenschluss, die rote Linie den Geschwaderstab danach. † markiert gefallene oder tödlich verunglückte bekannte Flieger.</p>
   </header>
+
+  <details class="intro" id="intro" open>
+    <summary><h2>Worum geht es?</h2><span class="tgl" aria-hidden="true"><span class="op">Einblenden</span><span class="cl">Ausblenden</span></span></summary>
+    <p>Im Ersten Weltkrieg (1914–1918) standen sich an der Westfront ab Herbst 1914 deutsche Truppen und die Alliierten gegenüber, von der belgischen Küste bis zur Schweizer Grenze. Über der Front wurde auch in der Luft gekämpft.</p>
+    <p>Manfred von Richthofen (1892–1918) gilt mit 80 anerkannten Luftsiegen als erfolgreichster Jagdflieger des Krieges. Weil er sein Flugzeug rot anstreichen ließ, nannte man ihn den „Roten Baron“. Er fiel am 21. April 1918.</p>
+    <p>Die Karte zeigt, wo seine Einheit lag: das Jagdgeschwader I (JG I), im Juni 1917 aus vier Jagdstaffeln gebildet, ab Mai 1918 „Jagdgeschwader Freiherr von Richthofen Nr. 1“. Sie reicht von der Aufstellung der Staffeln 1916 bis zur Auflösung im November 1918.</p>
+    <p class="how"><b>So liest du die Karte:</b> „Abspielen“ startet den Ablauf, „Weiter“ und „Zurück“ gehen Schritt für Schritt. Farbige Linien zeigen die einzelnen Staffeln, die rote Linie das Geschwader nach dem Zusammenschluss; † markiert gefallene oder tödlich verunglückte Flieger. Gepunktet unterstrichene Begriffe lassen sich antippen; alle stehen im <a href="glossar.html">Glossar</a>, dort auch die Belege zu diesem Kasten.</p>
+    <p class="how"><b>Drei Ereignisse im Detail:</b> <a href="boelcke1916.html">Boelckes Tod 1916</a> · <a href="april1917.html">Der „Blutige April“ 1917</a> · <a href="tod.html">Richthofens letzter Flug 1918</a></p>
+  </details>
 
   <section class="stage">
     <div class="map" id="map">
@@ -275,6 +309,7 @@ ol.srclist a { color: var(--ink) } ol.srclist li:target { background: var(--red-
         <path class="alline" id="alline"/>
         <g id="clabels"></g>
         <g id="fronts"></g>
+        <g id="sides" aria-hidden="true"><text class="side-label" id="sideDe"></text><text class="side-label" id="sideAl"></text></g>
         <g id="cities"></g>
         <path class="route-all" id="routeAll"/>
         <g id="tracks"></g>
@@ -303,14 +338,18 @@ ol.srclist a { color: var(--ink) } ol.srclist li:target { background: var(--red-
 
     <section class="controls" aria-label="Zeitleiste">
       <div class="btns">
-        <button type="button" id="prev" aria-label="Vorheriger Schritt">◀ Zurück</button>
-        <button type="button" class="primary" id="play">▶ Abspielen</button>
-        <button type="button" id="next" aria-label="Nächster Schritt">Weiter ▶</button>
-        <button type="button" id="reset">Anfang</button>
-        <span class="nowdate" id="nowDate" aria-live="off" title="Dargestelltes Datum"></span>
-        <label class="speed" for="speedSel">Tempo
-          <select id="speedSel"><option value="4200">langsam</option><option value="2800" selected>normal</option><option value="1600">schnell</option></select>
-        </label>
+        <div class="btns-main">
+          <button type="button" id="prev" aria-label="Vorheriger Schritt">◀ Zurück</button>
+          <button type="button" class="primary" id="play">▶ Abspielen</button>
+          <button type="button" id="next" aria-label="Nächster Schritt">Weiter ▶</button>
+        </div>
+        <div class="btns-sub">
+          <button type="button" id="reset">Anfang</button>
+          <span class="nowdate" id="nowDate" aria-live="off" title="Dargestelltes Datum"></span>
+          <label class="speed" for="speedSel">Tempo
+            <select id="speedSel"><option value="4200">langsam</option><option value="2800" selected>normal</option><option value="1600">schnell</option></select>
+          </label>
+        </div>
       </div>
       <div class="ruler" id="ruler"><div class="axis"></div><div class="prog" id="prog"></div><div class="playhead" id="playhead"></div></div>
     </section>
@@ -323,9 +362,15 @@ ol.srclist a { color: var(--ink) } ol.srclist li:target { background: var(--red-
       <div id="pUnits"></div>
       <p id="pText"></p>
       <div id="pPersons"></div>
-      <p class="note" id="pNote"></p>
-      <div class="src" id="pSrc"></div>
+      <details class="belege" id="pBel">
+        <summary>Quellen und Anmerkungen <span class="bel" id="pBelS"></span></summary>
+        <div class="belin">
+          <p class="note" id="pNote"></p>
+          <div class="src" id="pSrc"></div>
+        </div>
+      </details>
     </aside>
+    <details class="legend-m" id="legendM"><summary>Legende</summary></details>
   </section>
 
 
@@ -970,10 +1015,66 @@ function draw() {
   $("nowDate").textContent = new Date(tNow).toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric", timeZone: "UTC" });
   ticks.forEach((b, j) => b.classList.toggle("visited", j <= i));
   const fk = frontFor(ISO(tNow));
+  placeSides(fk, s, m);
   if (fk !== lastFront) {
     lastFront = fk;
     for (const [k, [a, b]] of Object.entries(frontEls)) { a.classList.toggle("on", k === fk); b.classList.toggle("on", k === fk); }
   }
+}
+
+// Beschriftung „deutsche Seite“ / „alliierte Seite“ beiderseits der Front, an der Stelle der Front nächst der Kartenmitte
+const sideCache = {};
+function sideData(fk) {
+  if (sideCache[fk]) return sideCache[fk];
+  const path = frontEls[fk][1], L = path.getTotalLength(), pts = [];
+  for (let l = 0; l <= L; l += 6) { const q = path.getPointAtLength(l); pts.push([q.x, q.y]); }
+  // Fläche östlich der Front = deutsche Seite: Front plus Schluss über den Ostrand
+  const a = pts[0], b = pts[pts.length - 1];
+  const poly = el("path", { d: MAP.fronts[fk] + `L4000,${b[1]}L4000,-3000L${a[0]},-3000Z`, fill: "none", stroke: "none" }, $("sides"));
+  return (sideCache[fk] = { pts, poly });
+}
+function inGerman(poly, x, y) {
+  try { const p = svgEl.createSVGPoint(); p.x = x; p.y = y; return poly.isPointInFill(p); } catch (e) { return null; }
+}
+function placeSides(fk, s, m) {
+  const de = $("sideDe"), al = $("sideAl");
+  const { pts, poly } = sideData(fk);
+  const cx = vb[0] + vb[2] / 2, cy = vb[1] + vb[3] / 2, mx = vb[2] * .12, my = vb[3] * .12;
+  // Hindernisse: Fokusmarke mit Ortsname
+  const obst = [[m[0] - 14 * s, m[1] - 14 * s, m[0] + 14 * s, m[1] + 14 * s]];
+  document.querySelectorAll(".city text").forEach(t => { try { const bb = t.getBBox(); if (bb.width && bb.x > vb[0] - 50 && bb.x < vb[0] + vb[2] + 50) obst.push([bb.x, bb.y, bb.x + bb.width, bb.y + bb.height]); } catch (e) {} });
+  try { const lb = $("curLabel"); if (lb.textContent && lb.style.visibility !== "hidden") { const bb = lb.getBBox(); if (bb.width) obst.push([bb.x, bb.y, bb.x + bb.width, bb.y + bb.height]); } } catch (e) {}
+  const W = 110 * s, H = 13 * s, off = 34 * s, pad = 6 * s;
+  const rectFor = (P, q) => {
+    const dx = (P[0] - q[0]) / off;
+    const anchor = Math.abs(dx) < .35 ? "middle" : (dx > 0 ? "start" : "end");
+    const y = P[1] + (anchor === "middle" ? ((P[1] > q[1]) ? 10 : -2) : 4) * s;
+    const x0 = anchor === "start" ? P[0] : anchor === "end" ? P[0] - W : P[0] - W / 2;
+    return { anchor, x: P[0], y, r: [x0, y - H, x0 + W, y + 3 * s] };
+  };
+  const hit = r => obst.some(o => r[0] < o[2] + pad && r[2] > o[0] - pad && r[1] < o[3] + pad && r[3] > o[1] - pad);
+  const cand = [];
+  pts.forEach((q, k) => {
+    if (q[0] < vb[0] + mx || q[0] > vb[0] + vb[2] - mx || q[1] < vb[1] + my || q[1] > vb[1] + vb[3] - my) return;
+    cand.push([(q[0] - cx) ** 2 + (q[1] - cy) ** 2, k]);
+  });
+  cand.sort((a, b) => a[0] - b[0]);
+  for (const [, k] of cand) {
+    const p0 = pts[Math.max(0, k - 3)], p1 = pts[Math.min(pts.length - 1, k + 3)], q = pts[k];
+    let nx = -(p1[1] - p0[1]), ny = p1[0] - p0[0]; const nl = Math.hypot(nx, ny) || 1; nx /= nl; ny /= nl;
+    let A = [q[0] + nx * off, q[1] + ny * off], B = [q[0] - nx * off, q[1] - ny * off];
+    const g = inGerman(poly, A[0], A[1]);
+    if (g === null) break;
+    if (!g) { const t = A; A = B; B = t; }
+    const ra = rectFor(A, q), rb = rectFor(B, q);
+    if (hit(ra.r) || hit(rb.r)) continue;
+    [[de, ra, "deutsche Seite"], [al, rb, "alliierte Seite"]].forEach(([t, R, txt]) => {
+      t.textContent = txt; t.setAttribute("x", R.x); t.setAttribute("y", R.y); t.setAttribute("text-anchor", R.anchor);
+      t.setAttribute("font-size", 12 * s); t.setAttribute("stroke-width", 3 * s); t.style.opacity = .9;
+    });
+    return;
+  }
+  de.style.opacity = al.style.opacity = 0;
 }
 
 function render(i) {
@@ -1002,6 +1103,9 @@ function render(i) {
     ps.append(h, r);
   }
   ps.hidden = !s.src;
+  $("pBel").hidden = !s.src && !s.note;
+  $("pBelS").textContent = s.src ? BEL[s.bel] : "Anmerkung";
+  $("pBelS").className = "bel" + (s.src ? " bel-" + s.bel : "");
   const pb = $("pPersons"); pb.innerHTML = "";
   (s.persons || []).forEach(id => {
     const p = PERSONS[id], d = document.createElement("div");
@@ -1057,7 +1161,16 @@ SRC.forEach(([k, t, u, chk]) => {
   $("srcList").appendChild(li);
 });
 
+// Einführung: Zustand (offen/zu) im Browser merken, damit Wiederkehrer direkt die Karte sehen
+{ const it = $("intro");
+  try { if (localStorage.getItem("introClosed") === "1") it.open = false; } catch (e) {}
+  it.addEventListener("toggle", () => { try { localStorage.setItem("introClosed", it.open ? "0" : "1"); } catch (e) {} }); }
+
+// Handy: Legende als aufklappbarer Block unter dem Schritttext
+{ const lg = document.querySelector(".map > .legend").cloneNode(true); lg.removeAttribute("aria-hidden"); $("legendM").appendChild(lg); }
+
 vb = targetBox(0); render(0); draw();
 </script>
+<script src="site.js" defer></script>
 </body>
 </html>
