@@ -853,7 +853,7 @@ function targetBox(i) {
   const pts = [F[i], F[Math.max(0, i - 1)], ...st.from, ...st.moves.map(m => pt(m[1])), ...(st.spur ? [pt(st.spur.to)] : [])];
   return fitBox(pts, narrow ? 150 : 220, narrow ? 150 : 160, narrow ? 300 : 420, narrow ? 300 : 260);
 }
-let raf = null;
+let raf = null, moving = false;
 function animate(i, dur) {
   cancelAnimationFrame(raf);
   const vbFrom = vb.slice(), vbTo = targetBox(i), gFrom = g, gTo = i;
@@ -863,6 +863,7 @@ function animate(i, dur) {
     const t = dur <= 0 ? 1 : Math.min(1, (now - start) / dur), e = ease(t);
     vb = vbFrom.map((v, k) => v + (vbTo[k] - v) * e);
     g = t >= 1 ? gTo : gFrom + (gTo - gFrom) * e;
+    moving = t < 1;
     draw();
     if (t < 1) raf = requestAnimationFrame(step);
   };
@@ -939,14 +940,14 @@ function draw() {
   $("nowDate").textContent = new Date(tNow).toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric", timeZone: "UTC" });
   ticks.forEach((b, j) => b.classList.toggle("visited", j <= i));
   const fk = frontFor(ISO(tNow));
-  placeSides(fk, s, m);
+  placeSides(fk, s, m, !moving);
   if (fk !== lastFront) {
     lastFront = fk;
     for (const [k, [a, b]] of Object.entries(frontEls)) { a.classList.toggle("on", k === fk); b.classList.toggle("on", k === fk); }
   }
 }
 
-// Beschriftung „deutsche Seite“ / „alliierte Seite“ beiderseits der Front, an der Stelle der Front nächst der Kartenmitte
+// Beschriftung „deutsche Seite“ / „alliierte Seite“ beiderseits der Front
 const sideCache = {};
 function sideData(fk) {
   if (sideCache[fk]) return sideCache[fk];
@@ -960,15 +961,22 @@ function sideData(fk) {
 function inGerman(poly, x, y) {
   try { const p = svgEl.createSVGPoint(); p.x = x; p.y = y; return poly.isPointInFill(p); } catch (e) { return null; }
 }
-function placeSides(fk, s, m) {
+// Die Beschriftung bleibt an ihrem Kartenort stehen und wird nur neu gesetzt, wenn sie nach einem Schritt
+// aus dem Bild fällt, verdeckt würde oder die Front wechselt. Während der Kamerafahrt bewegt sie sich nicht.
+let sideAt = null;   // { fk, k, flip }: Frontpunkt und Seitenzuordnung der aktuellen Beschriftung
+function placeSides(fk, s, m, still) {
   const de = $("sideDe"), al = $("sideAl");
   const { pts, poly } = sideData(fk);
-  const cx = vb[0] + vb[2] / 2, cy = vb[1] + vb[3] / 2, mx = vb[2] * .12, my = vb[3] * .12;
-  // Hindernisse: Fokusmarke mit Ortsname
-  const obst = [[m[0] - 14 * s, m[1] - 14 * s, m[0] + 14 * s, m[1] + 14 * s]];
-  document.querySelectorAll(".city text").forEach(t => { try { const bb = t.getBBox(); if (bb.width && bb.x > vb[0] - 50 && bb.x < vb[0] + vb[2] + 50) obst.push([bb.x, bb.y, bb.x + bb.width, bb.y + bb.height]); } catch (e) {} });
-  try { const lb = $("curLabel"); if (lb.textContent && lb.style.visibility !== "hidden") { const bb = lb.getBBox(); if (bb.width) obst.push([bb.x, bb.y, bb.x + bb.width, bb.y + bb.height]); } } catch (e) {}
-  const W = 110 * s, H = 13 * s, off = 34 * s, pad = 6 * s;
+  const narrow = (svgEl.getBoundingClientRect().width || 1000) < 500, fs = narrow ? 10 : 12;   // Handy: etwas kleiner, damit beide Seiten ins Bild passen
+  const W = 7.8 * fs * s, H = 1.1 * fs * s, off = (narrow ? 26 : 34) * s, pad = (narrow ? 4 : 6) * s;
+  const mx = vb[2] * .12, my = vb[3] * .12;
+  const geom = (k, flip) => {
+    const p0 = pts[Math.max(0, k - 3)], p1 = pts[Math.min(pts.length - 1, k + 3)], q = pts[k];
+    let nx = -(p1[1] - p0[1]), ny = p1[0] - p0[0]; const nl = Math.hypot(nx, ny) || 1; nx /= nl; ny /= nl;
+    let A = [q[0] + nx * off, q[1] + ny * off], B = [q[0] - nx * off, q[1] - ny * off];
+    if (flip) { const t = A; A = B; B = t; }
+    return { q, A, B };
+  };
   const rectFor = (P, q) => {
     const dx = (P[0] - q[0]) / off;
     const anchor = Math.abs(dx) < .35 ? "middle" : (dx > 0 ? "start" : "end");
@@ -976,29 +984,50 @@ function placeSides(fk, s, m) {
     const x0 = anchor === "start" ? P[0] : anchor === "end" ? P[0] - W : P[0] - W / 2;
     return { anchor, x: P[0], y, r: [x0, y - H, x0 + W, y + 3 * s] };
   };
+  const show = (ra, rb) => [[de, ra, "deutsche Seite"], [al, rb, "alliierte Seite"]].forEach(([t, R, txt]) => {
+    t.textContent = txt; t.setAttribute("x", R.x); t.setAttribute("y", R.y); t.setAttribute("text-anchor", R.anchor);
+    t.setAttribute("font-size", fs * s); t.setAttribute("stroke-width", 3 * s); t.style.opacity = .9;
+  });
+  const hide = () => { de.style.opacity = al.style.opacity = 0; };
+  const prev = sideAt && sideAt.fk === fk ? sideAt : null;
+  // Während der Kamerafahrt: an Ort und Stelle lassen, nur die Schriftgröße an den Maßstab anpassen
+  if (!still) {
+    if (!prev) { hide(); return; }
+    const { q, A, B } = geom(prev.k, prev.flip);
+    show(rectFor(A, q), rectFor(B, q));
+    return;
+  }
+  // Hindernisse: Fokusmarke mit Ortsname
+  const obst = [[m[0] - 14 * s, m[1] - 14 * s, m[0] + 14 * s, m[1] + 14 * s]];
+  document.querySelectorAll(".city text").forEach(t => { try { const bb = t.getBBox(); if (bb.width && bb.x > vb[0] - 50 && bb.x < vb[0] + vb[2] + 50) obst.push([bb.x, bb.y, bb.x + bb.width, bb.y + bb.height]); } catch (e) {} });
+  try { const lb = $("curLabel"); if (lb.textContent && lb.style.visibility !== "hidden") { const bb = lb.getBBox(); if (bb.width) obst.push([bb.x, bb.y, bb.x + bb.width, bb.y + bb.height]); } } catch (e) {}
   const hit = r => obst.some(o => r[0] < o[2] + pad && r[2] > o[0] - pad && r[1] < o[3] + pad && r[3] > o[1] - pad);
+  const inView = q => q[0] >= vb[0] + mx && q[0] <= vb[0] + vb[2] - mx && q[1] >= vb[1] + my && q[1] <= vb[1] + vb[3] - my;
+  const inBox = r => r[0] >= vb[0] && r[2] <= vb[0] + vb[2] && r[1] >= vb[1] && r[3] <= vb[1] + vb[3];
+  const ok = (q, ra, rb) => inView(q) && inBox(ra.r) && inBox(rb.r) && !hit(ra.r) && !hit(rb.r);
+  // Bisherige Stelle behalten, solange sie sichtbar und frei ist
+  if (prev) {
+    const { q, A, B } = geom(prev.k, prev.flip), ra = rectFor(A, q), rb = rectFor(B, q);
+    if (ok(q, ra, rb)) { show(ra, rb); return; }
+  }
+  // Neue Stelle: Frontpunkt nächst der Kartenmitte
+  const cx = vb[0] + vb[2] / 2, cy = vb[1] + vb[3] / 2;
   const cand = [];
   pts.forEach((q, k) => {
-    if (q[0] < vb[0] + mx || q[0] > vb[0] + vb[2] - mx || q[1] < vb[1] + my || q[1] > vb[1] + vb[3] - my) return;
+    if (!inView(q)) return;
     cand.push([(q[0] - cx) ** 2 + (q[1] - cy) ** 2, k]);
   });
   cand.sort((a, b) => a[0] - b[0]);
   for (const [, k] of cand) {
-    const p0 = pts[Math.max(0, k - 3)], p1 = pts[Math.min(pts.length - 1, k + 3)], q = pts[k];
-    let nx = -(p1[1] - p0[1]), ny = p1[0] - p0[0]; const nl = Math.hypot(nx, ny) || 1; nx /= nl; ny /= nl;
-    let A = [q[0] + nx * off, q[1] + ny * off], B = [q[0] - nx * off, q[1] - ny * off];
-    const g = inGerman(poly, A[0], A[1]);
-    if (g === null) break;
-    if (!g) { const t = A; A = B; B = t; }
-    const ra = rectFor(A, q), rb = rectFor(B, q);
-    if (hit(ra.r) || hit(rb.r)) continue;
-    [[de, ra, "deutsche Seite"], [al, rb, "alliierte Seite"]].forEach(([t, R, txt]) => {
-      t.textContent = txt; t.setAttribute("x", R.x); t.setAttribute("y", R.y); t.setAttribute("text-anchor", R.anchor);
-      t.setAttribute("font-size", 12 * s); t.setAttribute("stroke-width", 3 * s); t.style.opacity = .9;
-    });
+    const g0 = geom(k, false), gd = inGerman(poly, g0.A[0], g0.A[1]);
+    if (gd === null) break;
+    const { q, A, B } = gd ? g0 : geom(k, true), ra = rectFor(A, q), rb = rectFor(B, q);
+    if (!ok(q, ra, rb)) continue;
+    sideAt = { fk, k, flip: !gd };
+    show(ra, rb);
     return;
   }
-  de.style.opacity = al.style.opacity = 0;
+  sideAt = null; hide();
 }
 
 function render(i) {
