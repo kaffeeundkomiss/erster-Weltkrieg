@@ -1,0 +1,14 @@
+/* Bereichsnote Geschichte im Grundsystem Kaffee und Komiss (basis.css).
+   Überschreibt die Grundfarben der Seiten mit den gemeinsamen warmen Tönen; Kartenfarben und Staffelfarben bleiben. */
+:root.kk-b-gesch { --kk-max: 1040px;
+  --paper: #F3F0E8; --panel: #FFFDF8; --ink: #23211C; --muted: #625B4E; --rule: #DAD2C2; --border: #857A68 }
+:root.kk-b-gesch.kk-breit { --kk-max: 1240px }
+@media (prefers-color-scheme: dark) { :root.kk-b-gesch:not([data-theme="light"]) {
+  --paper: #1D1B16; --panel: #26231C; --ink: #ECE5D6; --muted: #B3A891; --rule: #3B362B; --border: #8A8070 } }
+:root.kk-b-gesch[data-theme="dark"] {
+  --paper: #1D1B16; --panel: #26231C; --ink: #ECE5D6; --muted: #B3A891; --rule: #3B362B; --border: #8A8070 }
+
+/* Kopfband: Kartenraster, Schild mit dem JG-I-Abzeichen. Das Abzeichen steht dort, nicht mehr neben der Überschrift. */
+.kk-kopf .kk-in { max-width: var(--kk-max); margin: 0 auto; padding: 22px max(16px, env(safe-area-inset-right, 0px)) 22px max(16px, env(safe-area-inset-left, 0px)) }
+.kk-schild img { width: 44px; height: 44px; flex: none; border-radius: 50% }
+.wrap header .brand > .logo { display: none }

@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="de">
+<html lang="de" class="kk-b-gesch kk-breit">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Animierte Karte vom Weg der Jagdstaffeln 4, 6, 10 und 11 ab 1916 über das Jagdgeschwader I (Richthofen) bis zur Auflösung im November 1918.">
-<meta name="theme-color" content="#eceee8" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#121614" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#23211C" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#12110E" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="JG Richthofen">
@@ -25,7 +25,8 @@ img { max-width: 100% }
 <title>Jagdgeschwader Richthofen 1916–1918</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="basis.css">
 <style>
 /* Layout: Karte als Hauptfläche, Detailspalte rechts (mobil darunter), Zeitleiste mit echter Datumsskala, darunter Stationsliste */
 :root {
@@ -259,8 +260,16 @@ ol.srclist a { color: var(--ink) } ol.srclist li:target { background: var(--red-
 .spur-label { fill: var(--ink); stroke: var(--paper); paint-order: stroke; stroke-linejoin: round; font-family: var(--f-display) }
 @media (prefers-reduced-motion: reduce) { .pulse { animation: none } .front, .mk, .trk { transition: none } }
 </style>
+<link rel="stylesheet" href="bereich.css">
 </head>
 <body>
+<div class="kk-leiste"><div class="kk-in">
+  <a class="kk-haus" href="https://kaffeeundkomiss.github.io/"><img src="kk-tasse.svg" alt="" width="22" height="22"><span>Kaffee und Komiss</span></a>
+  <nav class="kk-bereiche" aria-label="Bereiche"><a href="https://kaffeeundkomiss.github.io/erster-Weltkrieg/" aria-current="true">Geschichte</a><a href="https://kaffeeundkomiss.github.io/bundeswehr-Afghanistan-/"><span class="kk-lang">Sicherheitspolitik</span><span class="kk-kurz">Sicherheit</span></a><a href="https://kirchnerjan-cell.github.io/fdp-monitor/">Politik</a></nav>
+</div></div>
+<div class="kk-kopf"><div class="kk-in">
+  <a class="kk-schild" href="index.html"><img src="icons/favicon.svg" alt="" width="44" height="44"><span><span class="kk-name" style="display:block">Erster Weltkrieg</span><span class="kk-unter" style="display:block">Luftkrieg an der Westfront 1916–1918</span></span></a>
+</div></div>
 <div class="wrap">
   <header>
     <div class="brand">
@@ -1117,5 +1126,8 @@ document.addEventListener("keydown", e => {
 vb = targetBox(0); render(0); draw();
 </script>
 <script src="site.js" defer></script>
+<footer class="kk-fuss"><div class="kk-in">
+  <p><a href="https://kaffeeundkomiss.github.io/">Kaffee und Komiss</a>: Politik, Geschichte und Sicherheitspolitik mit Quellen. Private, nichtkommerzielle Zusammenstellung. Fehler gefunden? Bitte mit Quelle melden.</p>
+</div></footer>
 </body>
 </html>
