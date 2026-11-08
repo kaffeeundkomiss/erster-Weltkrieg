@@ -1,4 +1,4 @@
-/* Bereichsnote Geschichte im Grundsystem Kaffee und Komiss (basis.css).
+/* Bereichsnote Geschichte im Grundsystem Kaffee und Kommiss (basis.css).
    Überschreibt die Grundfarben der Seiten mit den gemeinsamen warmen Tönen; Kartenfarben und Staffelfarben bleiben. */
 :root.kk-b-gesch { --kk-max: 1040px;
   --paper: #F3F0E8; --panel: #FFFDF8; --ink: #23211C; --muted: #625B4E; --rule: #DAD2C2; --border: #857A68 }
