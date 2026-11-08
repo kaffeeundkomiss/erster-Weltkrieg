@@ -3,7 +3,7 @@
 Animierte Karte der Stationierungen des Jagdgeschwaders I (Richthofen) und seiner
 Jagdstaffeln 4, 6, 10 und 11 von der Aufstellung 1916 bis zur Auflösung im November 1918.
 
-Online: https://kirchnerjan-cell.github.io/richthofen/
+Online: https://kaffeeundkomiss.github.io/erster-Weltkrieg/
 
 ## Aufbau
 
