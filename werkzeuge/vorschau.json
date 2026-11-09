@@ -1,0 +1,15 @@
+{ "basis": "https://kaffeeundkommiss.github.io/erster-Weltkrieg/", "ordner": "vorschau", "site_name": "Erster Weltkrieg",
+  "seiten": [
+    { "datei": "index.html", "bild": "karte", "kicker": "Westfront · 1916–1918", "titel": "Jagdgeschwader Richthofen", "unter": "Animierte Karte vom Weg der Jagdstaffeln 4, 6, 10 und 11 bis zur Auflösung im November 1918." },
+    { "datei": "personen.html", "bild": "personen", "kicker": "Personen", "titel": "Flieger des Jagdgeschwaders Richthofen" },
+    { "datei": "boelcke1916.html", "bild": "boelcke1916", "kicker": "Ereignis · 28. Oktober 1916", "titel": "Boelckes Tod" },
+    { "datei": "april1917.html", "bild": "april1917", "kicker": "Ereignis · April 1917", "titel": "Der „Blutige April“" },
+    { "datei": "tod.html", "bild": "tod", "kicker": "Ereignis · 21. April 1918", "titel": "Richthofens letzter Flug" },
+    { "datei": "glossar.html", "bild": "glossar", "kicker": "Glossar", "titel": "Begriffe zum Luftkrieg 1914–1918" },
+    { "datei": "quellen-karte.html", "bild": "quellen-karte", "kicker": "Quellen", "titel": "Quellen zur Karte" },
+    { "datei": "quellen-personen.html", "bild": "quellen-personen", "kicker": "Quellen", "titel": "Quellen zu den Personen" },
+    { "datei": "quellen-boelcke1916.html", "bild": "quellen-boelcke1916", "kicker": "Quellen", "titel": "Quellen zu Boelckes Tod" },
+    { "datei": "quellen-april1917.html", "bild": "quellen-april1917", "kicker": "Quellen", "titel": "Quellen zum „Blutigen April“" },
+    { "datei": "quellen-tod.html", "bild": "quellen-tod", "kicker": "Quellen", "titel": "Quellen zu Richthofens letztem Flug" },
+    { "datei": "quellen-glossar.html", "bild": "quellen-glossar", "kicker": "Quellen", "titel": "Quellen zum Glossar" }
+  ] }
