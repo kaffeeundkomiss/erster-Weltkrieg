@@ -197,7 +197,7 @@ button.primary { background: var(--red); border-color: var(--red); color: #fff; 
 .speed { margin-left: auto; font: 500 12px var(--f-mono); color: var(--muted); display: flex; gap: 6px; align-items: center }
 @media (max-width: 640px) {
   /* Handy: Karte, direkt darunter Zurück/Abspielen/Weiter, dann der Schritttext; Datum, Tempo, Zeitleiste und Legende folgen danach */
-  .stage { display: flex; flex-direction: column; gap: 10px }
+  .stage { display: flex; flex-direction: column; gap: 10px; align-items: stretch }
   .stage > .map { order: 1 } .stage > .controls { display: contents } .controls > .btns { display: contents }
   .btns-main { order: 2; display: grid; grid-template-columns: 1fr 1.25fr 1fr; gap: 8px }
   .stage > .panel { order: 3; height: auto; contain: none; overflow: visible }
