@@ -1,7 +1,11 @@
 /* Bereichsnote Geschichte im Grundsystem Kaffee und Kommiss (basis.css).
    Überschreibt die Grundfarben der Seiten mit den gemeinsamen warmen Tönen; Kartenfarben und Staffelfarben bleiben. */
 :root.kk-b-gesch { --kk-max: 1040px;
-  --paper: #F3F0E8; --panel: #FFFDF8; --ink: #23211C; --muted: #625B4E; --rule: #DAD2C2; --border: #857A68 }
+  --paper: #F0F0EE; --panel: #FFFFFF; --ink: #23211C; --muted: #625B4E; --rule: #D6D6D6; --border: #857A68 }
+/* Heller Modus: dezentes Grau wie die Geschichte-Übersicht (10.11.2026) */
+@media (prefers-color-scheme: light) { :root.kk-b-gesch:not([data-theme="dark"]) {
+  --kk-grund: #F0F0EE; --kk-papier: #FFFFFF; --kk-linie: #D6D6D6; --kk-schild: rgba(255,255,255,.96) } }
+:root.kk-b-gesch[data-theme="light"] { --kk-grund: #F0F0EE; --kk-papier: #FFFFFF; --kk-linie: #D6D6D6; --kk-schild: rgba(255,255,255,.96) }
 :root.kk-b-gesch.kk-breit { --kk-max: 1240px }
 @media (prefers-color-scheme: dark) { :root.kk-b-gesch:not([data-theme="light"]) {
   --paper: #1D1B16; --panel: #26231C; --ink: #ECE5D6; --muted: #B3A891; --rule: #3B362B; --border: #8A8070 } }
