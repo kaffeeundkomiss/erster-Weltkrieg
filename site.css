@@ -68,3 +68,6 @@ figure.evfoto figcaption a { color: var(--ink) }
   .evintro { grid-template-columns: minmax(0, 1fr) }
   figure.evfoto { margin-top: 4px; max-width: 180px }
 }
+
+/* Kopfband: Stacheldraht und Explosionen statt Gitter (wie Jünger-Seite) */
+.kk-kopf { --kk-muster: url("stacheldraht.svg") }
