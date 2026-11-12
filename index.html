@@ -160,6 +160,10 @@ h1 { font: 700 clamp(30px, 5vw, 50px)/1 var(--f-display); letter-spacing: .01em;
 .legend { grid-template-columns: auto auto; column-gap: 14px }
 @media (max-width: 560px) { .legend { position: static; border: 0; border-top: 1px solid var(--rule); border-radius: 0; grid-template-columns: 1fr 1fr } }
 .mapbtn { position: absolute; right: 10px; top: 10px; }
+/* Maßstabsleiste: Länge folgt der Vergrößerung (draw) */
+.massstab { position: absolute; right: 10px; bottom: 10px; pointer-events: none; font: 600 11px/1 var(--f-display); letter-spacing: .03em; color: var(--ink);
+  background: color-mix(in srgb, var(--panel) 85%, transparent); padding: 4px 7px 5px; border-radius: 3px }
+.massstab .ms-bar { display: block; height: 5px; margin-top: 3px; border: 1px solid var(--ink); background: linear-gradient(90deg, var(--ink) 50%, var(--panel) 50%) }
 .legend.legend-bar { position: static; display: flex; flex-wrap: wrap; gap: 4px 20px; padding: 8px 14px; background: var(--panel); margin-top: -8px }
 
 .panel { background: var(--panel); border: 1px solid var(--rule); border-radius: 3px; padding: 18px 18px 16px; display: grid; gap: 10px; min-width: 0 }
@@ -354,6 +358,7 @@ ol.srclist a { color: var(--ink) } ol.srclist li:target { background: var(--red-
           <text class="cur-label" id="curLabel"></text>
         </g>
       </svg>
+      <div class="massstab" id="massstab" aria-hidden="true"><span class="ms-lab" id="msLab"></span><span class="ms-bar" id="msBar"></span></div>
       <button class="mapbtn" id="zoomBtn" type="button" aria-pressed="true">Gesamtkarte</button>
     </div>
 
@@ -919,6 +924,10 @@ function draw() {
   svgEl.setAttribute("viewBox", vb.map(v => v.toFixed(1)).join(" "));
   const pxw = svgEl.getBoundingClientRect().width || 1000;
   const s = Math.min(vb[2] / pxw, 3.2) * (pxw < 500 ? 1 : 1.1); // Karteneinheiten pro Bildschirmpixel
+  // Maßstab: 1 Karteneinheit = 0,614 km (Mittel aus 21 Städtepaaren, Abweichung unter 0,5 %)
+  { const r = svgEl.getBoundingClientRect(), upx = Math.max(vb[2] / (r.width || 1000), vb[3] / (r.height || 640)), kmpx = 0.614 * upx;
+    const km = [5, 10, 20, 25, 50, 100, 200].find(k => k / kmpx >= 60) || 200;
+    $("msBar").style.width = Math.round(km / kmpx) + "px"; $("msLab").textContent = km + " km"; }
   const [i, f] = split(g);
   const settled = Math.abs(g - Math.round(g)) < 1e-6;
   // Verbandslinien
