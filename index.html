@@ -96,6 +96,7 @@ h1 { font: 700 clamp(30px, 5vw, 50px)/1 var(--f-display); letter-spacing: .01em;
 .intro:not([open]) { padding-bottom: 14px }
 .intro p { margin: 0 } .intro .how { font-size: 15px; color: var(--muted) } .intro .how b { color: var(--ink); font-weight: 600 } .intro a { color: var(--ink); font-weight: 600 }
 .side-label { font-family: var(--f-display); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; fill: var(--front); paint-order: stroke; stroke: var(--paper); stroke-linejoin: round; pointer-events: none; transition: opacity .3s }
+.side-ic { pointer-events: none; transition: opacity .3s; opacity: 0 }
 .legend-m { display: none }
 
 /* Zeitleiste fest unter der Karte; der Schrittbereich steht rechts daneben und darf länger sein, ohne die Zeitleiste zu verschieben */
@@ -347,7 +348,7 @@ ol.srclist a { color: var(--ink) } ol.srclist li:target { background: var(--red-
         <g id="rivLabels" aria-hidden="true"></g>
         <g id="clabels"></g>
         <g id="fronts"></g>
-        <g id="sides" aria-hidden="true"><text class="side-label" id="sideDe"></text><text class="side-label" id="sideAl"></text></g>
+        <g id="sides" aria-hidden="true"><g class="side-ic" id="sideDeI"><use href="#e-de"/></g><text class="side-label" id="sideDe"></text><g class="side-ic" id="sideAlI"><use href="#e-fr"/><use href="#e-uk"/></g><text class="side-label" id="sideAl"></text></g>
         <g id="cities"></g>
         <path class="route-all" id="routeAll"/>
         <g id="tracks"></g>
@@ -1018,12 +1019,23 @@ function inGerman(poly, x, y) {
 }
 // Die Beschriftung bleibt an ihrem Kartenort stehen und wird nur neu gesetzt, wenn sie nach einem Schritt
 // aus dem Bild fällt, verdeckt würde oder die Front wechselt. Während der Kamerafahrt bewegt sie sich nicht.
-let sideAt = null;   // { fk, k, flip }: Frontpunkt und Seitenzuordnung der aktuellen Beschriftung
+let sideAt = null;   // { fk, k, flip, mi }: Frontpunkt, Seitenzuordnung und Darstellungsstufe der aktuellen Beschriftung
 function placeSides(fk, s, m, still) {
-  const de = $("sideDe"), al = $("sideAl");
+  const de = $("sideDe"), al = $("sideAl"), deI = $("sideDeI"), alI = $("sideAlI");
   const { pts, poly } = sideData(fk);
-  const narrow = (svgEl.getBoundingClientRect().width || 1000) < 500, fs = narrow ? 10 : 12;   // Handy: etwas kleiner, damit beide Seiten ins Bild passen
-  const W = 7.8 * fs * s, H = 1.1 * fs * s, off = (narrow ? 26 : 34) * s, pad = (narrow ? 4 : 6) * s;
+  // Darstellungsstufen, von groß nach klein: Schrift deutlich größer als die Ortsnamen (11–13), davor die Kennzeichen
+  // der Seite (Eisernes Kreuz bzw. Kokarden Frankreich und Großbritannien). Passt keine Stufe mit Kennzeichen ins Bild,
+  // bleibt wie bisher nur die Schrift.
+  const narrow = (svgEl.getBoundingClientRect().width || 1000) < 500;
+  const MODES = narrow ? [{ fs: 12, ic: true }, { fs: 10, ic: true }, { fs: 10, ic: false }]
+                       : [{ fs: 15, ic: true }, { fs: 12, ic: true }, { fs: 12, ic: false }];
+  const off = (narrow ? 28 : 38) * s, pad = (narrow ? 4 : 6) * s;
+  const cfg = mi => {
+    const { fs, ic: withIc } = MODES[mi], ic = 1.2 * fs * s, gap = .4 * fs * s;
+    const icW = n => withIc ? n * ic + (n - 1) * .25 * ic + gap : 0;
+    const tw = (t, txt) => { t.textContent = txt; t.setAttribute("font-size", fs * s); let w = 0; try { w = t.getComputedTextLength(); } catch (e) {} return w || .56 * txt.length * fs * s; };
+    return { mi, fs, withIc, ic, icW, H: 1.25 * fs * s, Wd: icW(1) + tw(de, "deutsche Seite"), Wa: icW(2) + tw(al, "alliierte Seite") };
+  };
   const mx = vb[2] * .12, my = vb[3] * .12;
   const geom = (k, flip) => {
     const p0 = pts[Math.max(0, k - 3)], p1 = pts[Math.min(pts.length - 1, k + 3)], q = pts[k];
@@ -1032,55 +1044,63 @@ function placeSides(fk, s, m, still) {
     if (flip) { const t = A; A = B; B = t; }
     return { q, A, B };
   };
-  const rectFor = (P, q) => {
+  const rectFor = (P, q, W, C) => {
     const dx = (P[0] - q[0]) / off;
     const anchor = Math.abs(dx) < .35 ? "middle" : (dx > 0 ? "start" : "end");
-    const y = P[1] + (anchor === "middle" ? ((P[1] > q[1]) ? 10 : -2) : 4) * s;
+    const y = P[1] + (anchor === "middle" ? ((P[1] > q[1]) ? 12 : -3) : 5) * s;
     const x0 = anchor === "start" ? P[0] : anchor === "end" ? P[0] - W : P[0] - W / 2;
-    return { anchor, x: P[0], y, r: [x0, y - H, x0 + W, y + 3 * s] };
+    return { x0, y, r: [x0, y - C.H, x0 + W, y + .35 * C.fs * s] };
   };
-  const show = (ra, rb) => [[de, ra, "deutsche Seite"], [al, rb, "alliierte Seite"]].forEach(([t, R, txt]) => {
-    t.textContent = txt; t.setAttribute("x", R.x); t.setAttribute("y", R.y); t.setAttribute("text-anchor", R.anchor);
-    t.setAttribute("font-size", fs * s); t.setAttribute("stroke-width", 3 * s); t.style.opacity = .9;
+  const pair = (g, C) => { const { q, A, B } = g; return [rectFor(A, q, C.Wd, C), rectFor(B, q, C.Wa, C)]; };
+  const show = ([ra, rb], C) => [[de, deI, ra, 1], [al, alI, rb, 2]].forEach(([t, g, R, n]) => {
+    t.setAttribute("x", R.x0 + C.icW(n)); t.setAttribute("y", R.y); t.setAttribute("text-anchor", "start");
+    t.setAttribute("font-size", C.fs * s); t.setAttribute("stroke-width", 3 * s); t.style.opacity = .9;
+    const cy = R.y - .36 * C.fs * s;
+    g.querySelectorAll("use").forEach((u, i) => u.setAttribute("transform", `translate(${R.x0 + C.ic / 2 + i * 1.25 * C.ic},${cy}) scale(${C.ic / 22})`));
+    g.style.opacity = C.withIc ? 1 : 0;
   });
-  const hide = () => { de.style.opacity = al.style.opacity = 0; };
+  const hide = () => { de.style.opacity = al.style.opacity = deI.style.opacity = alI.style.opacity = 0; };
   const prev = sideAt && sideAt.fk === fk ? sideAt : null;
   // Während der Kamerafahrt: an Ort und Stelle lassen, nur die Schriftgröße an den Maßstab anpassen
   if (!still) {
     if (!prev) { hide(); return; }
-    const { q, A, B } = geom(prev.k, prev.flip);
-    show(rectFor(A, q), rectFor(B, q));
+    const C = cfg(Math.min(prev.mi, MODES.length - 1));
+    show(pair(geom(prev.k, prev.flip), C), C);
     return;
   }
   // Hindernisse: Fokusmarke mit Ortsname
   const obst = [[m[0] - 14 * s, m[1] - 14 * s, m[0] + 14 * s, m[1] + 14 * s]];
   document.querySelectorAll(".city text").forEach(t => { try { const bb = t.getBBox(); if (bb.width && bb.x > vb[0] - 50 && bb.x < vb[0] + vb[2] + 50) obst.push([bb.x, bb.y, bb.x + bb.width, bb.y + bb.height]); } catch (e) {} });
   try { const lb = $("curLabel"); if (lb.textContent && lb.style.visibility !== "hidden") { const bb = lb.getBBox(); if (bb.width) obst.push([bb.x, bb.y, bb.x + bb.width, bb.y + bb.height]); } } catch (e) {}
-  const hit = r => obst.some(o => r[0] < o[2] + pad && r[2] > o[0] - pad && r[1] < o[3] + pad && r[3] > o[1] - pad);
+  // Weiche Hindernisse: sichtbare Dorfnamen; nur meiden, wenn sich dafür eine freie Stelle findet
+  const soft = [];
+  document.querySelectorAll(".vil text").forEach(t => { if (t.style.display === "none") return; try { const bb = t.getBBox(); if (bb.width) soft.push([bb.x, bb.y, bb.x + bb.width, bb.y + bb.height]); } catch (e) {} });
+  let useSoft = false;
+  const hit = r => obst.concat(useSoft ? soft : []).some(o => r[0] < o[2] + pad && r[2] > o[0] - pad && r[1] < o[3] + pad && r[3] > o[1] - pad);
   const inView = q => q[0] >= vb[0] + mx && q[0] <= vb[0] + vb[2] - mx && q[1] >= vb[1] + my && q[1] <= vb[1] + vb[3] - my;
   const inBox = r => r[0] >= vb[0] && r[2] <= vb[0] + vb[2] && r[1] >= vb[1] && r[3] <= vb[1] + vb[3];
-  const ok = (q, ra, rb) => inView(q) && inBox(ra.r) && inBox(rb.r) && !hit(ra.r) && !hit(rb.r);
-  // Bisherige Stelle behalten, solange sie sichtbar und frei ist
-  if (prev) {
-    const { q, A, B } = geom(prev.k, prev.flip), ra = rectFor(A, q), rb = rectFor(B, q);
-    if (ok(q, ra, rb)) { show(ra, rb); return; }
-  }
-  // Neue Stelle: Frontpunkt nächst der Kartenmitte
+  const ok = (q, [ra, rb]) => inView(q) && inBox(ra.r) && inBox(rb.r) && !hit(ra.r) && !hit(rb.r);
+  // Neue Stelle: Frontpunkte nach Nähe zur Kartenmitte
   const cx = vb[0] + vb[2] / 2, cy = vb[1] + vb[3] / 2;
   const cand = [];
-  pts.forEach((q, k) => {
-    if (!inView(q)) return;
-    cand.push([(q[0] - cx) ** 2 + (q[1] - cy) ** 2, k]);
-  });
+  pts.forEach((q, k) => { if (inView(q)) cand.push([(q[0] - cx) ** 2 + (q[1] - cy) ** 2, k]); });
   cand.sort((a, b) => a[0] - b[0]);
-  for (const [, k] of cand) {
-    const g0 = geom(k, false), gd = inGerman(poly, g0.A[0], g0.A[1]);
-    if (gd === null) break;
-    const { q, A, B } = gd ? g0 : geom(k, true), ra = rectFor(A, q), rb = rectFor(B, q);
-    if (!ok(q, ra, rb)) continue;
-    sideAt = { fk, k, flip: !gd };
-    show(ra, rb);
-    return;
+  // Größte Stufe zuerst. Je Stufe: bisherige Stelle behalten, solange sie sichtbar und frei ist, sonst neu suchen
+  for (let mi = 0; mi < MODES.length; mi++) {
+    const C = cfg(mi);
+    for (const sp of soft.length ? [true, false] : [false]) {
+      useSoft = sp;
+      if (prev) { const g = geom(prev.k, prev.flip), R = pair(g, C); if (ok(g.q, R)) { sideAt = { ...prev, mi }; show(R, C); return; } }
+      for (const [, k] of cand) {
+        const g0 = geom(k, false), gd = inGerman(poly, g0.A[0], g0.A[1]);
+        if (gd === null) break;
+        const g = gd ? g0 : geom(k, true), R = pair(g, C);
+        if (!ok(g.q, R)) continue;
+        sideAt = { fk, k, flip: !gd, mi };
+        show(R, C);
+        return;
+      }
+    }
   }
   sideAt = null; hide();
 }
